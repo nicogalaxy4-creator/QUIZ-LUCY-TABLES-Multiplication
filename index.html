@@ -429,6 +429,62 @@
   }
   .s-missed-item .eq { font-size: 1.3rem; font-weight: 700; }
   .s-missed-item .eq b { color: var(--orange-dark); }
+
+  /* Cahier : soustraction posée interactive */
+  .cahier {
+    --cw: clamp(50px, 8vw, 74px);   /* largeur d'un chiffre */
+    --sw: clamp(42px, 5.8vw, 52px); /* case +1 du bas */
+    --rh: clamp(54px, 7.4vw, 72px); /* hauteur d'une ligne de chiffres */
+    --ch: clamp(42px, 5.8vw, 52px); /* case 1 du haut */
+    display: inline-grid;
+    column-gap: 8px; row-gap: 4px;
+    font-weight: 700; line-height: 1;
+    font-size: clamp(2.3rem, 6.2vw, 3.8rem);
+    align-items: stretch;
+  }
+  .cahier.md { --cw: 42px; --sw: 34px; --rh: 46px; --ch: 32px; font-size: 1.9rem; column-gap: 6px; row-gap: 3px; }
+  .cahier.shake { animation: shake .4s; }
+  .cahier .ph { align-self: center; }
+  .cc-cell { display: flex; align-items: center; justify-content: center; border-radius: 12px; padding: 3px; }
+  .cc-main { width: var(--cw); display: flex; align-items: center; justify-content: center; }
+  .cc-side { width: var(--sw); display: flex; align-items: center; justify-content: center; }
+  .cc-crow { min-height: calc(var(--ch) + 6px); }
+  .cc-drow { height: var(--rh); }
+  .cc-rrow { min-height: calc(var(--rh) + 6px); }
+  .cc-sign { color: var(--pink); display: flex; align-items: center; justify-content: flex-end; padding-right: 2px; }
+  .cahier .pbar { height: 6px; margin: 2px 0; }
+  .cbox {
+    width: var(--ch); height: var(--ch); padding: 0;
+    border: 3px dashed rgba(239, 43, 79, .5); border-radius: 10px;
+    background: rgba(255, 255, 255, .85); color: #ef2b4f;
+    font-family: inherit; font-weight: 700; line-height: 1;
+    font-size: calc(var(--ch) * .55);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cbox.bot { width: var(--sw); height: var(--sw); font-size: calc(var(--sw) * .45); }
+  .cbox.on { border-style: solid; border-color: #ef2b4f; background: #ffe3e8; }
+  .cbox.ghost { visibility: hidden; }
+  .rbox {
+    width: var(--cw); height: var(--rh); padding: 0;
+    border: 4px dashed #b9a6ff; border-radius: 14px;
+    background: rgba(255, 255, 255, .85); color: inherit;
+    font-family: inherit; font-size: 1em; font-weight: 700; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .rbox.filled { border-style: solid; border-color: rgba(0, 0, 0, .12); }
+  .rbox.active { border-style: solid; border-color: #ffb800; box-shadow: 0 0 0 4px #fff3c4; }
+  .qcard.good .rbox { border-style: solid; border-color: var(--green); color: var(--green-dark); }
+  .qcard.oops .rbox.fix, .correction .rbox.fix { border-style: solid; border-color: var(--orange); color: var(--orange-dark); }
+  .pose-toggle {
+    margin-top: 12px;
+    background: #f3eeff; color: var(--purple);
+    font-size: clamp(1.05rem, 2.8vw, 1.3rem); font-weight: 600;
+    padding: 10px 20px; border-radius: 999px;
+    box-shadow: 0 4px 0 #d9cbff;
+  }
+  .pose-toggle:active { transform: translateY(3px); box-shadow: 0 1px 0 #d9cbff; }
+  #screen-squiz.cahier-on .key { height: clamp(52px, 7.4vh, 84px); }
+  #screen-squiz.cahier-on #s-feedback { min-height: 64px; }
 </style>
 </head>
 <body>
@@ -1214,28 +1270,89 @@
     sShow();
   }
 
+  // ---------- Cahier : soustraction posée interactive (retenues + résultat case par case) ----------
+  var HINT_LINE = "Tape ta réponse avec les chiffres ✏️";
+  var HINT_CAHIER = "✏️ Commence par les unités, à droite. Touche les petites cases rouges pour écrire les retenues.";
+  var sCah = { on: false, res: [], top: [], bot: [], active: 0 };
+
+  function canToggle(q) { return !q.posed && countBorrows(q.a, q.b) > 0; }
+  function cahEmpty() { return sCah.res.join("") === ""; }
+
+  // o : { interactive, res, top, bot, active, correction, size }
+  function cahierHTML(a, b, o) {
+    var c = subCols(a, b), n = c.length, i, h = "";
+    var tag = o.interactive ? "button" : "span";
+    var res, top, bot;
+    if (o.correction) {
+      var rs = String(a - b);
+      res = []; top = []; bot = [];
+      for (i = 0; i < n; i++) { res.push(rs.charAt(rs.length - 1 - i)); top.push(c[i].borrow); bot.push(c[i].carryIn === 1); }
+    } else {
+      res = o.res; top = o.top; bot = o.bot;
+    }
+    function col(i, rowCls, main, side) {
+      return '<div class="cc-cell ' + COLCLASS[i] + " " + rowCls + '"><div class="cc-main">' + main + "</div>" +
+        (i > 0 ? '<div class="cc-side">' + (side || "") + "</div>" : "") + "</div>";
+    }
+    function box(kind, i, on) {
+      var label = kind === "ct" ? "Retenue" + NB + ": 10 de plus aux " + COLNAMES[i] : "Retenue" + NB + ": +1 aux " + COLNAMES[i];
+      var attr = o.interactive ? ' type="button" data-' + kind + '="' + i + '" aria-label="' + label + '" aria-pressed="' + on + '"' : "";
+      var cls = "cbox " + (kind === "cb" ? "bot" : "top") + (on ? " on" : "") + (o.correction && !on ? " ghost" : "");
+      return "<" + tag + ' class="' + cls + '"' + attr + ">" + (on ? (kind === "cb" ? "+1" : "1") : "") + "</" + tag + ">";
+    }
+    // En-têtes C D U
+    h += "<div></div>";
+    for (i = n - 1; i >= 0; i--) h += '<div class="ph ' + COLCLASS[i] + '">' + COLLETTERS[i] + "</div>";
+    // Petites cases du haut (le "1" qui ajoute 10 au chiffre du haut)
+    h += "<div></div>";
+    for (i = n - 1; i >= 0; i--) h += col(i, "cc-crow", i < n - 1 ? box("ct", i, top[i]) : "");
+    // Nombre du haut
+    h += "<div></div>";
+    for (i = n - 1; i >= 0; i--) h += col(i, "cc-drow", String(c[i].t));
+    // Nombre du bas + case "+1"
+    h += '<div class="cc-sign">' + MINUS + "</div>";
+    for (i = n - 1; i >= 0; i--) h += col(i, "cc-drow", c[i].hasB ? String(c[i].d) : "", box("cb", i, bot[i]));
+    // Trait
+    h += '<div class="pbar"></div>';
+    // Résultat, une case par colonne
+    h += "<div></div>";
+    for (i = n - 1; i >= 0; i--) {
+      var v = res[i] || "", act = !!o.interactive && o.active === i;
+      var cls = "rbox" + (act ? " active" : "") + (v ? " filled" : "") + (o.correction ? " fix" : "");
+      var attr = o.interactive ? ' type="button" data-cr="' + i + '" aria-label="Résultat des ' + COLNAMES[i] + '"' : "";
+      h += col(i, "cc-rrow", "<" + tag + ' class="' + cls + '"' + attr + ">" + (v || (act ? '<span class="qmark">?</span>' : "")) + "</" + tag + ">");
+    }
+    return '<div class="cahier ' + (o.size || "xl") + '" style="grid-template-columns:auto repeat(' + n + ',auto)">' + h + "</div>";
+  }
+
   function sRenderCard() {
     var q = sQs[sIdx], card = $("#s-card");
-    if (q.posed) {
-      card.innerHTML = poseHTML(q.a, q.b, { headers: true, size: "xl", result: sTyped, placeholder: true });
+    $("#screen-squiz").classList.toggle("cahier-on", sCah.on);
+    if (sCah.on) {
+      card.innerHTML = cahierHTML(q.a, q.b, { interactive: true, res: sCah.res, top: sCah.top, bot: sCah.bot, active: sCah.active }) +
+        (canToggle(q) ? '<div><button class="pose-toggle" id="s-pose-toggle">↩️ Écrire en ligne</button></div>' : "");
     } else {
       card.innerHTML = '<div class="question">' + q.a + ' <span class="op">' + MINUS + "</span> " + q.b +
-        ' <span class="op">=</span> <span class="answer' + (sTyped ? "" : " empty") + '" id="s-answer">' + (sTyped || "?") + "</span></div>";
+        ' <span class="op">=</span> <span class="answer' + (sTyped ? "" : " empty") + '" id="s-answer">' + (sTyped || "?") + "</span></div>" +
+        (canToggle(q) ? '<div><button class="pose-toggle" id="s-pose-toggle">📝 Poser l\'opération</button></div>' : "");
     }
-    $("#s-validate").classList.toggle("dim", sPhase === "answer" && sTyped === "");
+    $("#s-validate").classList.toggle("dim", sPhase === "answer" && (sCah.on ? cahEmpty() : sTyped === ""));
   }
 
   function sShow() {
     clearTimeout(sTimer);
     sPhase = "answer";
     sTyped = "";
+    var q = sQs[sIdx], n = String(q.a).length;
+    sCah = { on: q.posed, res: [], top: [], bot: [], active: 0 };
+    for (var i = 0; i < n; i++) { sCah.res.push(""); sCah.top.push(false); sCah.bot.push(false); }
     $("#s-qnum").textContent = sIdx + 1;
     $("#s-bar").style.width = (sIdx / TOTAL * 100) + "%";
     var card = $("#s-card");
     card.classList.remove("good", "oops", "pop");
     void card.offsetWidth;
     card.classList.add("pop");
-    $("#s-feedback").innerHTML = sQs[sIdx].posed ? "Tape le résultat avec les chiffres ✏️" : "Tape ta réponse avec les chiffres ✏️";
+    $("#s-feedback").innerHTML = sCah.on ? HINT_CAHIER : HINT_LINE;
     $("#s-keypad").classList.remove("locked", "hidden");
     $("#s-correction").classList.add("hidden");
     var v = $("#s-validate");
@@ -1244,8 +1361,32 @@
     sRenderCard();
   }
 
+  // Passer d'une réponse en ligne à l'opération posée (et inversement)
+  function sToggleCahier() {
+    var n = sCah.res.length, i;
+    if (!sCah.on) {
+      for (i = 0; i < n; i++) sCah.res[i] = sTyped.charAt(sTyped.length - 1 - i);
+      sCah.active = Math.min(sTyped.length, n - 1);
+      sCah.on = true;
+    } else {
+      sTyped = sCah.res.slice().reverse().join("");
+      sCah.on = false;
+    }
+    $("#s-feedback").innerHTML = sCah.on ? HINT_CAHIER : HINT_LINE;
+    soundTap();
+    sRenderCard();
+  }
+
   function sPress(d) {
     if (sPhase !== "answer") return;
+    if (sCah.on) {
+      // un chiffre par colonne, puis on passe à la colonne de gauche
+      sCah.res[sCah.active] = d;
+      if (sCah.active < sCah.res.length - 1) sCah.active++;
+      soundTap();
+      sRenderCard();
+      return;
+    }
     if (sTyped.length >= String(sQs[sIdx].a).length) return;
     sTyped = sTyped === "0" ? d : sTyped + d;
     soundTap();
@@ -1253,27 +1394,66 @@
   }
   function sErase() {
     if (sPhase !== "answer") return;
+    if (sCah.on) {
+      if (sCah.res[sCah.active] === "" && sCah.active > 0) sCah.active--;
+      sCah.res[sCah.active] = "";
+      sRenderCard();
+      return;
+    }
     sTyped = sTyped.slice(0, -1);
     sRenderCard();
   }
 
+  // Touches dans l'opération posée : retenues, choix de la colonne, bouton "poser"
+  $("#s-card").addEventListener("click", function (e) {
+    if (sPhase !== "answer") return;
+    var t = e.target.closest("button");
+    if (!t) return;
+    if (t.id === "s-pose-toggle") { sToggleCahier(); return; }
+    if (t.hasAttribute("data-ct")) { var it = +t.dataset.ct; sCah.top[it] = !sCah.top[it]; soundTap(); }
+    else if (t.hasAttribute("data-cb")) { var ib = +t.dataset.cb; sCah.bot[ib] = !sCah.bot[ib]; soundTap(); }
+    else if (t.hasAttribute("data-cr")) { sCah.active = +t.dataset.cr; }
+    else return;
+    sRenderCard();
+  });
+
   function sValidate() {
     if (sPhase === "feedback") { sNext(); return; }
-    var card = $("#s-card"), q = sQs[sIdx], good = q.a - q.b, v = $("#s-validate");
-    if (sTyped === "") {
-      var el = q.posed ? card.firstElementChild : $("#s-answer");
+    var card = $("#s-card"), q = sQs[sIdx], good = q.a - q.b, v = $("#s-validate"), answer, i;
+    function nudge(msg) {
+      var el = sCah.on ? card.firstElementChild : $("#s-answer");
       el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake");
-      $("#s-feedback").innerHTML = "Tape d'abord ta réponse 😉";
-      return;
+      $("#s-feedback").innerHTML = msg;
+    }
+    if (sCah.on) {
+      var hi = -1;
+      for (i = 0; i < sCah.res.length; i++) if (sCah.res[i] !== "") hi = i;
+      if (hi < 0) { nudge("Tape d'abord ta réponse 😉"); return; }
+      for (i = 0; i <= hi; i++) {
+        if (sCah.res[i] === "") {
+          sCah.active = i; sRenderCard();
+          nudge("Il manque un chiffre aux " + COLNAMES[i] + " 😉");
+          return;
+        }
+      }
+      answer = "";
+      for (i = hi; i >= 0; i--) answer += sCah.res[i];
+    } else {
+      if (sTyped === "") { nudge("Tape d'abord ta réponse 😉"); return; }
+      answer = sTyped;
     }
     sPhase = "feedback";
     $("#s-keypad").classList.add("locked");
     card.classList.remove("pop");
+    var tog = card.querySelector(".pose-toggle");
+    if (tog) tog.parentNode.removeChild(tog);
     var eq = q.a + " " + MINUS + " " + q.b + " = " + good;
 
-    if (parseInt(sTyped, 10) === good) {
+    // Seul le résultat compte : les retenues ne sont pas notées
+    if (parseInt(answer, 10) === good) {
       sScore++;
       $("#s-live").textContent = sScore;
+      if (sCah.on) card.innerHTML = cahierHTML(q.a, q.b, { res: sCah.res, top: sCah.top, bot: sCah.bot });
       card.classList.add("good");
       $("#s-feedback").innerHTML = '<div class="fb-good">' + rand(BRAVO) + "</div>";
       v.textContent = "Suivant ➜";
@@ -1285,8 +1465,8 @@
     } else {
       sMissed.push(q);
       card.classList.add("oops");
-      if (q.posed) {
-        card.innerHTML = poseHTML(q.a, q.b, { headers: true, size: "xl", result: String(good), carries: true });
+      if (sCah.on) {
+        card.innerHTML = cahierHTML(q.a, q.b, { correction: true });
       } else {
         var a = $("#s-answer");
         a.textContent = good;
@@ -1294,9 +1474,14 @@
       }
       $("#s-feedback").innerHTML =
         '<div class="fb-oops"><div class="l1">' + rand(OOPS) + '</div><div class="l2">' + eq + "</div></div>";
+      var poseCorr = "";
+      if (!sCah.on) {
+        poseCorr = countBorrows(q.a, q.b) > 0
+          ? cahierHTML(q.a, q.b, { correction: true, size: "md" })
+          : poseHTML(q.a, q.b, { headers: true, size: "md", result: String(good), carries: true });
+      }
       var corr = $("#s-correction");
-      corr.innerHTML =
-        (q.posed ? "" : poseHTML(q.a, q.b, { headers: true, size: "md", result: String(good), carries: true })) +
+      corr.innerHTML = poseCorr +
         '<div class="expl">' + explain(q.a, q.b) + "</div>" +
         '<div class="verif">🔍 Pour vérifier' + NB + ": " + good + " + " + q.b + " = " + q.a + " ✔️</div>";
       $("#s-keypad").classList.add("hidden");

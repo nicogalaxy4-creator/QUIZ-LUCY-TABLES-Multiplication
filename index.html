@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#7c4dff">
-<title>Les tables de Lucy</title>
+<title>Les maths de Lucy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -301,16 +301,168 @@
   @media (prefers-reduced-motion: reduce) {
     .end-emoji, .answer.empty { animation: none; }
   }
+
+  /* =========================================================
+     ACCUEIL + SOUSTRACTIONS
+     ========================================================= */
+  .hidden { display: none !important; }
+  .back-btn {
+    position: absolute; top: 6px; left: 0;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #fff; font-size: 1.5rem;
+    box-shadow: 0 4px 0 #d9cbff;
+  }
+  .back-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #d9cbff; }
+
+  .home-wrap { width: 100%; max-width: 900px; }
+  .home-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; margin-top: 10px; }
+  .home-card {
+    border-radius: 32px; padding: 28px 18px 26px; color: #fff;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    text-shadow: 0 2px 0 rgba(0,0,0,.18);
+    box-shadow: 0 9px 0 rgba(0,0,0,.2);
+    transition: transform .08s;
+  }
+  .home-card:hover { transform: translateY(-3px) rotate(-1deg); }
+  .home-card:active { transform: translateY(6px); box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+  .home-card.mult { background: linear-gradient(150deg, #ff6fb5, #7c4dff); }
+  .home-card.sub { background: linear-gradient(150deg, #ffb020, #ff5a5a); }
+  .hc-emoji {
+    font-size: clamp(3rem, 9vw, 4.4rem); line-height: 1;
+    width: 1.7em; height: 1.7em; border-radius: 50%;
+    background: rgba(255,255,255,.92);
+    display: flex; align-items: center; justify-content: center;
+    text-shadow: none;
+  }
+  .hc-title { font-size: clamp(1.7rem, 4.5vw, 2.3rem); font-weight: 700; line-height: 1.15; }
+  .hc-sub { font-size: clamp(1.1rem, 3vw, 1.35rem); font-weight: 500; }
+
+  .sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .sbtn {
+    --c: #22b455;
+    background: var(--c); color: #fff;
+    border-radius: 26px; padding: 16px; min-height: 160px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    box-shadow: 0 7px 0 rgba(0,0,0,.22);
+    text-shadow: 0 2px 0 rgba(0,0,0,.18);
+    transition: transform .08s;
+  }
+  .sbtn:hover { transform: translateY(-2px) rotate(-1deg); }
+  .sbtn:active { transform: translateY(5px); box-shadow: 0 2px 0 rgba(0,0,0,.22); }
+  .s-num { font-size: 1.1rem; font-weight: 700; background: rgba(255,255,255,.28); border-radius: 999px; padding: 1px 14px; }
+  .s-title { font-size: clamp(1.6rem, 4.4vw, 2.1rem); font-weight: 700; line-height: 1.1; }
+  .s-ex {
+    font-size: clamp(1.4rem, 4vw, 1.8rem); font-weight: 700;
+    background: rgba(255,255,255,.94); color: var(--ink); text-shadow: none;
+    border-radius: 16px; padding: 2px 16px;
+  }
+  .s-ex.stack { text-align: right; line-height: 1.05; padding: 6px 16px; }
+  .s-ex.stack u { text-decoration: none; border-bottom: 3px solid var(--ink); }
+
+  /* Opération posée */
+  .pose {
+    display: inline-grid;
+    column-gap: .12em; row-gap: .06em;
+    font-weight: 700; line-height: 1.15;
+    font-size: var(--ps);
+    align-items: center;
+  }
+  .pose.xl { --ps: clamp(2.4rem, 7vw, 4.4rem); }
+  .pose.md { --ps: clamp(1.9rem, 5vw, 2.5rem); }
+  .pose.sm { --ps: 1.6rem; }
+  .pose.shake { animation: shake .4s; }
+  .pc {
+    position: relative;
+    min-width: 1.25em; text-align: center;
+    padding: 0 .12em; border-radius: .2em;
+  }
+  .cu { background: #e1efff; color: #1d5fd1; }
+  .cd { background: #dff6e6; color: #138a3e; }
+  .cc { background: #ffe1ef; color: #cc1f74; }
+  .ph { font-size: .4em; text-align: center; border-radius: .5em; padding: .15em 0; color: #fff; }
+  .ph.cu { background: #3b82f6; color: #fff; }
+  .ph.cd { background: #22b455; color: #fff; }
+  .ph.cc { background: #ff4fa3; color: #fff; }
+  .ps { text-align: right; padding-right: .05em; }
+  .ps.sign { color: var(--pink); }
+  .pbar { grid-column: 1 / -1; height: .09em; background: var(--ink); border-radius: 9px; margin: .04em 0; }
+  .pr { min-height: 1.15em; }
+  .k1, .k2 { position: absolute; font-size: .42em; color: #ef2b4f; font-weight: 700; line-height: 1; }
+  .k1 { left: .05em; top: .1em; }
+  .k2 { right: -.05em; bottom: .05em; }
+  .pc.hl { outline: .08em solid #ffb800; outline-offset: -.03em; box-shadow: 0 0 0 .14em #fff3c4; }
+  .qmark { color: #b9a6ff; animation: blink 1.2s infinite; }
+
+  /* Rappel de leçon */
+  .lesson-wrap { width: 100%; max-width: 980px; }
+  .rules { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 8px; font-size: clamp(1.15rem, 3vw, 1.4rem); font-weight: 500; }
+  .rules li { background: #f6f1ff; border-radius: 16px; padding: 8px 14px; }
+  .tu { color: #1d5fd1; } .td { color: #138a3e; } .tc { color: #cc1f74; } .tr { color: #ef2b4f; }
+  .pose-center { text-align: center; margin: 6px 0 2px; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+  .step {
+    background: #fffaf0; border: 3px solid #ffe2a8; border-radius: 22px;
+    padding: 12px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .badge { background: var(--orange); color: #fff; border-radius: 999px; padding: 1px 14px; font-weight: 700; font-size: 1.1rem; }
+  .st { font-size: clamp(1.1rem, 2.8vw, 1.3rem); font-weight: 500; }
+  .done { margin-top: 14px; text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; color: var(--green-dark); }
+  .tip { text-align: center; font-size: clamp(1.1rem, 3vw, 1.3rem); color: var(--ink-soft); margin-top: 4px; }
+  .lesson-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 4px 0 24px; }
+
+  /* Correction dans le quiz */
+  #s-feedback { min-height: 96px; }
+  .correction {
+    background: #fff; border: 4px solid #ffd8a3; border-radius: 26px;
+    padding: 14px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    animation: pop .35s ease;
+  }
+  .expl { font-size: clamp(1.15rem, 3vw, 1.4rem); font-weight: 500; background: #fff4e3; border-radius: 16px; padding: 8px 14px; }
+  .verif { font-size: clamp(1.05rem, 2.8vw, 1.25rem); color: var(--green-dark); font-weight: 600; }
+
+  /* Erreurs à revoir (soustractions) */
+  .s-missed-item {
+    background: #fff4e3; border: 3px solid #ffd8a3; border-radius: 18px;
+    padding: 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .s-missed-item .eq { font-size: 1.3rem; font-weight: 700; }
+  .s-missed-item .eq b { color: var(--orange-dark); }
 </style>
 </head>
 <body>
 
 <canvas id="confetti"></canvas>
 
+<!-- ================= ACCUEIL ================= -->
+<section class="screen active" id="screen-home">
+  <div class="home-wrap">
+    <header class="menu-header">
+      <h1>🌈 Les maths de Lucy 🦄</h1>
+      <p class="subtitle">Qu'est-ce qu'on révise aujourd'hui&nbsp;?</p>
+      <button class="sound-btn" id="home-sound" aria-label="Son activé ou coupé">🔊</button>
+    </header>
+    <div class="home-choices">
+      <button class="home-card mult" id="go-mult">
+        <span class="hc-emoji">✖️</span>
+        <span class="hc-title">Tables de multiplication</span>
+        <span class="hc-sub">De la table de 2 à la table de 10</span>
+      </button>
+      <button class="home-card sub" id="go-sub">
+        <span class="hc-emoji">➖</span>
+        <span class="hc-title">Soustractions</span>
+        <span class="hc-sub">Sans retenue, avec retenue, posées</span>
+      </button>
+    </div>
+  </div>
+</section>
+
 <!-- ================= MENU ================= -->
-<section class="screen active" id="screen-menu">
+<section class="screen" id="screen-menu">
   <div class="menu-wrap">
     <header class="menu-header">
+      <button class="back-btn" id="menu-home-btn" aria-label="Retour à l'accueil">⬅️</button>
       <h1>✖️ Les tables de Lucy 🦄</h1>
       <p class="subtitle">Choisis comment tu veux jouer&nbsp;!</p>
       <button class="sound-btn" id="sound-btn" aria-label="Son activé ou coupé">🔊</button>
@@ -399,12 +551,114 @@
   </div>
 </section>
 
+<!-- ================= SOUSTRACTIONS : MENU ================= -->
+<section class="screen" id="screen-sub-menu">
+  <div class="menu-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="sub-home-btn" aria-label="Retour à l'accueil">⬅️</button>
+      <h1>➖ Les soustractions 🐸</h1>
+      <p class="subtitle">Choisis ton entraînement&nbsp;!</p>
+    </header>
+    <div class="panel">
+      <div class="sub-grid">
+        <button class="sbtn" data-mode="sans" style="--c:#22b455">
+          <span class="s-num">1</span><span class="s-title">Sans retenue</span><span class="s-ex">85 − 32</span>
+        </button>
+        <button class="sbtn" data-mode="avec" style="--c:#ef4444">
+          <span class="s-num">2</span><span class="s-title">Avec retenue</span><span class="s-ex">72 − 38</span>
+        </button>
+        <button class="sbtn" data-mode="posee" style="--c:#2f8cff">
+          <span class="s-num">3</span><span class="s-title">Soustraction posée</span><span class="s-ex stack">85<br><u>− 32</u></span>
+        </button>
+        <button class="sbtn" data-mode="melange" style="--c:#7c4dff">
+          <span class="s-num">4</span><span class="s-title">Mélange de tout</span><span class="s-ex">🎲 Un peu de tout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOUSTRACTIONS : RAPPEL ================= -->
+<section class="screen" id="screen-lesson">
+  <div class="lesson-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="lesson-back" aria-label="Retour">⬅️</button>
+      <h1>📚 Petit rappel</h1>
+      <p class="subtitle" id="lesson-sub"></p>
+    </header>
+    <div id="lesson-body"></div>
+    <div class="lesson-actions">
+      <button class="go-btn" id="lesson-go">J'ai compris, on y va&nbsp;! 🚀</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOUSTRACTIONS : QUIZ ================= -->
+<section class="screen" id="screen-squiz">
+  <div class="quiz-wrap">
+    <div class="topbar">
+      <button class="home-btn" id="s-quit" aria-label="Retour au menu">🏠 <span class="lbl">Menu</span></button>
+      <div class="progress">
+        <div class="ptext">Question <span id="s-qnum">1</span> / 20</div>
+        <div class="bar"><div class="bar-fill" id="s-bar"></div></div>
+      </div>
+      <div class="score-pill">⭐ <span id="s-live">0</span></div>
+    </div>
+
+    <div class="quiz-body">
+      <div class="left">
+        <div class="tag" id="s-tag">Sans retenue</div>
+        <div class="qcard" id="s-card" aria-live="polite"></div>
+        <div class="feedback" id="s-feedback" aria-live="polite"></div>
+      </div>
+
+      <div class="right">
+        <div class="keypad" id="s-keypad">
+          <button class="key" data-d="1">1</button>
+          <button class="key" data-d="2">2</button>
+          <button class="key" data-d="3">3</button>
+          <button class="key" data-d="4">4</button>
+          <button class="key" data-d="5">5</button>
+          <button class="key" data-d="6">6</button>
+          <button class="key" data-d="7">7</button>
+          <button class="key" data-d="8">8</button>
+          <button class="key" data-d="9">9</button>
+          <button class="key erase" data-erase="1" aria-label="Effacer">⌫ Effacer</button>
+          <button class="key zero" data-d="0">0</button>
+        </div>
+        <div class="correction hidden" id="s-correction"></div>
+        <button class="validate dim" id="s-validate">Valider ✔</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOUSTRACTIONS : FIN ================= -->
+<section class="screen" id="screen-send">
+  <div class="end-wrap">
+    <div class="end-emoji" id="s-end-emoji">🏆</div>
+    <h1 class="end-title" id="s-end-title">Bravo&nbsp;!</h1>
+    <div class="score-big"><span id="s-end-score">18</span> <small>/ 20</small></div>
+    <div class="stars" id="s-stars"></div>
+    <p class="end-msg" id="s-end-msg"></p>
+
+    <div class="panel missed">
+      <div id="s-missed-box"></div>
+    </div>
+
+    <div class="end-actions">
+      <button class="go-btn" id="s-restart">🔁 Recommencer</button>
+      <button class="go-btn purple" id="s-menu">🏠 Retour au menu</button>
+    </div>
+  </div>
+</section>
+
 <script>
 (function () {
   "use strict";
 
   var TOTAL = 20;
-  var NB = " "; // espace insécable avant ! ? :
+  var NB = "\u00a0"; // espace insécable avant ! ? :
   var COLORS = {
     2: "#ff4fa3", 3: "#ff7a1a", 4: "#f5b400", 5: "#22b455", 6: "#10b3a3",
     7: "#2f8cff", 8: "#7c4dff", 9: "#c23ee0", 10: "#ef4444"
@@ -780,6 +1034,359 @@
 
   $("#restart-btn").addEventListener("click", function () { startQuiz(tables); });
   $("#menu-btn").addEventListener("click", function () { showScreen("menu"); });
+
+  // =========================================================
+  // ---------- ACCUEIL ----------
+  // =========================================================
+  var MINUS = "\u2212";
+  function updateHomeSound() { $("#home-sound").textContent = soundOn ? "🔊" : "🔇"; }
+  function goHome() { updateHomeSound(); showScreen("home"); }
+  $("#home-sound").addEventListener("click", function () {
+    soundOn = !soundOn; store("sound", soundOn); updateHomeSound(); updateSoundBtn(); soundTap();
+  });
+  updateHomeSound();
+  $("#go-mult").addEventListener("click", function () { updateSoundBtn(); showScreen("menu"); });
+  $("#go-sub").addEventListener("click", function () { showScreen("sub-menu"); });
+  $("#menu-home-btn").addEventListener("click", goHome);
+  $("#sub-home-btn").addEventListener("click", goHome);
+
+  // =========================================================
+  // ---------- SOUSTRACTIONS ----------
+  // =========================================================
+  var SUB_MODES = {
+    sans:    { label: "Sans retenue",       color: "#22b455" },
+    avec:    { label: "Avec retenue",       color: "#ef4444" },
+    posee:   { label: "Soustraction posée", color: "#2f8cff" },
+    melange: { label: "Mélange de tout",    color: "#7c4dff" }
+  };
+  var COLNAMES = ["unités", "dizaines", "centaines", "milliers"];
+  var COLLETTERS = ["U", "D", "C", "M"];
+  var COLCLASS = ["cu", "cd", "cc", "cc"];
+
+  function rnd(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
+
+  // Calcul colonne par colonne (i = 0 : unités), méthode de la retenue
+  function subCols(a, b) {
+    var sa = String(a), sb = String(b), out = [], carry = 0;
+    for (var i = 0; i < sa.length; i++) {
+      var t = +sa.charAt(sa.length - 1 - i);
+      var hasB = i < sb.length;
+      var d = hasB ? +sb.charAt(sb.length - 1 - i) : 0;
+      var s = d + carry;
+      var borrow = t < s;
+      out.push({ t: t, d: d, hasB: hasB, carryIn: carry, borrow: borrow, r: (borrow ? t + 10 : t) - s });
+      carry = borrow ? 1 : 0;
+    }
+    return out;
+  }
+  function countBorrows(a, b) { return subCols(a, b).filter(function (c) { return c.borrow; }).length; }
+
+  // Dessine une soustraction posée en colonnes
+  // o : { headers, size, result, placeholder, carries, hl }
+  function poseHTML(a, b, o) {
+    o = o || {};
+    var c = subCols(a, b), n = c.length, res = o.result || "", h = "", i;
+    function cell(i, content, extra) {
+      return '<div class="pc ' + COLCLASS[i] + (o.hl === i ? " hl" : "") + (extra ? " " + extra : "") + '">' + content + "</div>";
+    }
+    if (o.headers) {
+      h += "<div></div>";
+      for (i = n - 1; i >= 0; i--) h += '<div class="ph ' + COLCLASS[i] + '">' + COLLETTERS[i] + "</div>";
+    }
+    h += '<div class="ps"></div>';
+    for (i = n - 1; i >= 0; i--) h += cell(i, (o.carries && c[i].borrow ? '<span class="k1">1</span>' : "") + c[i].t);
+    h += '<div class="ps sign">' + MINUS + "</div>";
+    for (i = n - 1; i >= 0; i--) {
+      h += cell(i, (c[i].hasB ? c[i].d : "&nbsp;") + (o.carries && c[i].carryIn ? '<span class="k2">+1</span>' : ""));
+    }
+    h += '<div class="pbar"></div><div class="ps"></div>';
+    for (i = n - 1; i >= 0; i--) {
+      var ch = res.charAt(res.length - 1 - i);
+      if (!res && o.placeholder && i === 0) ch = '<span class="qmark">?</span>';
+      h += cell(i, ch || "&nbsp;", "pr");
+    }
+    return '<div class="pose ' + (o.size || "md") + '" style="grid-template-columns:auto repeat(' + n + ',1fr)">' + h + "</div>";
+  }
+
+  // Explication douce en cas d'erreur
+  function explain(a, b) {
+    var c = subCols(a, b);
+    for (var i = 0; i < c.length; i++) {
+      if (c[i].borrow) {
+        var s = c[i].d + c[i].carryIn;
+        return "Aux " + COLNAMES[i] + ", " + c[i].t + " " + MINUS + " " + s + ", c'est impossible" + NB + "! " +
+          "On ajoute 10" + NB + ": " + (c[i].t + 10) + " " + MINUS + " " + s + " = " + c[i].r + ". " +
+          'Et on n\'oublie pas la retenue (le petit <b class="tr">+1</b> rouge) 😉';
+      }
+    }
+    return "Ici, pas de retenue" + NB + ": on calcule colonne par colonne, en commençant par les unités 👉";
+  }
+
+  // ---------- Générateur : la difficulté augmente au fil du quiz ----------
+  function levelFor(i) { return i < 7 ? 0 : (i < 14 ? 1 : 2); }
+  function genSub(type, level) {
+    for (var k = 0; k < 1000; k++) {
+      var a, b;
+      if (level === 0) { a = rnd(20, 99); b = rnd(11, a - 3); }          // 2 chiffres − 2 chiffres
+      else if (level === 1) { a = rnd(100, 999); b = rnd(11, 99); }      // 3 chiffres − 2 chiffres
+      else { a = rnd(200, 999); b = rnd(101, a - 11); }                  // 3 chiffres − 3 chiffres
+      if (b >= a) continue;
+      var nb = countBorrows(a, b);
+      if (type === "sans" && nb > 0) continue;
+      if (type === "avec" && nb === 0) continue;
+      if (type === "avec" && level < 2 && nb > 1) continue;
+      return { a: a, b: b };
+    }
+    return type === "sans" ? { a: 85, b: 32 } : { a: 72, b: 38 };
+  }
+  function buildSubQuestions(mode) {
+    var qs = [], seen = {};
+    for (var i = 0; i < TOTAL; i++) {
+      var lvl = levelFor(i), type, posed;
+      if (mode === "sans") { type = "sans"; posed = false; }
+      else if (mode === "avec") { type = "avec"; posed = false; }
+      else if (mode === "posee") { type = Math.random() < 0.4 ? "sans" : "avec"; posed = true; }
+      else { type = Math.random() < 0.5 ? "sans" : "avec"; posed = Math.random() < 0.5; }
+      var q, tries = 0;
+      do { q = genSub(type, lvl); tries++; } while (seen[q.a + "-" + q.b] && tries < 50);
+      seen[q.a + "-" + q.b] = true;
+      q.posed = posed;
+      qs.push(q);
+    }
+    return qs;
+  }
+
+  // ---------- Rappel de leçon ----------
+  function stepHTML(num, text, pose) {
+    return '<div class="step"><span class="badge">Étape ' + num + '</span><div class="st">' + text + "</div>" + pose + "</div>";
+  }
+  function lessonHTML(mode) {
+    var M = " " + MINUS + " ", h = "";
+    h += '<div class="panel"><h2>📏 Comment poser une soustraction</h2><ul class="rules">' +
+      "<li>⬆️ Le <b>grand nombre</b> en haut, le petit en dessous.</li>" +
+      '<li>🎨 <b class="tu">Unités</b> sous unités, <b class="td">dizaines</b> sous dizaines, <b class="tc">centaines</b> sous centaines.</li>' +
+      '<li>👉 On commence toujours par les <b class="tu">unités</b>, tout à droite.</li></ul>' +
+      '<div class="pose-center">' + poseHTML(485, 132, { headers: true, size: "md" }) + "</div></div>";
+
+    if (mode !== "avec") {
+      h += '<div class="panel"><h2>🟢 Sans retenue' + NB + ": 85" + M + "32</h2><div class=\"steps\">" +
+        stepHTML(1, '🔵 Les <b class="tu">unités</b>' + NB + ": 5" + M + "2 = 3", poseHTML(85, 32, { headers: true, hl: 0, result: "3" })) +
+        stepHTML(2, '🟢 Les <b class="td">dizaines</b>' + NB + ": 8" + M + "3 = 5", poseHTML(85, 32, { headers: true, hl: 1, result: "53" })) +
+        '</div><div class="done">✅ 85' + M + "32 = 53</div></div>";
+    }
+    if (mode !== "sans") {
+      h += '<div class="panel"><h2>🔴 Avec retenue' + NB + ": 72" + M + "38</h2><div class=\"steps\">" +
+        stepHTML(1, '🔵 Les <b class="tu">unités</b>' + NB + ": 2" + M + "8… impossible" + NB + "! 😮",
+          poseHTML(72, 38, { headers: true, hl: 0 })) +
+        stepHTML(2, '✨ On ajoute <b class="tr">10</b> en haut' + NB + ": 2 devient 12. Et on ajoute <b class=\"tr\">1</b> en bas, chez les dizaines" + NB + ": c'est la <b>retenue</b>" + NB + "!",
+          poseHTML(72, 38, { headers: true, hl: 0, carries: true })) +
+        stepHTML(3, "🔵 12" + M + "8 = 4", poseHTML(72, 38, { headers: true, hl: 0, carries: true, result: "4" })) +
+        stepHTML(4, '🟢 Les <b class="td">dizaines</b>' + NB + ": 3 + 1 = 4, puis 7" + M + "4 = 3",
+          poseHTML(72, 38, { headers: true, hl: 1, carries: true, result: "34" })) +
+        '</div><div class="done">✅ 72' + M + "38 = 34</div>" +
+        '<div class="tip">🔍 Pour vérifier, on fait l\'addition' + NB + ": 34 + 38 = 72 ✔️</div></div>";
+    }
+    return h;
+  }
+
+  var sMode = "sans", sQs = [], sIdx = 0, sScore = 0, sMissed = [], sTyped = "", sPhase = "answer", sTimer = null;
+
+  function openLesson(mode) {
+    sMode = mode;
+    $("#lesson-sub").textContent = "Avant de commencer" + NB + ": " + SUB_MODES[mode].label;
+    $("#lesson-body").innerHTML = lessonHTML(mode);
+    showScreen("lesson");
+  }
+  document.querySelectorAll(".sbtn").forEach(function (b) {
+    b.addEventListener("click", function () { openLesson(b.dataset.mode); });
+  });
+  $("#lesson-back").addEventListener("click", function () { showScreen("sub-menu"); });
+  $("#lesson-go").addEventListener("click", function () { startSub(sMode); });
+
+  function startSub(mode) {
+    sMode = mode;
+    sQs = buildSubQuestions(mode);
+    sIdx = 0; sScore = 0; sMissed = [];
+    $("#s-tag").textContent = SUB_MODES[mode].label;
+    $("#s-tag").style.background = SUB_MODES[mode].color;
+    $("#s-live").textContent = "0";
+    showScreen("squiz");
+    sShow();
+  }
+
+  function sRenderCard() {
+    var q = sQs[sIdx], card = $("#s-card");
+    if (q.posed) {
+      card.innerHTML = poseHTML(q.a, q.b, { headers: true, size: "xl", result: sTyped, placeholder: true });
+    } else {
+      card.innerHTML = '<div class="question">' + q.a + ' <span class="op">' + MINUS + "</span> " + q.b +
+        ' <span class="op">=</span> <span class="answer' + (sTyped ? "" : " empty") + '" id="s-answer">' + (sTyped || "?") + "</span></div>";
+    }
+    $("#s-validate").classList.toggle("dim", sPhase === "answer" && sTyped === "");
+  }
+
+  function sShow() {
+    clearTimeout(sTimer);
+    sPhase = "answer";
+    sTyped = "";
+    $("#s-qnum").textContent = sIdx + 1;
+    $("#s-bar").style.width = (sIdx / TOTAL * 100) + "%";
+    var card = $("#s-card");
+    card.classList.remove("good", "oops", "pop");
+    void card.offsetWidth;
+    card.classList.add("pop");
+    $("#s-feedback").innerHTML = sQs[sIdx].posed ? "Tape le résultat avec les chiffres ✏️" : "Tape ta réponse avec les chiffres ✏️";
+    $("#s-keypad").classList.remove("locked", "hidden");
+    $("#s-correction").classList.add("hidden");
+    var v = $("#s-validate");
+    v.textContent = "Valider ✔";
+    v.classList.remove("next");
+    sRenderCard();
+  }
+
+  function sPress(d) {
+    if (sPhase !== "answer") return;
+    if (sTyped.length >= String(sQs[sIdx].a).length) return;
+    sTyped = sTyped === "0" ? d : sTyped + d;
+    soundTap();
+    sRenderCard();
+  }
+  function sErase() {
+    if (sPhase !== "answer") return;
+    sTyped = sTyped.slice(0, -1);
+    sRenderCard();
+  }
+
+  function sValidate() {
+    if (sPhase === "feedback") { sNext(); return; }
+    var card = $("#s-card"), q = sQs[sIdx], good = q.a - q.b, v = $("#s-validate");
+    if (sTyped === "") {
+      var el = q.posed ? card.firstElementChild : $("#s-answer");
+      el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake");
+      $("#s-feedback").innerHTML = "Tape d'abord ta réponse 😉";
+      return;
+    }
+    sPhase = "feedback";
+    $("#s-keypad").classList.add("locked");
+    card.classList.remove("pop");
+    var eq = q.a + " " + MINUS + " " + q.b + " = " + good;
+
+    if (parseInt(sTyped, 10) === good) {
+      sScore++;
+      $("#s-live").textContent = sScore;
+      card.classList.add("good");
+      $("#s-feedback").innerHTML = '<div class="fb-good">' + rand(BRAVO) + "</div>";
+      v.textContent = "Suivant ➜";
+      v.classList.add("next");
+      var r = card.getBoundingClientRect();
+      burst(r.left + r.width / 2, r.top + r.height / 2, 90);
+      soundGood();
+      sTimer = setTimeout(sNext, 1600);
+    } else {
+      sMissed.push(q);
+      card.classList.add("oops");
+      if (q.posed) {
+        card.innerHTML = poseHTML(q.a, q.b, { headers: true, size: "xl", result: String(good), carries: true });
+      } else {
+        var a = $("#s-answer");
+        a.textContent = good;
+        a.classList.remove("empty");
+      }
+      $("#s-feedback").innerHTML =
+        '<div class="fb-oops"><div class="l1">' + rand(OOPS) + '</div><div class="l2">' + eq + "</div></div>";
+      var corr = $("#s-correction");
+      corr.innerHTML =
+        (q.posed ? "" : poseHTML(q.a, q.b, { headers: true, size: "md", result: String(good), carries: true })) +
+        '<div class="expl">' + explain(q.a, q.b) + "</div>" +
+        '<div class="verif">🔍 Pour vérifier' + NB + ": " + good + " + " + q.b + " = " + q.a + " ✔️</div>";
+      $("#s-keypad").classList.add("hidden");
+      corr.classList.remove("hidden");
+      v.textContent = "J'ai compris ➜";
+      v.classList.add("next");
+      soundOops();
+    }
+    $("#s-bar").style.width = ((sIdx + 1) / TOTAL * 100) + "%";
+  }
+
+  function sNext() {
+    clearTimeout(sTimer);
+    if (sPhase !== "feedback") return;
+    sIdx++;
+    if (sIdx >= TOTAL) sEnd(); else sShow();
+  }
+
+  $("#s-keypad").addEventListener("click", function (e) {
+    var k = e.target.closest(".key");
+    if (!k) return;
+    if (k.hasAttribute("data-erase")) sErase(); else sPress(k.dataset.d);
+  });
+  $("#s-validate").addEventListener("click", sValidate);
+  $("#s-quit").addEventListener("click", function () {
+    if (window.confirm("Tu veux arrêter et revenir au menu" + NB + "?")) {
+      clearTimeout(sTimer);
+      showScreen("sub-menu");
+    }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!$("#screen-squiz").classList.contains("active")) return;
+    if (/^[0-9]$/.test(e.key)) { e.preventDefault(); sPress(e.key); }
+    else if (e.key === "Backspace" || e.key === "Delete") { e.preventDefault(); sErase(); }
+    else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); sValidate(); }
+  });
+
+  function sEnd() {
+    var stars, emoji, title, msg;
+    if (sScore === 20) {
+      stars = 5; emoji = "🏆"; title = "Parfait, Lucy" + NB + "!";
+      msg = "20 sur 20" + NB + "! Tu es une championne des soustractions" + NB + "! 🎉";
+    } else if (sScore >= 17) {
+      stars = 4; emoji = "🌟"; title = "Super travail" + NB + "!";
+      msg = "Presque parfait" + NB + "! Encore un petit effort et c'est 20 sur 20" + NB + "! 💪";
+    } else if (sScore >= 13) {
+      stars = 3; emoji = "😃"; title = "Très bien" + NB + "!";
+      msg = "Tu progresses beaucoup. Continue comme ça" + NB + "! 🚀";
+    } else if (sScore >= 8) {
+      stars = 2; emoji = "🌈"; title = "Bien joué" + NB + "!";
+      msg = "Les retenues, ça s'apprend petit à petit. On recommence" + NB + "? 💪";
+    } else {
+      stars = 1; emoji = "🤗"; title = "Bravo d'avoir essayé" + NB + "!";
+      msg = "Relis le petit rappel, et tu vas y arriver" + NB + "! ❤️";
+    }
+    $("#s-end-emoji").textContent = emoji;
+    $("#s-end-title").textContent = title;
+    $("#s-end-score").textContent = sScore;
+    $("#s-end-msg").textContent = msg;
+
+    var s = "";
+    for (var i = 0; i < 5; i++) {
+      s += '<span class="star' + (i < stars ? " on" : "") + '" style="animation-delay:' + (0.2 + i * 0.18) + 's">★</span>';
+    }
+    $("#s-stars").innerHTML = s;
+
+    var seen = {}, list = [];
+    sMissed.forEach(function (q) {
+      var k = q.a + "-" + q.b;
+      if (!seen[k]) { seen[k] = true; list.push(q); }
+    });
+    var box = $("#s-missed-box");
+    if (list.length === 0) {
+      box.innerHTML = '<div class="perfect">🎯 Aucune erreur, bravo&nbsp;!</div>';
+    } else {
+      box.innerHTML = "<h2>👀 À revoir ensemble</h2>" +
+        '<div class="missed-list">' + list.map(function (q) {
+          return '<div class="s-missed-item">' +
+            poseHTML(q.a, q.b, { size: "sm", result: String(q.a - q.b), carries: true }) +
+            '<div class="eq">' + q.a + " " + MINUS + " " + q.b + " = <b>" + (q.a - q.b) + "</b></div></div>";
+        }).join("") + "</div>";
+    }
+
+    showScreen("send");
+    soundEnd();
+    if (sScore >= 13) rain(sScore === 20 ? 320 : 160);
+  }
+
+  $("#s-restart").addEventListener("click", function () { startSub(sMode); });
+  $("#s-menu").addEventListener("click", function () { showScreen("sub-menu"); });
 })();
 </script>
 </body>

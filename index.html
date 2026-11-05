@@ -1,3 +1,44 @@
+<!--
+  ==========================================================================
+  LES MATHS DE LUCY — RÈGLES À RESPECTER POUR TOUS LES FUTURS AJOUTS
+  ==========================================================================
+  Public : Lucy, 8 ans, en CE2. Tout en français, un seul fichier index.html.
+
+  1. Présentation adaptée à une enfant de 8 ans
+     - Très coloré, gros boutons, grands chiffres, phrases courtes, des emojis.
+     - Ton toujours encourageant : jamais de reproche, une erreur est expliquée
+       gentiment avec la bonne réponse.
+     - Utilisable au doigt sur tablette (cases et boutons d'au moins 40 px)
+       et sur ordinateur (souris et clavier). Pas de défilement horizontal.
+
+  2. Soustractions posées : retenues comme sur un cahier (méthode française CE2)
+     - On ajoute 10 au chiffre du haut et 1 au chiffre du bas de la colonne
+       suivante (à gauche).
+     - Petite case "1" : collée juste à GAUCHE du chiffre du haut, pour qu'on
+       lise "10", "12"... Elle existe pour toutes les colonnes sauf celle la
+       plus à gauche.
+     - Petite case "+1" : collée juste à GAUCHE du chiffre du bas de la colonne
+       suivante, un peu plus petite que la case du haut. Exemple 20 − 14 :
+       le "+1" se met à gauche du 1, pas entre le 1 et le 4.
+     - Quand on touche la case "1" d'une colonne, la case "+1" de la colonne
+       de gauche se met en surbrillance.
+     - Les retenues sont facultatives et ne comptent pas dans la note :
+       seul le résultat compte.
+     - Le résultat se tape chiffre par chiffre, de droite à gauche, une case
+       sous chaque colonne.
+     - En cas d'erreur, la correction montre l'opération posée avec les
+       retenues au bon endroit, en couleur.
+
+  3. Alignement des colonnes (de 2 à 4 chiffres)
+     - Colonnes M, C, D, U chacune de sa couleur (violet, rose, vert, bleu),
+       avec leur lettre en en-tête.
+     - Dans chaque colonne, le chiffre du haut, le chiffre du bas et la case
+       du résultat sont centrés sur le même axe vertical.
+     - Unités sous unités, dizaines sous dizaines, centaines sous centaines,
+       milliers sous milliers, pour des nombres de 2, 3 et 4 chiffres,
+       sur tablette (portrait et paysage) et sur ordinateur.
+  ==========================================================================
+-->
 <!doctype html>
 <html lang="fr">
 <head>
@@ -1191,36 +1232,59 @@
   }
 
   // ---------- Générateur : la difficulté augmente au fil du quiz ----------
+  // Questions 1 à 7 : nombres à 2 chiffres
+  // Questions 8 à 14 : nombres à 3 chiffres
+  // Questions 15 à 20 : nombres à 3 ou 4 chiffres (jusqu'à 1000), parfois deux retenues à la suite
   function levelFor(i) { return i < 7 ? 0 : (i < 14 ? 1 : 2); }
+  function hasDoubleBorrow(c) {
+    for (var i = 0; i < c.length - 1; i++) if (c[i].borrow && c[i + 1].borrow) return true;
+    return false;
+  }
   function genSub(type, level) {
-    for (var k = 0; k < 1000; k++) {
+    var wantDouble = type === "avec" && level === 2 && Math.random() < 0.5;    // deux retenues à la suite
+    var useThousand = type === "avec" && level === 2 && Math.random() < 0.25;  // 1000 − ...
+    for (var k = 0; k < 2000; k++) {
       var a, b;
-      if (level === 0) { a = rnd(20, 99); b = rnd(11, a - 3); }          // 2 chiffres − 2 chiffres
-      else if (level === 1) { a = rnd(100, 999); b = rnd(11, 99); }      // 3 chiffres − 2 chiffres
-      else { a = rnd(200, 999); b = rnd(101, a - 11); }                  // 3 chiffres − 3 chiffres
-      if (b >= a) continue;
-      var nb = countBorrows(a, b);
+      if (level === 0) {                                   // 2 chiffres − 2 chiffres
+        a = rnd(20, 99); b = rnd(11, a - 3);
+      } else if (level === 1) {                            // 3 chiffres − 3 chiffres
+        a = rnd(200, 999); b = rnd(101, a - 11);
+      } else {                                             // 3 ou 4 chiffres (jusqu'à 1000)
+        a = useThousand ? 1000 : rnd(400, 999);
+        b = rnd(101, a - 11);
+      }
+      if (b >= a || b < 11) continue;
+      var c = subCols(a, b), nb = c.filter(function (x) { return x.borrow; }).length;
       if (type === "sans" && nb > 0) continue;
       if (type === "avec" && nb === 0) continue;
       if (type === "avec" && level < 2 && nb > 1) continue;
+      if (wantDouble && !hasDoubleBorrow(c)) continue;
       return { a: a, b: b };
     }
     return type === "sans" ? { a: 85, b: 32 } : { a: 72, b: 38 };
   }
+  // Tirage au hasard à chaque partie : jamais deux fois la même opération dans une série,
+  // et on évite les opérations de la partie précédente pour que chaque série soit différente.
+  var lastSeries = load("sub-last", []);
   function buildSubQuestions(mode) {
-    var qs = [], seen = {};
+    var qs = [], seen = {}, prev = {};
+    if (Array.isArray(lastSeries)) lastSeries.forEach(function (k) { prev[k] = true; });
     for (var i = 0; i < TOTAL; i++) {
       var lvl = levelFor(i), type, posed;
       if (mode === "sans") { type = "sans"; posed = false; }
       else if (mode === "avec") { type = "avec"; posed = false; }
       else if (mode === "posee") { type = Math.random() < 0.4 ? "sans" : "avec"; posed = true; }
       else { type = Math.random() < 0.5 ? "sans" : "avec"; posed = Math.random() < 0.5; }
-      var q, tries = 0;
-      do { q = genSub(type, lvl); tries++; } while (seen[q.a + "-" + q.b] && tries < 50);
-      seen[q.a + "-" + q.b] = true;
+      var q, key, tries = 0;
+      do {
+        q = genSub(type, lvl); key = q.a + "-" + q.b; tries++;
+      } while ((seen[key] || (prev[key] && tries < 200)) && tries < 5000);
+      seen[key] = true;
       q.posed = posed;
       qs.push(q);
     }
+    lastSeries = qs.map(function (q) { return q.a + "-" + q.b; });
+    store("sub-last", lastSeries);
     return qs;
   }
 

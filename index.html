@@ -54,6 +54,20 @@
      - Division : on écrit "24 : 6" (deux-points), comme à l'école.
      - Le menu d'accueil garde de la place pour de futures parties (carte
        "Bientôt…" en dernier).
+  5. Parties 7 à 13 (Calcul mental, Fractions, Mesures, L'heure, La monnaie,
+     Géométrie, Problèmes) : même déroulé que la règle 4.
+     - Tous les dessins (pizzas, tablettes, bandes, règle graduée, horloges,
+       pièces et billets, équerre, figures, axes de symétrie, schémas en
+       barres) sont faits directement dans la page en SVG ou en HTML :
+       aucune image extérieure. Traits épais, couleurs vives, textes en gras.
+     - Horloge : petite aiguille (heures) en BLEU, grande aiguille (minutes)
+       en ROSE, les 12 nombres écrits.
+     - Angle droit : marqué par un petit carré rouge ; l'équerre est dessinée
+       en bleu transparent posée au sommet.
+     - Axe de symétrie : ligne rouge en pointillés.
+     - Problèmes : elle choisit d'abord l'opération (+ − × :), puis donne le
+       résultat ; la correction montre un schéma en barres.
+     - Monnaie : on écrit "2 € 50 c" ; 1 € = 100 c.
   ==========================================================================
 -->
 <!doctype html>
@@ -721,6 +735,70 @@
   #screen-gquiz.colop-on #g-feedback { min-height: 52px; }
   .gdraw.many { font-size: clamp(1.15rem, 3vw, 1.55rem); gap: 3px; }
   .gm-sub { text-align: center; }
+
+  /* =========================================================
+     PARTIES 7 À 13 : calcul mental, fractions, mesures, heure, monnaie, géométrie, problèmes
+     ========================================================= */
+  .home-card.calc { background: linear-gradient(150deg, #ff9a5a, #ff4f7b); }
+  .home-card.frac { background: linear-gradient(150deg, #ff6b6b, #c2410c); }
+  .home-card.mes { background: linear-gradient(150deg, #34d399, #0e9f8e); }
+  .home-card.heure { background: linear-gradient(150deg, #60a5fa, #6d28d9); }
+  .home-card.money { background: linear-gradient(150deg, #f6c445, #d98a00); }
+  .home-card.geo { background: linear-gradient(150deg, #a78bfa, #ec4899); }
+  .home-card.prob { background: linear-gradient(150deg, #22c1c3, #3b5bdb); }
+  .gsvg { display: block; width: min(100%, 230px); height: auto; margin: 6px auto; overflow: visible; }
+  .gsvg.big { width: min(100%, 260px); }
+  .gsvg.strip { width: min(100%, 300px); }
+  .gsvg.wide { width: min(100%, 520px); }
+  .gsvg.clock { width: min(100%, 220px); }
+  .gsvg.clock.mid { width: min(100%, 160px); }
+  .gsvg.geo { width: min(100%, 290px); }
+  .gsvg.angle { width: min(100%, 280px); }
+  .gsvg.opt { width: min(100%, 130px); margin: 2px auto; }
+  .gsvg.coin, .gsvg.bill { display: inline-block; width: auto; margin: 3px; vertical-align: middle; }
+  .gemoji { font-size: clamp(3rem, 9vw, 4.4rem); line-height: 1.1; }
+  .gfrac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1; margin: 0 .1em; font-weight: 700; }
+  .gfrac span:first-child { border-bottom: .08em solid currentColor; padding: 0 .12em .06em; }
+  .gfrac span:last-child { padding-top: .06em; }
+  .frstack { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 1.6rem; }
+  .gopts.fracs { grid-template-columns: repeat(3, 1fr); }
+  .gopts.fracs .gopt { font-size: clamp(2rem, 6vw, 2.6rem); color: var(--purple); }
+  .gopts.pics { grid-template-columns: repeat(3, 1fr); }
+  .gopts.pics.two { grid-template-columns: 1fr 1fr; }
+  .gopts.pics .gopt { padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.8rem; }
+  .gopts.units3, .gopts.signs3 { grid-template-columns: repeat(3, 1fr); }
+  .gopts.units3 .gopt, .gopts.two .gopt { font-size: clamp(1.5rem, 4.4vw, 2rem); font-weight: 700; }
+  .gopts.signs3 .gopt { font-size: clamp(2.4rem, 7vw, 3.4rem); font-weight: 700; color: var(--purple); min-height: 90px; }
+  .gmoney { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; margin: 6px 0; }
+  .gclocks { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .gcl { text-align: center; font-weight: 700; color: var(--ink-soft); }
+  .gl-jump { color: var(--pink); font-weight: 700; font-size: 1.15rem; background: #ffe1ef; border-radius: 999px; padding: 2px 10px; }
+  .tenframe { display: inline-grid; grid-template-columns: repeat(5, 34px); gap: 4px; padding: 6px; border: 3px solid #3b2a5a; border-radius: 10px; margin: 6px auto; background: #fff; }
+  .tenframe span { width: 34px; height: 34px; border-radius: 50%; border: 2px dashed #c9b8ff; }
+  .tenframe span.on { background: #ff4fa3; border: 2px solid #c2186b; }
+  .gops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 6px auto; max-width: 420px; }
+  .gopbtn {
+    min-height: 64px; border-radius: 18px; background: #fff; border: 4px solid #e1d6ff; box-shadow: 0 5px 0 #d9cbff;
+    font-size: 2.2rem; font-weight: 700; color: var(--purple); line-height: 1;
+  }
+  .gopbtn:active { transform: translateY(3px); box-shadow: 0 2px 0 #d9cbff; }
+  .gopbtn.sel { border-color: #ffb800; background: #fff3c4; }
+  .gopbtn.right { border-color: var(--green); background: #e7fbe9; color: var(--green-dark); }
+  .gopbtn.wrong { border-color: var(--orange); background: #fff4e3; color: var(--orange-dark); }
+  .gops.shake { animation: shake .4s; }
+  /* Dans la correction, les dessins sont plus petits (la question au-dessus les montre déjà en grand) */
+  #g-correction .gsvg { width: min(100%, 150px); margin: 2px auto; }
+  #g-correction .gsvg.wide { width: min(100%, 380px); }
+  #g-correction .gsvg.strip { width: min(100%, 240px); }
+  #g-correction .gsvg.coin, #g-correction .gsvg.bill { width: auto; height: 44px; }
+  #g-correction .frstack { font-size: 1.3rem; }
+  #g-correction .gdraw { font-size: 1.3rem; }
+  .bm { display: flex; flex-direction: column; gap: 6px; margin: 8px auto; max-width: 460px; width: 100%; }
+  .bm-row { display: flex; gap: 4px; }
+  .bm-seg { min-width: 2.6em; border-radius: 10px; padding: 8px 4px; text-align: center; font-weight: 700; font-size: 1.1rem; border: 3px solid rgba(0,0,0,.12); }
+  .bm-seg.c0 { background: #dbeafe; color: #1d5fd1; }
+  .bm-seg.c1 { background: #dcfce7; color: #138a3e; }
+  .bm-seg.q { background: #fff3c4; color: #8a5a00; border-style: dashed; }
 </style>
 </head>
 <body>
@@ -765,6 +843,41 @@
         <span class="hc-emoji">🍕</span>
         <span class="hc-title">Division</span>
         <span class="hc-sub">Partager, faire des groupes</span>
+      </button>
+      <button class="home-card calc" id="go-calc">
+        <span class="hc-emoji">🧠</span>
+        <span class="hc-title">Calcul mental</span>
+        <span class="hc-sub">Doubles, × 10, compléments</span>
+      </button>
+      <button class="home-card frac" id="go-frac">
+        <span class="hc-emoji">🍕</span>
+        <span class="hc-title">Fractions</span>
+        <span class="hc-sub">Un demi, un tiers, un quart</span>
+      </button>
+      <button class="home-card mes" id="go-mes">
+        <span class="hc-emoji">📏</span>
+        <span class="hc-title">Mesures</span>
+        <span class="hc-sub">Longueurs, masses, contenances</span>
+      </button>
+      <button class="home-card heure" id="go-heure">
+        <span class="hc-emoji">🕒</span>
+        <span class="hc-title">L'heure et les durées</span>
+        <span class="hc-sub">Horloge, quarts d'heure, durées</span>
+      </button>
+      <button class="home-card money" id="go-money">
+        <span class="hc-emoji">💶</span>
+        <span class="hc-title">La monnaie</span>
+        <span class="hc-sub">Compter, rendre la monnaie</span>
+      </button>
+      <button class="home-card geo" id="go-geo">
+        <span class="hc-emoji">📐</span>
+        <span class="hc-title">Géométrie</span>
+        <span class="hc-sub">Angle droit, figures, symétrie</span>
+      </button>
+      <button class="home-card prob" id="go-prob">
+        <span class="hc-emoji">🔎</span>
+        <span class="hc-title">Problèmes</span>
+        <span class="hc-sub">Choisir la bonne opération</span>
       </button>
       <!-- Place pour les prochaines parties : ajouter ici un nouveau bouton "home-card" avant la carte "Bientôt" -->
       <div class="home-card soon" aria-hidden="true">
@@ -2822,7 +2935,7 @@
     clearTimeout(G.timer);
     G.phase = "answer";
     var q = G.qs[G.idx];
-    if (q.type === "fields") G.st = { vals: q.fields.map(function () { return ""; }), active: 0 };
+    if (q.type === "fields") G.st = { vals: q.fields.map(function () { return ""; }), active: 0, op: -1 };
     else if (q.type === "choice") G.st = { sel: -1 };
     else if (q.type === "order") G.st = { placed: [] };
     else {
@@ -2842,7 +2955,7 @@
     if (keyed) $("#g-zone").innerHTML = "";
     $("#g-correction").classList.add("hidden");
     // Questions hautes (opération posée, histoire, dessin, décomposition) : touches un peu moins hautes pour tout voir sans défiler
-    $("#screen-gquiz").classList.toggle("colop-on", q.type === "column" || /gstory|gdraw|gdec|bk-wrap/.test(q.prompt || ""));
+    $("#screen-gquiz").classList.toggle("colop-on", q.type === "column" || /gstory|gdraw|gdec|bk-wrap|gsvg|gmoney|gemoji|gops/.test(q.prompt || ""));
     $("#g-feedback").innerHTML = q.hint || (q.type === "column" ? G_HINTS[q.op] : (q.type === "fields" && q.fields.length > 1 ? "Touche une case, puis tape ta réponse ✏️" : G_HINTS[q.type]));
     var v = $("#g-validate");
     v.textContent = "Valider ✔";
@@ -2872,7 +2985,16 @@
       if (q.story) o.size = "lg";
       card.innerHTML = (q.story ? '<div class="gp gstory">' + q.story + "</div>" : "") + colHTML(q.op, q.a, q.b, o);
     } else {
-      card.innerHTML = q.prompt.replace(/\{(\d)\}/g, function (m, k) { return gFieldBtn(+k); });
+      card.innerHTML = q.prompt.replace(/\{(\d)\}/g, function (m, k) { return gFieldBtn(+k); }).replace("{op}", function () {
+        // Problèmes : boutons pour choisir l'opération
+        return '<div class="gops">' + (q.ops || []).map(function (o, k) {
+          var c = "gopbtn";
+          if (st.fix) { if (k === q.opAnswer) c += " right"; else if (k === st.op) c += " wrong"; }
+          else if (G.phase === "feedback" && k === st.op) c += " right";
+          else if (k === st.op) c += " sel";
+          return '<button type="button" class="' + c + '" data-op="' + k + '" aria-label="Opération ' + o + '">' + o + "</button>";
+        }).join("") + "</div>";
+      });
     }
     if (q.type === "choice") {
       z.innerHTML = '<div class="gopts ' + (q.optClass || "") + '">' + q.options.map(function (op, k) {
@@ -2931,7 +3053,8 @@
     if (G.phase !== "answer") return;
     var t = e.target.closest("button"), q = G.qs[G.idx], st = G.st;
     if (!t) return;
-    if (t.hasAttribute("data-f")) { st.active = +t.dataset.f; }
+    if (t.hasAttribute("data-op")) { st.op = +t.dataset.op; soundTap(); }
+    else if (t.hasAttribute("data-f")) { st.active = +t.dataset.f; }
     else if (t.hasAttribute("data-cr")) { st.active = { kind: "r", i: +t.dataset.cr }; st.retR = +t.dataset.cr; }
     else if (t.hasAttribute("data-cc")) {
       var i = +t.dataset.cc;
@@ -2961,10 +3084,11 @@
   function gCheck() {
     var q = G.qs[G.idx], st = G.st, i;
     if (q.type === "fields") {
+      if (q.ops && st.op < 0) return { empty: "Choisis d'abord l'opération 😉", opEmpty: true };
       for (i = 0; i < q.fields.length; i++) {
         if (st.vals[i] === "") return { empty: q.fields.length > 1 ? "Il manque une réponse 😉" : "Tape d'abord ta réponse 😉", focus: i };
       }
-      return { ok: q.fields.every(function (f, k) { return parseInt(st.vals[k], 10) === f; }) };
+      return { ok: (!q.ops || st.op === q.opAnswer) && q.fields.every(function (f, k) { return parseInt(st.vals[k], 10) === f; }) };
     }
     if (q.type === "choice") return st.sel < 0 ? { empty: "Choisis une réponse 😉" } : { ok: st.sel === q.answer };
     if (q.type === "order") {
@@ -2986,7 +3110,7 @@
       if (c.focus !== undefined) st.active = c.focus;
       if (c.col !== undefined) { st.active = { kind: "r", i: c.col }; st.retR = c.col; }
       gRender();
-      var el = (q.type === "choice" || q.type === "order") ? $("#g-zone") : (card.querySelector(".gfield.active") || card.querySelector(".colop") || card.firstElementChild);
+      var el = c.opEmpty ? card.querySelector(".gops") : (q.type === "choice" || q.type === "order") ? $("#g-zone") : (card.querySelector(".gfield.active") || card.querySelector(".colop") || card.firstElementChild);
       el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake");
       $("#g-feedback").innerHTML = c.empty;
       return;
@@ -3016,6 +3140,10 @@
       corr.innerHTML = q.explain;
       $("#g-keypad").classList.add("hidden");
       corr.classList.remove("hidden");
+      // Parties 7 à 13 : si la correction est longue, on fait juste apparaître le bouton "J'ai compris"
+      if (["calc", "frac", "mes", "heure", "money", "geo", "prob"].indexOf(G.mod.id) >= 0) {
+        requestAnimationFrame(function () { if (v.getBoundingClientRect().bottom > window.innerHeight) v.scrollIntoView({ block: "nearest", behavior: "smooth" }); });
+      }
       v.textContent = "J'ai compris ➜";
       v.classList.add("next");
       soundOops();
@@ -3069,6 +3197,1042 @@
   }
   $("#g-restart").addEventListener("click", function () { gStart(G.mode); });
   $("#g-menu").addEventListener("click", function () { showScreen("gmenu"); });
+
+  // =========================================================
+  // ---------- PARTIES 7 À 13 : dessins communs (SVG faits dans la page) ----------
+  // =========================================================
+  function svgWrap(w, h, inner, cls, label, vb) {
+    return '<svg class="gsvg ' + (cls || "") + '" viewBox="' + (vb || ("0 0 " + w + " " + h)) + '" role="img" aria-label="' + (label || "dessin") + '">' + inner + "</svg>";
+  }
+  function svgText(x, y, t, size, color, anchor) {
+    return '<text x="' + x + '" y="' + y + '" text-anchor="' + (anchor || "middle") + '" font-size="' + (size || 18) + '" font-weight="700" fill="' + (color || "#3b2a5a") +
+      '" stroke="#fff" stroke-width="4" paint-order="stroke" font-family="Fredoka, Comic Sans MS, sans-serif">' + t + "</text>";
+  }
+  function r1(x) { return Math.round(x * 10) / 10; }
+  // Droite avec des bonds : [[valeur, "+6"], [valeur, "+30"], ...]
+  function jumpsHTML(start, jumps) {
+    var h = '<div class="gline"><span class="gl-n">' + start + "</span>";
+    jumps.forEach(function (j) { h += '<span class="gl-jump">' + j[1] + '</span><span class="gl-n">' + j[0] + "</span>"; });
+    return h + "</div>";
+  }
+  // Boîte de 10 (pour les compléments à 10)
+  function tenFrameHTML(k) {
+    var h = '<div class="tenframe">';
+    for (var i = 0; i < 10; i++) h += '<span class="' + (i < k ? "on" : "") + '"></span>';
+    return h + "</div>";
+  }
+
+  // =========================================================
+  // ---------- PARTIE 7 : CALCUL MENTAL ----------
+  // =========================================================
+  function dblExplain(n) {
+    if (n < 10) return n + " + " + n + " = " + (2 * n) + ".";
+    var u = n % 10, t = n - u;
+    if (!u) return "Le double de " + t + ", c'est " + t + " + " + t + " = " + (2 * t) + ".";
+    return "Je coupe " + n + " en " + t + " et " + u + "&nbsp;: double de " + t + " = " + (2 * t) + ", double de " + u + " = " + (2 * u) + ". Et " + (2 * t) + " + " + (2 * u) + " = <b>" + (2 * n) + "</b>.";
+  }
+  function halfExplain(n) {
+    var a = Math.floor(n / 20) * 20, b = n - a;
+    if (n <= 20 || !b || !a) return "La moitié de " + fmt(n) + ", c'est " + fmt(n / 2) + " car " + fmt(n / 2) + " + " + fmt(n / 2) + " = " + fmt(n) + ".";
+    return "Je coupe " + fmt(n) + " en " + a + " et " + b + "&nbsp;: moitié de " + a + " = " + (a / 2) + ", moitié de " + b + " = " + (b / 2) +
+      ". Et " + (a / 2) + " + " + (b / 2) + " = <b>" + (n / 2) + "</b>.";
+  }
+  function complJumps(a, target) {
+    var step = target === 1000 ? 100 : 10, nxt = Math.ceil(a / step) * step, j = [];
+    if (target === 10 || nxt === a) return jumpsHTML(a, [[target, "+" + (target - a)]]);
+    j.push([nxt, "+" + (nxt - a)]);
+    if (nxt < target) j.push([fmt(target), "+" + (target - nxt)]);
+    return jumpsHTML(a, j) + '<div class="expl">' + (nxt - a) + (nxt < target ? " + " + (target - nxt) : "") + " = <b>" + (target - a) + "</b></div>";
+  }
+  function pmExplain(n, sign, k) {
+    var round = k === 19 ? 20 : 10, fix = k === 11 ? 1 : -1;   // 9 = 10 - 1 ; 11 = 10 + 1 ; 19 = 20 - 1
+    if (sign < 0) fix = -fix;
+    var mid = n + sign * round, r = mid + fix;
+    return jumpsHTML(n, [[mid, (sign > 0 ? "+" : "−") + round], [r, (fix > 0 ? "+1" : "−1")]]) +
+      '<div class="expl">' + (sign > 0 ? "Ajouter " : "Retirer ") + k + ", c'est " + (sign > 0 ? "ajouter " : "retirer ") + round + " puis " + (fix > 0 ? "ajouter 1" : "retirer 1") +
+      "&nbsp;: " + n + (sign > 0 ? " + " : " − ") + round + " = " + mid + ", puis " + mid + (fix > 0 ? " + 1" : " − 1") + " = <b>" + r + "</b>.</div>";
+  }
+  function qCalc(kind, L) {
+    var n, a, t, k, sign, r;
+    if (kind === "dbl") {
+      n = L === 0 ? rnd(2, 20) : L === 1 ? rnd(21, 50) : rand([rnd(51, 99), rnd(11, 50) * 5]);
+      return { key: "dbl-" + n, type: "fields", fields: [2 * n],
+        prompt: '<div class="gp">Quel est le <b>double</b> de ' + n + "&nbsp;?</div>" + '<div class="gq">' + (L === 0 ? n + " + " + n : "Double de " + n) + " = {0}</div>",
+        eq: "Le double de " + n + " = " + fmt(2 * n), explain: '<div class="expl">' + dblExplain(n) + "</div>" };
+    }
+    if (kind === "half") {
+      n = L === 0 ? 2 * rnd(1, 10) : L === 1 ? 2 * rnd(11, 50) : rand([rnd(1, 10) * 100, 2 * rnd(51, 250)]);
+      return { key: "half-" + n, type: "fields", fields: [n / 2],
+        prompt: '<div class="gp">Quelle est la <b>moitié</b> de ' + fmt(n) + '&nbsp;?</div><div class="gq">Moitié de ' + fmt(n) + " = {0}</div>",
+        eq: "La moitié de " + fmt(n) + " = " + fmt(n / 2), explain: '<div class="expl">' + halfExplain(n) + "</div>" };
+    }
+    if (kind === "x10") {
+      var by = L === 0 ? 10 : L === 1 ? rand([10, 100]) : 100;
+      n = L === 0 ? rnd(2, 20) : by === 10 ? rnd(21, 99) : (L === 1 ? rnd(2, 20) : rnd(21, 99));
+      return { key: "x" + by + "-" + n, type: "fields", fields: [n * by],
+        prompt: '<div class="gq">' + n + " × " + by + " = {0}</div>",
+        eq: n + " × " + by + " = " + fmt(n * by),
+        explain: '<div class="gline"><span class="gl-n">' + n + '</span><span class="gl-jump">× ' + by + '</span><span class="gl-n">' + fmt(n * by) + "</span></div>" +
+          '<div class="pose-center">' + placeHTML(n * by) + '</div><div class="expl">× ' + by + "&nbsp;: chaque chiffre avance de " + (by === 10 ? "1 rang" : "2 rangs") +
+          " vers la gauche. On écrit " + (by === 10 ? "un <b>0</b>" : "deux <b>0</b>") + " à droite.</div>" };
+    }
+    if (kind === "compl") {
+      t = L === 0 ? 10 : L === 1 ? 100 : rand([100, 1000]);
+      a = t === 10 ? rnd(1, 9) : t === 100 ? (L === 1 && Math.random() < 0.4 ? rnd(1, 9) * 10 : rnd(11, 99)) : rnd(11, 99) * 10;
+      if (t === 100 && a % 10 === 0 && L === 2) a = rnd(11, 99);
+      return { key: "c" + t + "-" + a, type: "fields", fields: [t - a],
+        prompt: '<div class="gp">Combien faut-il ajouter pour aller jusqu\'à <b>' + fmt(t) + "</b>&nbsp;?</div>" + (t === 10 ? tenFrameHTML(a) : "") +
+          '<div class="gq">' + fmt(a) + " + {0} = " + fmt(t) + "</div>",
+        eq: fmt(a) + " + " + fmt(t - a) + " = " + fmt(t), explain: (t === 10 ? tenFrameHTML(a) : "") + complJumps(a, t) };
+    }
+    k = L === 0 ? 9 : L === 1 ? rand([9, 11]) : rand([11, 19, 19]);
+    sign = Math.random() < 0.5 ? 1 : -1;
+    n = L === 0 ? rnd(20, 80) : L === 1 ? rnd(30, 150) : rnd(40, 300);
+    r = n + sign * k;
+    return { key: "pm-" + n + (sign > 0 ? "+" : "-") + k, type: "fields", fields: [r],
+      prompt: '<div class="gq">' + n + (sign > 0 ? " + " : " − ") + k + " = {0}</div>",
+      hint: "Astuce&nbsp;: " + k + ", c'est presque " + (k === 19 ? 20 : 10) + "&nbsp;! ✏️",
+      eq: n + (sign > 0 ? " + " : " − ") + k + " = " + r, explain: pmExplain(n, sign, k) };
+  }
+  var CALC_KINDS = { dbl: ["dbl", "half"], x10: ["x10"], compl: ["compl"], pm: ["pm"] };
+  function qCalcMode(mode, L) { return qCalc(rand(mode === "melange" ? ["dbl", "half", "x10", "compl", "pm"] : CALC_KINDS[mode]), L); }
+  function pbCalc(mode, L) {
+    var kind = mode === "melange" ? rand(["dbl", "half", "x10", "compl", "pm"]) : rand(CALC_KINDS[mode]), n, a;
+    if (kind === "dbl") { n = L === 0 ? rnd(4, 20) : rnd(21, 50);
+      return { key: "dbl-" + n, type: "fields", fields: [2 * n], prompt: '<div class="gp gstory">🔵 Lucy a <b>' + n + '</b> billes. Sa grande sœur en a le double. Combien de billes a sa sœur&nbsp;?</div><div class="gq gsmall">{0} billes</div>',
+        eq: "Le double de " + n + " = " + (2 * n), explain: '<div class="expl">' + dblExplain(n) + "</div>" }; }
+    if (kind === "half") { n = L === 0 ? 2 * rnd(3, 10) : 2 * rnd(11, 40);
+      return { key: "half-" + n, type: "fields", fields: [n / 2], prompt: '<div class="gp gstory">🃏 Tom a <b>' + n + '</b> images. Il en donne la moitié à Léa. Combien d\'images donne-t-il&nbsp;?</div><div class="gq gsmall">{0} images</div>',
+        eq: "La moitié de " + n + " = " + (n / 2), explain: '<div class="expl">' + halfExplain(n) + "</div>" }; }
+    if (kind === "x10") { n = L === 0 ? rnd(2, 9) : rnd(11, 40);
+      return { key: "x10-" + n, type: "fields", fields: [n * 10], prompt: '<div class="gp gstory">✏️ Un paquet contient <b>10</b> crayons. Combien de crayons dans <b>' + n + '</b> paquets&nbsp;?</div><div class="gq gsmall">{0} crayons</div>',
+        eq: n + " × 10 = " + (n * 10), explain: '<div class="expl">' + n + " paquets de 10, c'est " + n + " dizaines&nbsp;: " + (n * 10) + ".</div>" }; }
+    if (kind === "compl") { a = L === 0 ? rnd(11, 89) : rnd(11, 99);
+      return { key: "c100-" + a, type: "fields", fields: [100 - a], prompt: '<div class="gp gstory">🐷 Lucy a <b>' + a + '</b>' + NB + '€ dans sa tirelire. Combien lui manque-t-il pour avoir 100' + NB + '€&nbsp;?</div><div class="gq gsmall">{0} €</div>',
+        eq: a + " + " + (100 - a) + " = 100", explain: complJumps(a, 100) }; }
+    n = rnd(20, L === 0 ? 80 : 150);
+    return { key: "pm-" + n + "+9", type: "fields", fields: [n + 9], prompt: '<div class="gp gstory">🏆 Hugo a <b>' + n + '</b> points. Il en gagne encore <b>9</b>. Combien de points a-t-il maintenant&nbsp;?</div><div class="gq gsmall">{0} points</div>',
+      eq: n + " + 9 = " + (n + 9), explain: pmExplain(n, 1, 9) };
+  }
+  function lessonCalc(mode) {
+    var h = "", all = mode === "melange";
+    if (mode === "dbl" || all) {
+      h += '<div class="panel"><h2>👯 Doubles et moitiés</h2><div class="gtable">' +
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function (x) { return "<span>" + x + " + " + x + " = " + (2 * x) + "</span>"; }).join("") + '</div><div class="steps">' +
+        stepHTML(1, "Le double de 35&nbsp;: je coupe 35 en 30 et 5", '<div class="gq gsmall">30 + 5</div>') +
+        stepHTML(2, "Double de 30 = 60, double de 5 = 10", '<div class="gq gsmall">60 + 10</div>') +
+        stepHTML(3, "Je rassemble", '<div class="gq gsmall">= 70</div>') +
+        '</div><div class="done">✅ Le double de 35 = 70</div><div class="tip">✂️ La moitié, c\'est l\'inverse&nbsp;: la moitié de 70 = 35.</div></div>';
+    }
+    if (mode === "x10" || all) {
+      h += '<div class="panel"><h2>🔟 Multiplier par 10 et par 100</h2><div class="steps">' +
+        stepHTML(1, "34 × 10&nbsp;: chaque chiffre avance d'un rang, on écrit un 0", placeHTML(340)) +
+        stepHTML(2, "34 × 100&nbsp;: chaque chiffre avance de deux rangs, on écrit deux 0", placeHTML(3400)) +
+        '</div><div class="done">✅ 34 × 10 = 340 &nbsp;·&nbsp; 34 × 100 = 3' + NB + "400</div></div>";
+    }
+    if (mode === "compl" || all) {
+      h += '<div class="panel"><h2>🎯 Les compléments</h2><div class="steps">' +
+        stepHTML(1, "À 10&nbsp;: 7 + 3 = 10", tenFrameHTML(7)) +
+        stepHTML(2, "À 100&nbsp;: de 64, je vais à 70 (+6), puis à 100 (+30)", jumpsHTML(64, [[70, "+6"], [100, "+30"]])) +
+        stepHTML(3, "À 1" + NB + "000&nbsp;: de 750, je vais à 800 (+50), puis à 1" + NB + "000 (+200)", jumpsHTML(750, [[800, "+50"], ["1" + NB + "000", "+200"]])) +
+        '</div><div class="done">✅ 64 + 36 = 100 &nbsp;·&nbsp; 750 + 250 = 1' + NB + "000</div></div>";
+    }
+    if (mode === "pm" || all) {
+      h += '<div class="panel"><h2>🧠 Ajouter ou retirer 9, 11, 19</h2><ul class="rules">' +
+        "<li>➕ 9 = 10 − 1 &nbsp;·&nbsp; ➕ 11 = 10 + 1 &nbsp;·&nbsp; ➕ 19 = 20 − 1</li></ul><div class=\"steps\">" +
+        stepHTML(1, "47 + 9&nbsp;: j'ajoute 10, puis je retire 1", jumpsHTML(47, [[57, "+10"], [56, "−1"]])) +
+        stepHTML(2, "63 − 19&nbsp;: je retire 20, puis j'ajoute 1", jumpsHTML(63, [[43, "−20"], [44, "+1"]])) +
+        '</div><div class="done">✅ 47 + 9 = 56 &nbsp;·&nbsp; 63 − 19 = 44</div></div>';
+    }
+    return h;
+  }
+  MODULES.calc = {
+    id: "calc", title: "🧠 Le calcul mental", short: "Calcul mental", champ: "du calcul mental",
+    levels: [
+      { id: "dbl", label: "Doubles et moitiés", ex: "35 ➜ 70", color: "#ff7a1a" },
+      { id: "x10", label: "× 10 et × 100", ex: "34 × 10 = 340", color: "#2f8cff" },
+      { id: "compl", label: "Compléments", ex: "64 + ? = 100", color: "#22b455" },
+      { id: "pm", label: "+ ou − 9, 11, 19", ex: "47 + 9", color: "#ef4444" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonCalc, question: qCalcMode, problem: pbCalc
+  };
+
+  // =========================================================
+  // ---------- PARTIE 8 : FRACTIONS ----------
+  // =========================================================
+  function fr(k, n) { return '<span class="gfrac"><span>' + k + "</span><span>" + n + "</span></span>"; }
+  var FR_WORDS = { "1/2": "un demi", "1/3": "un tiers", "2/3": "deux tiers", "1/4": "un quart", "2/4": "deux quarts", "3/4": "trois quarts" };
+  function frName(k, n) { return FR_WORDS[k + "/" + n]; }
+  var FR_LIST = [[1, 2], [1, 4], [1, 3], [3, 4], [2, 3], [2, 4]];
+  function frPool(L) { return FR_LIST.slice(0, L === 0 ? 3 : L === 1 ? 5 : 6); }
+  function sameValue(a, b) { return a[0] * b[1] === b[0] * a[1]; }
+  var FR_SHAPES = ["pizza", "choco", "strip"];
+  function pizzaSVG(n, k, cls) {
+    var s = '<circle cx="60" cy="60" r="56" fill="#e9a94f"/>', R = 48;
+    for (var i = 0; i < n; i++) {
+      var a0 = -Math.PI / 2 + i * 2 * Math.PI / n, a1 = a0 + 2 * Math.PI / n, am = (a0 + a1) / 2;
+      s += '<path d="M60 60 L' + r1(60 + R * Math.cos(a0)) + " " + r1(60 + R * Math.sin(a0)) + " A" + R + " " + R + " 0 0 1 " + r1(60 + R * Math.cos(a1)) + " " + r1(60 + R * Math.sin(a1)) +
+        ' Z" fill="' + (i < k ? "#ef4444" : "#fff3d6") + '" stroke="#7a4b12" stroke-width="3" stroke-linejoin="round"/>';
+      if (i < k) s += '<circle cx="' + r1(60 + 28 * Math.cos(am)) + '" cy="' + r1(60 + 28 * Math.sin(am)) + '" r="6" fill="#ffd166"/>';
+    }
+    return svgWrap(120, 120, s, cls, "pizza");
+  }
+  function chocoSVG(n, k, cls) {
+    var cols = n === 4 ? 2 : n, rows = n === 4 ? 2 : 1, w = 44, s = '<rect x="2" y="2" width="' + (cols * w + 8) + '" height="' + (rows * w + 8) + '" rx="8" fill="#5a3418"/>';
+    for (var i = 0; i < n; i++) {
+      var x = 6 + (i % cols) * w, y = 6 + Math.floor(i / cols) * w;
+      s += '<rect x="' + x + '" y="' + y + '" width="' + (w - 4) + '" height="' + (w - 4) + '" rx="5" fill="' + (i < k ? "#8b5a2b" : "#f3e3d3") + '" stroke="#5a3418" stroke-width="2"/>';
+      if (i < k) s += '<rect x="' + (x + 6) + '" y="' + (y + 6) + '" width="' + (w - 16) + '" height="' + (w - 16) + '" rx="3" fill="#a0693a"/>';
+    }
+    return svgWrap(cols * w + 12, rows * w + 12, s, cls, "tablette de chocolat");
+  }
+  function stripSVG(n, k, cls, color) {
+    var W = 240, s = "";
+    for (var i = 0; i < n; i++) s += '<rect x="' + r1(4 + i * W / n) + '" y="4" width="' + r1(W / n) + '" height="44" fill="' + (i < k ? (color || "#3b82f6") : "#fff") + '" stroke="#3b2a5a" stroke-width="3"/>';
+    return svgWrap(W + 8, 52, s, (cls || "") + " strip", "bande");
+  }
+  function fracDrawing(sh, n, k, cls) { return sh === "pizza" ? pizzaSVG(n, k, cls) : sh === "choco" ? chocoSVG(n, k, cls) : stripSVG(n, k, cls); }
+  function frExplain(k, n) {
+    return "L'unité est partagée en <b>" + n + " parts égales</b> (le nombre du bas) et on en colorie <b>" + k + "</b> (le nombre du haut)&nbsp;: c'est " + fr(k, n) + ", " + frName(k, n) + ".";
+  }
+  function frCompare(a, b) {
+    var va = a[0] / a[1], vb = b[0] / b[1];
+    return '<div class="frstack">' + fr(a[0], a[1]) + stripSVG(a[1], a[0], "", "#3b82f6") + fr(b[0], b[1]) + stripSVG(b[1], b[0], "", "#ff4fa3") + "</div>" +
+      '<div class="expl">' + (va === vb ? "Les deux bandes coloriées ont la même longueur&nbsp;: les fractions sont <b>égales</b>." :
+        "La bande coloriée la plus longue est celle de " + fr(va > vb ? a[0] : b[0], va > vb ? a[1] : b[1]) + "." +
+        (a[0] === 1 && b[0] === 1 ? " Plus on partage en parts nombreuses, plus chaque part est petite&nbsp;!" : "")) + "</div>";
+  }
+  function qFrac(kind, L) {
+    var f, sh, k, n, others, opts;
+    if (kind === "lire") {
+      f = rand(frPool(L)); sh = rand(FR_SHAPES); k = f[0]; n = f[1];
+      var words = Math.random() < 0.5;
+      others = shuffle(FR_LIST.filter(function (x) { return !sameValue(x, f); })).slice(0, 2);
+      opts = shuffle([f].concat(others));
+      return { key: "frl-" + k + "-" + n + "-" + sh + (words ? "-w" : ""), type: "choice", optClass: words ? "" : "fracs",
+        options: opts.map(function (x) { return words ? frName(x[0], x[1]) : fr(x[0], x[1]); }), answer: opts.indexOf(f),
+        prompt: '<div class="gp">Quelle fraction est <b>coloriée</b>&nbsp;?</div>' + fracDrawing(sh, n, k, "big"),
+        eq: fr(k, n) + " = " + frName(k, n), explain: fracDrawing(sh, n, k) + '<div class="expl">' + frExplain(k, n) + "</div>" };
+    }
+    if (kind === "pick") {
+      f = rand(frPool(L)); sh = rand(FR_SHAPES); k = f[0]; n = f[1];
+      others = shuffle(FR_LIST.filter(function (x) { return !sameValue(x, f) && (sh !== "choco" || x[1] !== 4 || true); })).slice(0, 2);
+      opts = shuffle([f].concat(others));
+      return { key: "frp-" + k + "-" + n + "-" + sh, type: "choice", optClass: "pics",
+        options: opts.map(function (x) { return fracDrawing(sh, x[1], x[0], "opt"); }), answer: opts.indexOf(f),
+        prompt: '<div class="gp">Quel dessin montre</div><div class="gq">' + fr(k, n) + '</div><div class="gp gsmall">(' + frName(k, n) + ")</div>",
+        eq: fr(k, n) + "&nbsp;: " + n + " parts égales, " + k + " coloriée" + (k > 1 ? "s" : ""), explain: fracDrawing(sh, n, k) + '<div class="expl">' + frExplain(k, n) + "</div>" };
+    }
+    // comparer
+    var pool = L === 0 ? [[1, 2], [1, 3], [1, 4]] : frPool(L), a, b;
+    do { a = rand(pool); b = rand(pool); } while (a === b || (L < 2 && sameValue(a, b)));
+    if (L === 0) {
+      sh = rand(FR_SHAPES);
+      opts = shuffle([a, b]);
+      var big = a[0] / a[1] > b[0] / b[1] ? a : b;
+      return { key: "frc0-" + [a, b].map(String).sort().join("-") + "-" + sh, type: "choice", optClass: "pics two",
+        options: opts.map(function (x) { return fr(x[0], x[1]) + fracDrawing(sh, x[1], x[0], "opt"); }), answer: opts.indexOf(big),
+        prompt: '<div class="gp">Quelle part est la <b>plus grande</b>&nbsp;?</div>', eq: fr(big[0], big[1]) + " est la plus grande part", explain: frCompare(a, b) };
+    }
+    var va = a[0] / a[1], vb = b[0] / b[1], three = L === 2;
+    return { key: "frc-" + a + "-" + b, type: "choice", optClass: three ? "signs signs3" : "signs",
+      options: three ? ["&lt;", "=", "&gt;"] : ["&lt;<small>plus petit</small>", "&gt;<small>plus grand</small>"],
+      answer: three ? (va < vb ? 0 : va === vb ? 1 : 2) : (va < vb ? 0 : 1),
+      prompt: '<div class="gq">' + fr(a[0], a[1]) + ' <span class="gsign">?</span> ' + fr(b[0], b[1]) + '</div><div class="gp">Choisis le bon signe.</div>' +
+        '<div class="frstack">' + stripSVG(a[1], a[0], "", "#3b82f6") + stripSVG(b[1], b[0], "", "#ff4fa3") + "</div>",
+      eq: fr(a[0], a[1]) + (va < vb ? " &lt; " : va === vb ? " = " : " &gt; ") + fr(b[0], b[1]), explain: frCompare(a, b) };
+  }
+  var FRAC_KINDS = { lire: ["lire"], pick: ["pick"], comp: ["comp"] };
+  function qFracMode(mode, L) { return qFrac(rand(mode === "melange" ? ["lire", "pick", "comp"] : FRAC_KINDS[mode]), L); }
+  function pbFrac(mode, L) {
+    var kind = rand(mode === "comp" ? ["qui"] : mode === "lire" ? ["pizza", "part"] : mode === "pick" ? ["part", "pizza"] : ["part", "pizza", "qui"]);
+    if (kind === "part") {
+      var d = L === 0 ? 2 : rand([2, 3, 4]), q = rnd(2, L === 0 ? 8 : 6), N = d * q, e = rand(["🍬", "🍓", "🍪", "🔵"]);
+      var nm = { 2: "la moitié", 3: "le tiers", 4: "le quart" }[d];
+      return { key: "frn-" + d + "-" + N, type: "fields", fields: [q],
+        prompt: '<div class="gp gstory">' + e + " Lucy a <b>" + N + "</b> bonbons. Elle en donne <b>" + nm + "</b> à son frère. Combien en donne-t-elle&nbsp;?</div>" + itemsHTML(e, N) + '<div class="gq gsmall">{0}</div>',
+        eq: cap(nm) + " de " + N + " = " + q + " (" + N + " : " + d + ")", explain: groupHTML(e, q, d, 0) + '<div class="expl">' + cap(nm) + ", c'est une part quand on partage en " + d + "&nbsp;: " + N + " : " + d + " = <b>" + q + "</b>.</div>" };
+    }
+    if (kind === "pizza") {
+      var f = rand(frPool(L)), opts = shuffle([f].concat(shuffle(FR_LIST.filter(function (x) { return !sameValue(x, f); })).slice(0, 2)));
+      return { key: "frs-" + f, type: "choice", optClass: "fracs",
+        options: opts.map(function (x) { return fr(x[0], x[1]); }), answer: opts.indexOf(f),
+        prompt: '<div class="gp gstory">🍕 Papa coupe une pizza en <b>' + f[1] + "</b> parts égales. Lucy en mange <b>" + f[0] + "</b>. Quelle fraction de la pizza a-t-elle mangée&nbsp;?</div>",
+        eq: fr(f[0], f[1]) + " (" + frName(f[0], f[1]) + ")", explain: pizzaSVG(f[1], f[0]) + '<div class="expl">' + frExplain(f[0], f[1]) + "</div>" };
+    }
+    var a = rand([[1, 2], [1, 3], [1, 4]]), b;
+    do { b = rand([[1, 2], [1, 3], [1, 4]]); } while (b[1] === a[1]);
+    return { key: "frt-" + a + "-" + b, type: "choice", optClass: "two", options: ["Tom", "Léa"], answer: a[0] / a[1] > b[0] / b[1] ? 0 : 1,
+      prompt: '<div class="gp gstory">🍫 Tom mange ' + fr(a[0], a[1]) + " d'une tablette de chocolat. Léa mange " + fr(b[0], b[1]) + " d'une tablette pareille. Qui en mange le plus&nbsp;?</div>",
+      eq: (a[0] / a[1] > b[0] / b[1] ? "Tom" : "Léa") + "&nbsp;: " + fr(a[0], a[1]) + (a[0] / a[1] > b[0] / b[1] ? " &gt; " : " &lt; ") + fr(b[0], b[1]), explain: frCompare(a, b) };
+  }
+  function lessonFrac(mode) {
+    var h = '<div class="panel"><h2>🍕 Partager en parts égales</h2><div class="steps">' +
+      stepHTML(1, "Un demi&nbsp;: " + fr(1, 2), pizzaSVG(2, 1)) + stepHTML(2, "Un tiers&nbsp;: " + fr(1, 3), chocoSVG(3, 1)) + stepHTML(3, "Un quart&nbsp;: " + fr(1, 4), stripSVG(4, 1)) +
+      '</div><div class="tip">⚠️ Les parts doivent être <b>égales</b>&nbsp;!</div></div>';
+    if (mode !== "comp") {
+      h += '<div class="panel"><h2>📖 Lire une fraction</h2><div class="steps">' +
+        stepHTML(1, "Je compte les parts égales&nbsp;: <b>4</b> (en bas)", chocoSVG(4, 0)) +
+        stepHTML(2, "Je compte les parts coloriées&nbsp;: <b>3</b> (en haut)", chocoSVG(4, 3)) +
+        stepHTML(3, "J'écris la fraction", '<div class="gq">' + fr(3, 4) + "</div>") +
+        '</div><div class="done">✅ ' + fr(3, 4) + " = trois quarts</div></div>";
+    }
+    if (mode === "comp" || mode === "melange") {
+      h += '<div class="panel"><h2>⚖️ Comparer des fractions</h2><div class="frstack">' +
+        fr(1, 2) + stripSVG(2, 1, "", "#3b82f6") + fr(1, 3) + stripSVG(3, 1, "", "#22b455") + fr(1, 4) + stripSVG(4, 1, "", "#ff4fa3") +
+        '</div><div class="done">✅ ' + fr(1, 2) + " &gt; " + fr(1, 3) + " &gt; " + fr(1, 4) + '</div><div class="tip">Plus on partage en parts nombreuses, plus chaque part est petite. Et ' + fr(2, 4) + " = " + fr(1, 2) + "&nbsp;!</div></div>";
+    }
+    return h;
+  }
+  MODULES.frac = {
+    id: "frac", title: "🍕 Les fractions", short: "Fractions", champ: "des fractions",
+    levels: [
+      { id: "lire", label: "Reconnaître la fraction", ex: "🍕 ➜ " + fr(1, 4), color: "#ef4444" },
+      { id: "pick", label: "Trouver le bon dessin", ex: fr(3, 4) + " ➜ 🍫", color: "#ff7a1a" },
+      { id: "comp", label: "Comparer", ex: fr(1, 2) + " &gt; " + fr(1, 4), color: "#2f8cff" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonFrac, question: qFracMode, problem: pbFrac
+  };
+
+  // =========================================================
+  // ---------- PARTIE 9 : MESURES ----------
+  // =========================================================
+  var UNIT_FAM = { L: ["mm", "cm", "m", "km"], M: ["g", "kg"], C: ["cL", "L"] };
+  var UNIT_REF = {
+    mm: "1 mm, c'est tout petit&nbsp;: l'épaisseur d'une carte.", cm: "1 cm, c'est à peu près la largeur d'un doigt.",
+    m: "1 m, c'est un grand pas d'adulte.", km: "1 km, c'est environ 15 minutes de marche.",
+    g: "1 g, c'est la masse d'un trombone.", kg: "1 kg, c'est un paquet de farine.",
+    cL: "1 cL, c'est une petite cuillère.", L: "1 L, c'est une grande bouteille d'eau."
+  };
+  var MES_ITEMS = [
+    { e: "✏️", t: "La longueur d'un crayon", v: 15, u: "cm", f: "L", L: 0 }, { e: "🚪", t: "La hauteur d'une porte", v: 2, u: "m", f: "L", L: 0 },
+    { e: "🚗", t: "La distance entre deux villes", v: 80, u: "km", f: "L", L: 0 }, { e: "📏", t: "La longueur de la règle de la trousse", v: 20, u: "cm", f: "L", L: 0 },
+    { e: "🏫", t: "La longueur de la cour de l'école", v: 40, u: "m", f: "L", L: 0 }, { e: "🌳", t: "La hauteur d'un grand arbre", v: 12, u: "m", f: "L", L: 0 },
+    { e: "🧽", t: "La longueur d'une gomme", v: 4, u: "cm", f: "L", L: 0 }, { e: "🚌", t: "La longueur d'un bus", v: 12, u: "m", f: "L", L: 0 },
+    { e: "🏃", t: "La longueur d'une course à pied", v: 10, u: "km", f: "L", L: 1 }, { e: "🛏️", t: "La longueur d'un lit", v: 2, u: "m", f: "L", L: 1 },
+    { e: "🍎", t: "La masse d'une pomme", v: 150, u: "g", f: "M", L: 1 }, { e: "🐱", t: "La masse d'un chat", v: 4, u: "kg", f: "M", L: 1 },
+    { e: "🧳", t: "La masse d'une valise", v: 15, u: "kg", f: "M", L: 1 }, { e: "✉️", t: "La masse d'une lettre", v: 20, u: "g", f: "M", L: 1 },
+    { e: "🥛", t: "Un verre de lait", v: 20, u: "cL", f: "C", L: 1 }, { e: "🛁", t: "L'eau d'une baignoire", v: 150, u: "L", f: "C", L: 1 },
+    { e: "🪣", t: "Un seau d'eau", v: 10, u: "L", f: "C", L: 1 }, { e: "🐜", t: "La longueur d'une fourmi", v: 5, u: "mm", f: "L", L: 2 },
+    { e: "🪙", t: "L'épaisseur d'une pièce", v: 2, u: "mm", f: "L", L: 2 }, { e: "🍉", t: "La masse d'une pastèque", v: 3, u: "kg", f: "M", L: 2 },
+    { e: "🍬", t: "La masse d'un bonbon", v: 5, u: "g", f: "M", L: 2 }, { e: "☕", t: "Une tasse de chocolat chaud", v: 25, u: "cL", f: "C", L: 2 },
+    { e: "🐟", t: "L'eau d'un aquarium", v: 60, u: "L", f: "C", L: 2 }, { e: "🐶", t: "La masse d'un petit chien", v: 6, u: "kg", f: "M", L: 2 },
+    { e: "🧃", t: "Une petite brique de jus", v: 20, u: "cL", f: "C", L: 2 }, { e: "🏔️", t: "La hauteur d'une montagne", v: 4, u: "km", f: "L", L: 2 }
+  ];
+  var CONV = [["m", "cm", 100], ["cm", "mm", 10], ["km", "m", 1000], ["kg", "g", 1000], ["L", "cL", 100]];
+  function convRule(c) { return "1 " + c[0] + " = " + fmt(c[2]) + " " + c[1]; }
+  function unitsHTML() {
+    return '<div class="gtable"><span>1 km = 1' + NB + "000 m</span><span>1 m = 100 cm</span><span>1 cm = 10 mm</span><span>1 kg = 1" + NB + "000 g</span><span>1 L = 100 cL</span></div>";
+  }
+  // Règle graduée : objet de "from" à "to" (en mm)
+  function rulerSVG(from, to, maxcm, mm) {
+    var S = 40, X0 = 22, W = maxcm * S + 2 * X0, x1 = X0 + from * S / 10, x2 = X0 + to * S / 10, s = "";
+    s += '<rect x="' + x1 + '" y="16" width="' + (x2 - x1 - 18) + '" height="26" rx="5" fill="#ffb800" stroke="#c26a00" stroke-width="2"/>' +
+      '<polygon points="' + (x2 - 18) + ",16 " + x2 + ",29 " + (x2 - 18) + ',42" fill="#f6d2a2" stroke="#c26a00" stroke-width="2" stroke-linejoin="round"/>' +
+      '<polygon points="' + (x2 - 6) + ",26 " + x2 + ",29 " + (x2 - 6) + ',32" fill="#3b2a5a"/>' +
+      '<rect x="' + (x1 + 4) + '" y="20" width="10" height="18" rx="2" fill="#ff8fc7"/>';
+    [x1, x2].forEach(function (x) { s += '<line x1="' + x + '" y1="8" x2="' + x + '" y2="62" stroke="#ef4444" stroke-width="2" stroke-dasharray="5 4"/>'; });
+    s += '<rect x="4" y="62" width="' + (W - 8) + '" height="58" rx="6" fill="#fff6c9" stroke="#c9a227" stroke-width="2"/>';
+    for (var t = 0; t <= maxcm * 10; t++) {
+      var x = X0 + t * S / 10, big = t % 10 === 0, half = t % 5 === 0;
+      if (!mm && !half) continue;
+      s += '<line x1="' + x + '" y1="62" x2="' + x + '" y2="' + (62 + (big ? 26 : half ? 16 : 9)) + '" stroke="#3b2a5a" stroke-width="' + (big ? 2.5 : 1.3) + '"/>';
+      if (big) s += '<text x="' + x + '" y="112" text-anchor="middle" font-size="19" font-weight="700" fill="#3b2a5a">' + (t / 10) + "</text>";
+    }
+    return svgWrap(W, 124, s, "wide", "règle graduée");
+  }
+  function qMes(kind, L) {
+    var c, n, m, it;
+    if (kind === "unite") {
+      var pool = MES_ITEMS.filter(function (x) { return x.L <= L; });
+      it = rand(pool);
+      var units = UNIT_FAM[it.f].slice();
+      if (units.length > 3) units = shuffle(units.filter(function (u) { return u !== it.u; })).slice(0, 2).concat([it.u]);
+      units = shuffle(units);
+      return { key: "un-" + it.t, type: "choice", optClass: units.length === 2 ? "two" : "units3", options: units, answer: units.indexOf(it.u),
+        prompt: '<div class="gemoji">' + it.e + '</div><div class="gp">' + it.t + "&nbsp;: <b>" + it.v + ' …</b></div><div class="gp gsmall">Choisis la bonne unité.</div>',
+        eq: it.t + "&nbsp;: " + it.v + " " + it.u, explain: '<div class="expl">' + UNIT_REF[it.u] + " Donc " + it.v + " " + it.u + " ✔️</div>" + unitsHTML() };
+    }
+    if (kind === "conv") {
+      c = rand(CONV);
+      if (L === 0) {
+        n = rnd(1, 9);
+        return { key: "cv-" + c[0] + "-" + n, type: "fields", fields: [n * c[2]], prompt: '<div class="gq">' + n + " " + c[0] + " = {0} " + c[1] + "</div>",
+          eq: n + " " + c[0] + " = " + fmt(n * c[2]) + " " + c[1], explain: '<div class="expl">' + convRule(c) + ", donc " + n + " " + c[0] + " = " + n + " × " + fmt(c[2]) + " = <b>" + fmt(n * c[2]) + " " + c[1] + "</b>.</div>" + unitsHTML() };
+      }
+      if (L === 1) {
+        n = rnd(2, 9);
+        return { key: "cvr-" + c[0] + "-" + n, type: "fields", fields: [n], prompt: '<div class="gq">' + fmt(n * c[2]) + " " + c[1] + " = {0} " + c[0] + "</div>",
+          eq: fmt(n * c[2]) + " " + c[1] + " = " + n + " " + c[0], explain: '<div class="expl">' + convRule(c) + "&nbsp;: dans " + fmt(n * c[2]) + " " + c[1] + ", il y a " + n + " fois " + fmt(c[2]) + " " + c[1] + ", donc <b>" + n + " " + c[0] + "</b>.</div>" + unitsHTML() };
+      }
+      n = rnd(1, 5); m = c[2] === 10 ? rnd(1, 9) : c[2] === 100 ? rnd(5, 95) : rand([rnd(1, 9) * 100, rnd(1, 19) * 50, rnd(101, 999)]);
+      return { key: "cvm-" + c[0] + "-" + n + "-" + m, type: "fields", fields: [n * c[2] + m], prompt: '<div class="gq gsmall">' + n + " " + c[0] + " " + m + " " + c[1] + " = {0} " + c[1] + "</div>",
+        eq: n + " " + c[0] + " " + m + " " + c[1] + " = " + fmt(n * c[2] + m) + " " + c[1],
+        explain: '<div class="expl">' + n + " " + c[0] + " = " + fmt(n * c[2]) + " " + c[1] + ", puis " + fmt(n * c[2]) + " + " + m + " = <b>" + fmt(n * c[2] + m) + " " + c[1] + "</b>.</div>" + unitsHTML() };
+    }
+    // lire une règle
+    var from, len;
+    if (L === 0) { from = 0; len = rnd(3, 10) * 10; }
+    else if (L === 1) { from = rnd(1, 4) * 10; len = rnd(3, 10 - from / 10) * 10; }
+    else { from = rand([0, 10]); do { len = rnd(25, 95 - from); } while (len % 10 === 0); }
+    var cm = Math.floor(len / 10), mmv = len % 10;
+    return { key: "reg-" + from + "-" + len, type: "fields", fields: L === 2 ? [cm, mmv] : [cm],
+      prompt: '<div class="gp">Combien mesure le crayon&nbsp;?</div>' + rulerSVG(from, from + len, 10, L === 2) +
+        '<div class="gq gsmall">' + (L === 2 ? "{0} cm {1} mm" : "{0} cm") + "</div>",
+      hint: from ? "⚠️ Regarde bien où commence le crayon&nbsp;!" : (L === 2 ? "Compte les cm, puis les petits traits (mm) ✏️" : undefined),
+      eq: "Le crayon mesure " + (mmv ? cm + " cm " + mmv + " mm" : cm + " cm"),
+      explain: rulerSVG(from, from + len, 10, L === 2) + '<div class="expl">' + (from ? "Le crayon va de " + from / 10 + " à " + (from + len) / 10 + "&nbsp;: " + (from + len) / 10 + " − " + from / 10 + " = <b>" + cm + " cm</b>." :
+        "Le crayon commence au 0 et s'arrête " + (mmv ? "après le " + cm + ", au " + mmv + "<sup>e</sup> petit trait&nbsp;: <b>" + cm + " cm " + mmv + " mm</b>." : "au " + cm + "&nbsp;: <b>" + cm + " cm</b>.")) + "</div>" };
+  }
+  function qMesMode(mode, L) { return qMes(mode === "melange" ? rand(["unite", "conv", "regle"]) : mode, L); }
+  function pbMes(mode, L) {
+    var k = rand(mode === "unite" ? ["sac", "ruban"] : mode === "regle" ? ["ruban", "taille"] : ["taille", "sac", "bouteille", "ruban"]), a, b;
+    if (k === "taille") { a = rnd(10, 45);
+      return { key: "pmt-" + a, type: "fields", fields: [100 + a], prompt: '<div class="gp gstory">📏 Lucy mesure <b>1 m ' + a + ' cm</b>. Combien de centimètres cela fait-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
+        eq: "1 m " + a + " cm = " + (100 + a) + " cm", explain: '<div class="expl">1 m = 100 cm, et 100 + ' + a + " = <b>" + (100 + a) + " cm</b>.</div>" }; }
+    if (k === "sac") { a = rnd(1, 4); b = rand([200, 250, 300, 500, 750]);
+      return { key: "pms-" + a + "-" + b, type: "fields", fields: [a * 1000 + b], prompt: '<div class="gp gstory">🛒 Maman achète <b>' + a + " kg</b> de pommes et <b>" + b + ' g</b> de raisin. Combien de grammes en tout&nbsp;?</div><div class="gq gsmall">{0} g</div>',
+        eq: a + " kg + " + b + " g = " + fmt(a * 1000 + b) + " g", explain: '<div class="expl">' + a + " kg = " + fmt(a * 1000) + " g, et " + fmt(a * 1000) + " + " + b + " = <b>" + fmt(a * 1000 + b) + " g</b>.</div>" }; }
+    if (k === "bouteille") { a = rand([20, 25, 30, 40, 50, 75]);
+      return { key: "pmb-" + a, type: "fields", fields: [100 - a], prompt: '<div class="gp gstory">🧃 Une bouteille contient <b>1 L</b> de jus. Lucy en boit <b>' + a + ' cL</b>. Combien en reste-t-il&nbsp;?</div><div class="gq gsmall">{0} cL</div>',
+        eq: "100 cL − " + a + " cL = " + (100 - a) + " cL", explain: '<div class="expl">1 L = 100 cL, et 100 − ' + a + " = <b>" + (100 - a) + " cL</b>.</div>" }; }
+    a = rnd(5, 9) * 10; b = rnd(1, Math.floor((a / 10 - 1) / 2)) * 10;   // il reste toujours au moins 10 cm
+    return { key: "pmr-" + a + "-" + b, type: "fields", fields: [a - 2 * b], prompt: '<div class="gp gstory">🎀 Le ruban mesure <b>' + a + " cm</b>. On en coupe deux morceaux de <b>" + b + ' cm</b>. Combien en reste-t-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
+      eq: a + " − " + b + " − " + b + " = " + (a - 2 * b) + " cm", explain: '<div class="expl">On coupe ' + b + " + " + b + " = " + (2 * b) + " cm, et " + a + " − " + (2 * b) + " = <b>" + (a - 2 * b) + " cm</b>.</div>" };
+  }
+  function lessonMes(mode) {
+    var h = '<div class="panel"><h2>📏 Les unités</h2><ul class="rules">' +
+      "<li>📏 <b>Longueurs</b>&nbsp;: km, m, cm, mm. " + UNIT_REF.cm + "</li><li>⚖️ <b>Masses</b>&nbsp;: kg, g. " + UNIT_REF.kg + "</li><li>🥤 <b>Contenances</b>&nbsp;: L, cL. " + UNIT_REF.L + "</li></ul>" + unitsHTML() + "</div>";
+    if (mode === "conv" || mode === "melange") {
+      h += '<div class="panel"><h2>🔁 Convertir</h2><div class="steps">' +
+        stepHTML(1, "1 m = 100 cm", '<div class="gq gsmall">3 m = 3 × 100</div>') + stepHTML(2, "Je calcule", '<div class="gq gsmall">= 300 cm</div>') +
+        stepHTML(3, "Avec deux unités&nbsp;: 2 m 35 cm", '<div class="gq gsmall">200 + 35 = 235 cm</div>') + "</div></div>";
+    }
+    if (mode === "regle" || mode === "melange" || mode === "unite") {
+      h += '<div class="panel"><h2>📐 Lire une règle</h2><div class="steps">' +
+        stepHTML(1, "Le crayon commence au <b>0</b>&nbsp;: je lis le nombre au bout → 7 cm", rulerSVG(0, 70, 10, false)) +
+        stepHTML(2, "Il commence au 2 et finit au 9&nbsp;: 9 − 2 = 5 cm", rulerSVG(20, 70, 10, false)) +
+        stepHTML(3, "Les petits traits sont des mm&nbsp;: 4 cm 6 mm", rulerSVG(0, 46, 10, true)) + "</div></div>";
+    }
+    return h;
+  }
+  MODULES.mes = {
+    id: "mes", title: "📏 Les mesures", short: "Mesures", champ: "des mesures",
+    levels: [
+      { id: "unite", label: "Choisir la bonne unité", ex: "✏️ 15 cm ou 15 m&nbsp;?", color: "#22b455" },
+      { id: "conv", label: "Convertir", ex: "1 m = 100 cm", color: "#2f8cff" },
+      { id: "regle", label: "Lire une règle", ex: "📏 ➜ 7 cm", color: "#ff7a1a" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonMes, question: qMesMode, problem: pbMes
+  };
+
+  // =========================================================
+  // ---------- PARTIE 10 : L'HEURE ET LES DURÉES ----------
+  // =========================================================
+  // Petite aiguille (heures) en bleu, grande aiguille (minutes) en rose.
+  function clockSVG(h, m, cls) {
+    var s = '<circle cx="100" cy="100" r="94" fill="#fff" stroke="#7c4dff" stroke-width="8"/>', i, a;
+    for (i = 0; i < 60; i++) {
+      a = i * 6 * Math.PI / 180;
+      var big = i % 5 === 0, r0 = big ? 78 : 84;
+      s += '<line x1="' + r1(100 + r0 * Math.sin(a)) + '" y1="' + r1(100 - r0 * Math.cos(a)) + '" x2="' + r1(100 + 89 * Math.sin(a)) + '" y2="' + r1(100 - 89 * Math.cos(a)) +
+        '" stroke="#3b2a5a" stroke-width="' + (big ? 3 : 1.2) + '"/>';
+    }
+    for (i = 1; i <= 12; i++) {
+      a = i * 30 * Math.PI / 180;
+      s += '<text x="' + r1(100 + 63 * Math.sin(a)) + '" y="' + r1(100 - 63 * Math.cos(a) + 7) + '" text-anchor="middle" font-size="20" font-weight="700" fill="#3b2a5a" font-family="Fredoka, Comic Sans MS, sans-serif">' + i + "</text>";
+    }
+    var ah = ((h % 12) + m / 60) * 30 * Math.PI / 180, am = m * 6 * Math.PI / 180;
+    s += '<line x1="100" y1="100" x2="' + r1(100 + 44 * Math.sin(ah)) + '" y2="' + r1(100 - 44 * Math.cos(ah)) + '" stroke="#3b82f6" stroke-width="10" stroke-linecap="round"/>';
+    s += '<line x1="100" y1="100" x2="' + r1(100 + 74 * Math.sin(am)) + '" y2="' + r1(100 - 74 * Math.cos(am)) + '" stroke="#ff4fa3" stroke-width="6" stroke-linecap="round"/>';
+    s += '<circle cx="100" cy="100" r="8" fill="#3b2a5a"/>';
+    return svgWrap(200, 200, s, cls || "clock", "horloge");
+  }
+  function tfmt(h, m) { return h + " h" + (m ? " " + (m < 10 ? "0" + m : m) : ""); }
+  function addMin(h, m, d) { var t = h * 60 + m + d; return [Math.floor(t / 60), t % 60]; }
+  function hourWord(h) { return (h === 1 ? "une" : numberWords(h)) + " heure" + (h > 1 ? "s" : ""); }
+  function timeWords(h, m) {
+    if (m === 0) return hourWord(h);
+    if (m === 15) return hourWord(h) + " et quart";
+    if (m === 30) return hourWord(h) + " et demie";
+    return hourWord(h + 1) + " moins le quart";
+  }
+  function durText(d) { return d < 60 ? d + " min" : Math.floor(d / 60) + " h" + (d % 60 ? " " + (d % 60) + " min" : ""); }
+  // Ligne du temps : départ -> heure pile -> arrivée
+  function timeLine(h, m, d) {
+    var cur = h * 60 + m, end = cur + d, pts = [cur], nxt = Math.ceil(cur / 60) * 60, last = Math.floor(end / 60) * 60;
+    if (cur % 60 && nxt < end) pts.push(nxt);
+    if (end % 60 && last > pts[pts.length - 1]) pts.push(last);
+    pts.push(end);
+    var jumps = [];
+    for (var i = 1; i < pts.length; i++) jumps.push([tfmt(Math.floor(pts[i] / 60), pts[i] % 60), "+" + durText(pts[i] - pts[i - 1])]);
+    return jumpsHTML(tfmt(h, m), jumps);
+  }
+  function clockExplain(h, m) {
+    return clockSVG(h, m, "clock mid") + '<div class="expl">La <b class="tu">petite aiguille</b> (les heures) est ' + (m ? "après le " + (h % 12 || 12) : "sur le " + (h % 12 || 12)) +
+      ". La <b class=\"tc\">grande aiguille</b> (les minutes) est sur le " + (m ? m / 5 : 12) + (m ? " → " + m + " minutes" : " → pile") + ". Il est <b>" + tfmt(h, m) + "</b>.</div>";
+  }
+  function qHeure(kind, L) {
+    var h, m, d, s;
+    if (kind === "heures") {
+      h = rnd(1, 12); m = L === 0 ? 0 : rand([0, 30, 30]);
+      if (L === 2) {
+        h = rnd(1, 11);
+        return { key: "clkpm-" + h + "-" + m, type: "fields", fields: [h + 12, m],
+          prompt: '<div class="gp">C\'est <b>l\'après-midi</b> ☀️. Quelle heure est-il&nbsp;?</div>' + clockSVG(h, m) + '<div class="gq gsmall">{0} h {1}</div>',
+          hint: "L'après-midi, on ajoute 12&nbsp;: 3 h devient 15 h ✏️", eq: "Il est " + tfmt(h + 12, m) + " (" + tfmt(h, m) + " de l'après-midi)",
+          explain: clockExplain(h, m) + '<div class="expl">L\'après-midi, on ajoute 12 aux heures&nbsp;: ' + h + " + 12 = <b>" + (h + 12) + "</b>.</div>" };
+      }
+      return { key: "clk-" + h + "-" + m, type: "fields", fields: L === 0 ? [h] : [h, m],
+        prompt: '<div class="gp">Quelle heure est-il&nbsp;?</div>' + clockSVG(h, m) + '<div class="gq gsmall">' + (L === 0 ? "{0} heures" : "{0} h {1}") + "</div>",
+        eq: "Il est " + tfmt(h, m), explain: clockExplain(h, m) };
+    }
+    if (kind === "quarts") {
+      if (L === 1) {
+        h = rnd(1, 10); m = rand([15, 30, 45]);
+        var opts = shuffle([15, 30, 45]);
+        return { key: "clkw-" + h + "-" + m, type: "choice", options: opts.map(function (x) { return timeWords(h, x); }), answer: opts.indexOf(m),
+          prompt: '<div class="gp">Comment dit-on l\'heure&nbsp;?</div>' + clockSVG(h, m),
+          eq: tfmt(h, m) + " = " + timeWords(h, m), explain: clockExplain(h, m) + '<div class="expl">15 min = un quart d\'heure, 30 min = une demi-heure, 45 min = trois quarts d\'heure.</div>' };
+      }
+      h = rnd(1, 12); m = L === 0 ? rand([15, 45]) : rnd(1, 11) * 5;
+      return { key: "clkq-" + h + "-" + m, type: "fields", fields: [h, m],
+        prompt: '<div class="gp">Quelle heure est-il&nbsp;?</div>' + clockSVG(h, m) + '<div class="gq gsmall">{0} h {1}</div>',
+        hint: "La grande aiguille avance de 5 minutes à chaque nombre ✏️", eq: "Il est " + tfmt(h, m), explain: clockExplain(h, m) };
+    }
+    // durées
+    if (L === 2 && Math.random() < 0.5) {   // quelle heure sera-t-il ?
+      h = rnd(1, 10); m = rand([15, 30, 45]); d = rand([15, 30, 45]);
+      if (m + d < 60) d = 60 - m + rand([0, 15]);
+      var e = addMin(h, m, d);
+      return { key: "da-" + h + "-" + m + "-" + d, type: "fields", fields: [e[0], e[1]],
+        prompt: '<div class="gp">Il est ' + tfmt(h, m) + ". Quelle heure sera-t-il dans <b>" + durText(d) + "</b>&nbsp;?</div>" + clockSVG(h, m, "clock mid") + '<div class="gq gsmall">{0} h {1}</div>',
+        eq: tfmt(h, m) + " + " + durText(d) + " = " + tfmt(e[0], e[1]), explain: timeLine(h, m, d) + clockSVG(e[0], e[1], "clock mid") };
+    }
+    if (L === 0) { h = rnd(1, 9); m = 0; d = rnd(1, 3) * 60; }
+    else if (L === 1) { h = rnd(1, 10); m = rand([0, 30]); d = rand([15, 30, 45, 90]); if (m === 30 && d === 45) d = 15; }
+    else { h = rnd(1, 9); m = rand([15, 30, 45]); d = rand([30, 45, 60, 75]); }
+    var f = addMin(h, m, d), hm = d >= 60;
+    return { key: "du-" + h + "-" + m + "-" + d, type: "fields", fields: d < 60 ? [d] : (d % 60 ? [Math.floor(d / 60), d % 60] : [d / 60]),
+      prompt: '<div class="gp">Le dessin animé commence à <b>' + tfmt(h, m) + "</b> et finit à <b>" + tfmt(f[0], f[1]) + "</b>. Combien de temps dure-t-il&nbsp;?</div>" +
+        '<div class="gclocks"><div>' + clockSVG(h, m, "clock mid") + '<div class="gcl">Début</div></div><div>' + clockSVG(f[0], f[1], "clock mid") + '<div class="gcl">Fin</div></div></div>' +
+        '<div class="gq gsmall">' + (d < 60 ? "{0} min" : d % 60 ? "{0} h {1} min" : "{0} h") + "</div>",
+      eq: "De " + tfmt(h, m) + " à " + tfmt(f[0], f[1]) + "&nbsp;: " + durText(d), explain: timeLine(h, m, d) + '<div class="expl">En tout&nbsp;: <b>' + durText(d) + "</b>.</div>" };
+  }
+  function qHeureMode(mode, L) { return qHeure(mode === "melange" ? rand(["heures", "quarts", "duree"]) : mode, L); }
+  function pbHeure(mode, L) {
+    var k = rand(["recre", "gateau", "ecole", "film"]), h, m, d, e;
+    if (k === "recre") { h = 10; m = rand([0, 15, 30]); d = rand([15, 20, 30]); e = addMin(h, m, d);
+      return { key: "phr-" + m + "-" + d, type: "fields", fields: [e[0], e[1]], prompt: '<div class="gp gstory">🛝 La récréation commence à <b>' + tfmt(h, m) + "</b> et dure <b>" + d + ' minutes</b>. À quelle heure finit-elle&nbsp;?</div><div class="gq gsmall">{0} h {1}</div>',
+        eq: tfmt(h, m) + " + " + d + " min = " + tfmt(e[0], e[1]), explain: timeLine(h, m, d) }; }
+    if (k === "gateau") { h = rnd(2, 5); m = rand([0, 15, 30]); d = rand([30, 45]); e = addMin(h, m, d);
+      return { key: "phg-" + h + "-" + m + "-" + d, type: "fields", fields: [e[0], e[1]], prompt: '<div class="gp gstory">🎂 Le gâteau entre au four à <b>' + tfmt(h, m) + "</b>. Il doit cuire <b>" + d + ' minutes</b>. À quelle heure faut-il le sortir&nbsp;?</div><div class="gq gsmall">{0} h {1}</div>',
+        eq: tfmt(h, m) + " + " + d + " min = " + tfmt(e[0], e[1]), explain: timeLine(h, m, d) }; }
+    if (k === "ecole") { m = rand([0, 10, 15, 20]); d = rand([10, 15, 20, 25]); e = addMin(8, m, d);
+      return { key: "phe-" + m + "-" + d, type: "fields", fields: [d], prompt: '<div class="gp gstory">🎒 Lucy part de la maison à <b>' + tfmt(8, m) + "</b> et arrive à l'école à <b>" + tfmt(e[0], e[1]) + '</b>. Combien de minutes a duré le trajet&nbsp;?</div><div class="gq gsmall">{0} min</div>',
+        eq: "De " + tfmt(8, m) + " à " + tfmt(e[0], e[1]) + "&nbsp;: " + d + " min", explain: timeLine(8, m, d) }; }
+    h = rnd(2, 6); m = rand([0, 30]); d = rand([30, 60, 90]); e = addMin(h, m, d);
+    return { key: "phf-" + h + "-" + m + "-" + d, type: "fields", fields: [e[0], e[1]], prompt: '<div class="gp gstory">🎬 Le film commence à <b>' + tfmt(h, m) + "</b> et dure <b>" + durText(d) + '</b>. À quelle heure finit-il&nbsp;?</div><div class="gq gsmall">{0} h {1}</div>',
+      eq: tfmt(h, m) + " + " + durText(d) + " = " + tfmt(e[0], e[1]), explain: timeLine(h, m, d) };
+  }
+  function lessonHeure(mode) {
+    var h = '<div class="panel"><h2>🕒 Lire l\'heure</h2><div class="pose-center">' + clockSVG(3, 30, "clock") + '</div><ul class="rules">' +
+      '<li>🔵 La <b class="tu">petite aiguille</b> montre les <b>heures</b>.</li><li>🌸 La <b class="tc">grande aiguille</b> montre les <b>minutes</b>&nbsp;: à chaque nombre, 5 minutes de plus.</li>' +
+      "<li>⏰ Ici&nbsp;: la petite aiguille est entre 3 et 4, la grande est sur le 6 → <b>3 h 30</b>.</li></ul></div>";
+    if (mode !== "heures") {
+      h += '<div class="panel"><h2>🍰 Les quarts d\'heure</h2><div class="steps">' +
+        stepHTML(1, "3 h&nbsp;: trois heures", clockSVG(3, 0, "clock mid")) + stepHTML(2, "3 h 15&nbsp;: trois heures et quart", clockSVG(3, 15, "clock mid")) +
+        stepHTML(3, "3 h 30&nbsp;: trois heures et demie", clockSVG(3, 30, "clock mid")) + stepHTML(4, "3 h 45&nbsp;: quatre heures moins le quart", clockSVG(3, 45, "clock mid")) + "</div></div>";
+    } else {
+      h += '<div class="panel"><h2>☀️ Le matin et l\'après-midi</h2><ul class="rules"><li>La journée a 24 heures. L\'après-midi, on ajoute 12&nbsp;: 3 h de l\'après-midi = <b>15 h</b>.</li></ul></div>';
+    }
+    if (mode === "duree" || mode === "melange") {
+      h += '<div class="panel"><h2>⏳ Calculer une durée</h2><div class="steps">' +
+        stepHTML(1, "Je pars de 9 h 45 et je vais jusqu'à l'heure pile&nbsp;: 15 min", jumpsHTML("9 h 45", [["10 h", "+15 min"]])) +
+        stepHTML(2, "Puis de 10 h à 10 h 30&nbsp;: 30 min", jumpsHTML("10 h", [["10 h 30", "+30 min"]])) +
+        '</div><div class="done">✅ De 9 h 45 à 10 h 30&nbsp;: 15 + 30 = 45 minutes</div><div class="tip">1 heure = 60 minutes</div></div>';
+    }
+    return h;
+  }
+  MODULES.heure = {
+    id: "heure", title: "🕒 L'heure et les durées", short: "L'heure", champ: "de l'heure",
+    levels: [
+      { id: "heures", label: "Heures et demi-heures", ex: "🕒 3 h 30", color: "#2f8cff" },
+      { id: "quarts", label: "Quarts d'heure", ex: "3 h 15, 3 h 45", color: "#22b455" },
+      { id: "duree", label: "Durées", ex: "9 h 45 ➜ 10 h 30", color: "#ff7a1a" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonHeure, question: qHeureMode, problem: pbHeure
+  };
+
+  // =========================================================
+  // ---------- PARTIE 11 : LA MONNAIE ----------
+  // =========================================================
+  // Pièces et billets dessinés simplement (valeurs en centimes)
+  function moneyItem(v) {
+    if (v >= 500) {
+      var col = { 500: "#7f9c8f", 1000: "#e46a6a", 2000: "#4f86e8", 5000: "#ec9a3e" }[v];
+      return '<svg class="gsvg bill" width="118" height="64" viewBox="0 0 124 66" role="img" aria-label="billet de ' + (v / 100) + ' euros">' +
+        '<rect x="2" y="2" width="120" height="62" rx="8" fill="' + col + '" stroke="rgba(0,0,0,.25)" stroke-width="3"/>' +
+        '<rect x="10" y="10" width="104" height="46" rx="5" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="2" stroke-dasharray="5 4"/>' +
+        '<text x="62" y="43" text-anchor="middle" font-size="26" font-weight="700" fill="#fff" font-family="Fredoka, Comic Sans MS, sans-serif">' + (v / 100) + " €</text></svg>";
+    }
+    var r = { 1: 22, 2: 24, 5: 27, 10: 26, 20: 29, 50: 32, 100: 31, 200: 34 }[v], c = r + 3, sz = 2 * c, inner;
+    if (v >= 100) {
+      var out = v === 100 ? "#e8b931" : "#c9ccd1", mid = v === 100 ? "#c9ccd1" : "#e8b931";
+      inner = '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" fill="' + out + '" stroke="rgba(0,0,0,.3)" stroke-width="2"/><circle cx="' + c + '" cy="' + c + '" r="' + r1(r * 0.66) + '" fill="' + mid + '"/>';
+    } else {
+      inner = '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" fill="' + (v < 10 ? "#c9773f" : "#e8b931") + '" stroke="rgba(0,0,0,.3)" stroke-width="2"/><circle cx="' + c + '" cy="' + c + '" r="' + (r - 5) + '" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/>';
+    }
+    inner += '<text x="' + c + '" y="' + r1(c + r * 0.26) + '" text-anchor="middle" font-size="' + r1(r * 0.66) + '" font-weight="700" fill="#3b2a5a" font-family="Fredoka, Comic Sans MS, sans-serif">' + (v >= 100 ? v / 100 + "€" : v + "c") + "</text>";
+    var px = r1(sz * 1.3);
+    return '<svg class="gsvg coin" width="' + px + '" height="' + px + '" viewBox="0 0 ' + sz + " " + sz + '" role="img" aria-label="pièce de ' + (v >= 100 ? v / 100 + " euro" + (v > 100 ? "s" : "") : v + " centime" + (v > 1 ? "s" : "")) + '">' + inner + "</svg>";
+  }
+  function moneyHTML(list) { return '<div class="gmoney">' + list.map(moneyItem).join("") + "</div>"; }
+  function eur(c) { var e = Math.floor(c / 100), r = c % 100; return e && r ? e + " € " + r + " c" : e ? e + " €" : r + " c"; }
+  function changeList(c) {   // rendre la monnaie avec le moins de pièces possible
+    var out = [];
+    [5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1].forEach(function (v) { while (c >= v) { out.push(v); c -= v; } });
+    return out;
+  }
+  function pickMoney(values, count, maxTotal) {
+    var list;
+    do { list = []; for (var i = 0; i < count; i++) list.push(rand(values)); } while (list.reduce(function (a, b) { return a + b; }, 0) > maxTotal);
+    return list;
+  }
+  function sumExplain(list) {
+    var s = list.slice().sort(function (a, b) { return b - a; }), acc = 0, steps = [];
+    s.forEach(function (v) { acc += v; steps.push(eur(acc)); });
+    return moneyHTML(s) + '<div class="expl">On commence par les plus grosses valeurs&nbsp;: ' + steps.join(" → ") + ".</div>";
+  }
+  var SHOP = [{ e: "📕", n: "un livre" }, { e: "🧸", n: "une peluche" }, { e: "⚽", n: "un ballon" }, { e: "🎨", n: "une boîte de peintures" },
+    { e: "🍦", n: "une glace" }, { e: "🪀", n: "un yoyo" }, { e: "🧩", n: "un puzzle" }, { e: "🥐", n: "un croissant" }];
+  function qMoney(kind, L) {
+    var list, tot, p, pay, it;
+    if (kind === "compter") {
+      if (L === 0) { list = pickMoney([100, 200, 500, 1000], rnd(3, 5), 2000).sort(function (a, b) { return b - a; }); }
+      else if (L === 1) { list = shuffle(pickMoney([100, 200, 500, 1000, 2000, 5000], rnd(4, 6), 10000)); }
+      else { list = shuffle(pickMoney([100, 200, 500], rnd(1, 3), 900).concat(pickMoney([5, 10, 20, 50], rnd(2, 4), 99))); }
+      tot = list.reduce(function (a, b) { return a + b; }, 0);
+      return { key: "mc-" + list.slice().sort().join("."), type: "fields", fields: L === 2 ? [Math.floor(tot / 100), tot % 100] : [tot / 100],
+        prompt: '<div class="gp">Combien d\'argent y a-t-il&nbsp;?</div>' + moneyHTML(list) + '<div class="gq gsmall">' + (L === 2 ? "{0} € {1} c" : "{0} €") + "</div>",
+        eq: "En tout&nbsp;: " + eur(tot), explain: sumExplain(list) };
+    }
+    if (kind === "rendre") {
+      it = rand(SHOP);
+      if (L === 0) { p = rnd(1, 9) * 100; pay = 1000; }
+      else if (L === 1) { p = rnd(11, 45) * 100; pay = p < 2000 ? 2000 : 5000; }
+      else { p = rnd(1, 9) * 100 + rnd(1, 9) * 10; pay = p < 500 ? 500 : 1000; }
+      var back = pay - p, mid = Math.ceil(p / 100) * 100;
+      return { key: "mr-" + p + "-" + pay, type: "fields", fields: L === 2 ? [Math.floor(back / 100), back % 100] : [back / 100],
+        prompt: '<div class="gp">' + it.e + " Lucy achète " + it.n + " à <b>" + eur(p) + "</b>. Elle paie avec&nbsp;:</div>" + moneyHTML([pay]) +
+          '<div class="gp">Combien lui rend-on&nbsp;?</div><div class="gq gsmall">' + (L === 2 ? "{0} € {1} c" : "{0} €") + "</div>",
+        hint: "Compte de " + eur(p) + " jusqu'à " + eur(pay) + " ✏️",
+        eq: eur(pay) + " − " + eur(p) + " = " + eur(back),
+        explain: (mid !== p && mid < pay ? jumpsHTML(eur(p), [[eur(mid), "+" + eur(mid - p)], [eur(pay), "+" + eur(pay - mid)]]) : jumpsHTML(eur(p), [[eur(pay), "+" + eur(back)]])) +
+          moneyHTML(changeList(back)) + '<div class="expl">On lui rend <b>' + eur(back) + "</b>.</div>" };
+    }
+    // euros et centimes
+    if (L === 0) {
+      list = pickMoney([1, 2, 5, 10, 20, 50], rnd(3, 5), 99); tot = list.reduce(function (a, b) { return a + b; }, 0);
+      return { key: "mcc-" + list.slice().sort().join("."), type: "fields", fields: [tot], prompt: '<div class="gp">Combien de centimes&nbsp;?</div>' + moneyHTML(list) + '<div class="gq gsmall">{0} c</div>',
+        eq: "En tout&nbsp;: " + tot + " c", explain: sumExplain(list) };
+    }
+    if (L === 1) {
+      var e = rnd(1, 9), back2 = Math.random() < 0.5;
+      return back2 ? { key: "mcv2-" + e, type: "fields", fields: [e], prompt: '<div class="gq">' + (e * 100) + " c = {0} €</div>", eq: (e * 100) + " c = " + e + " €",
+          explain: '<div class="expl">1 € = 100 c. Dans ' + (e * 100) + " c, il y a " + e + " fois 100 c&nbsp;: <b>" + e + " €</b>.</div>" + moneyHTML(rep("100,", e).split(",").slice(0, e).map(Number)) }
+        : { key: "mcv-" + e, type: "fields", fields: [e * 100], prompt: '<div class="gq">' + e + " € = {0} c</div>", eq: e + " € = " + (e * 100) + " c",
+          explain: '<div class="expl">1 € = 100 c, donc ' + e + " € = " + e + " × 100 = <b>" + (e * 100) + " c</b>.</div>" };
+    }
+    var c = rnd(1, 9) * 100 + rnd(1, 99);
+    return Math.random() < 0.5 ? { key: "mce-" + c, type: "fields", fields: [c], prompt: '<div class="gq gsmall">' + eur(c) + " = {0} c</div>", eq: eur(c) + " = " + c + " c",
+        explain: '<div class="expl">' + Math.floor(c / 100) + " € = " + (Math.floor(c / 100) * 100) + " c, et " + (Math.floor(c / 100) * 100) + " + " + (c % 100) + " = <b>" + c + " c</b>.</div>" }
+      : { key: "mcs-" + c, type: "fields", fields: [Math.floor(c / 100), c % 100], prompt: '<div class="gq gsmall">' + c + " c = {0} € {1} c</div>", eq: c + " c = " + eur(c),
+        explain: '<div class="expl">' + c + " c = " + (Math.floor(c / 100) * 100) + " c + " + (c % 100) + " c = <b>" + eur(c) + "</b> (100 c = 1 €).</div>" };
+  }
+  function qMoneyMode(mode, L) { return qMoney(mode === "melange" ? rand(["compter", "rendre", "centimes"]) : mode, L); }
+  function pbMoney(mode, L) {
+    var k = rand(["courses", "reste", "tickets"]), a, b;
+    if (k === "courses") {
+      a = L === 0 ? rnd(1, 5) * 100 : rnd(1, 4) * 100 + rand([20, 50, 80]); b = rnd(1, 4) * 100;
+      return { key: "pmc-" + a + "-" + b, type: "fields", fields: (a + b) % 100 ? [Math.floor((a + b) / 100), (a + b) % 100] : [(a + b) / 100],
+        prompt: '<div class="gp gstory">🥐 Lucy achète un croissant à <b>' + eur(a) + "</b> et un jus de fruits à <b>" + eur(b) + '</b>. Combien paie-t-elle&nbsp;?</div><div class="gq gsmall">' + ((a + b) % 100 ? "{0} € {1} c" : "{0} €") + "</div>",
+        eq: eur(a) + " + " + eur(b) + " = " + eur(a + b), explain: moneyHTML(changeList(a).concat(changeList(b))) + '<div class="expl">' + eur(a) + " + " + eur(b) + " = <b>" + eur(a + b) + "</b>.</div>" };
+    }
+    if (k === "reste") {
+      a = L === 0 ? 1000 : 2000; b = rnd(2, a / 100 - 1) * 100;
+      return { key: "pmr-" + a + "-" + b, type: "fields", fields: [(a - b) / 100],
+        prompt: '<div class="gp gstory">🧩 Lucy a <b>' + eur(a) + "</b>. Elle achète un puzzle à <b>" + eur(b) + '</b>. Combien lui reste-t-il&nbsp;?</div><div class="gq gsmall">{0} €</div>',
+        eq: eur(a) + " − " + eur(b) + " = " + eur(a - b), explain: jumpsHTML(eur(b), [[eur(a), "+" + eur(a - b)]]) + '<div class="expl">Il lui reste <b>' + eur(a - b) + "</b>.</div>" };
+    }
+    a = rnd(2, 5); b = rnd(2, 6);
+    return { key: "pmt-" + a + "-" + b, type: "fields", fields: [a * b],
+      prompt: '<div class="gp gstory">🎠 Un tour de manège coûte <b>' + a + " €</b>. Combien coûtent <b>" + b + '</b> tours&nbsp;?</div><div class="gq gsmall">{0} €</div>',
+      eq: b + " × " + a + " € = " + (a * b) + " €", explain: moneyHTML(rep(a * 100 + ",", b).split(",").slice(0, b).map(Number)) + '<div class="expl">' + b + " fois " + a + " € = <b>" + (a * b) + " €</b>.</div>" };
+  }
+  function lessonMoney(mode) {
+    var h = '<div class="panel"><h2>💶 Les pièces et les billets</h2>' + moneyHTML([1, 2, 5, 10, 20, 50]) + moneyHTML([100, 200]) + moneyHTML([500, 1000, 2000, 5000]) +
+      '<ul class="rules"><li>🪙 <b>1 € = 100 c</b> (100 centimes).</li><li>👉 Pour compter, on commence par les billets et les plus grosses pièces.</li></ul></div>';
+    if (mode === "compter" || mode === "melange" || mode === "centimes") {
+      h += '<div class="panel"><h2>🧮 Compter</h2><div class="steps">' +
+        stepHTML(1, "Je range du plus grand au plus petit", moneyHTML([1000, 500, 200, 100])) +
+        stepHTML(2, "Je compte&nbsp;: 10 → 15 → 17 → 18", '<div class="gq gsmall">18 €</div>') +
+        stepHTML(3, "Avec des centimes&nbsp;: 2 € et 70 c", moneyHTML([200, 50, 20])) + '</div><div class="done">✅ 2 € 70 c = 270 c</div></div>';
+    }
+    if (mode === "rendre" || mode === "melange") {
+      h += '<div class="panel"><h2>🛍️ Rendre la monnaie</h2><div class="steps">' +
+        stepHTML(1, "Un livre coûte 7 €, Lucy paie avec 10 €", moneyHTML([1000])) +
+        stepHTML(2, "Je compte de 7 € jusqu'à 10 €", jumpsHTML("7 €", [["10 €", "+3 €"]])) +
+        stepHTML(3, "On lui rend 3 €", moneyHTML([200, 100])) + '</div><div class="done">✅ 10 € − 7 € = 3 €</div></div>';
+    }
+    return h;
+  }
+  MODULES.money = {
+    id: "money", title: "💶 La monnaie", short: "Monnaie", champ: "de la monnaie",
+    levels: [
+      { id: "compter", label: "Compter l'argent", ex: "💶 ➜ 18 €", color: "#22b455" },
+      { id: "rendre", label: "Rendre la monnaie", ex: "10 € − 7 € = 3 €", color: "#ff7a1a" },
+      { id: "centimes", label: "Euros et centimes", ex: "1 € = 100 c", color: "#2f8cff" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonMoney, question: qMoneyMode, problem: pbMoney
+  };
+
+  // =========================================================
+  // ---------- PARTIE 12 : GÉOMÉTRIE ----------
+  // =========================================================
+  var GEO_COLORS = ["#ff8fc7", "#7cc4ff", "#8ee59b", "#ffd166", "#c3a6ff"];
+  var GEO_NAMES = { carre: "carré", rect: "rectangle", tri: "triangle", trirect: "triangle rectangle", cercle: "cercle", losange: "losange" };
+  // Une figure : { type, pts, rot, color } — dessinée dans une boîte 200 × 160
+  function makeShape(type, rot) {
+    var a, w, h, pts = null;
+    if (type === "carre") { a = rnd(80, 100); pts = [[100 - a / 2, 80 - a / 2], [100 + a / 2, 80 - a / 2], [100 + a / 2, 80 + a / 2], [100 - a / 2, 80 + a / 2]]; }
+    else if (type === "rect") { w = rnd(140, 170); h = rnd(60, 85); pts = [[100 - w / 2, 80 - h / 2], [100 + w / 2, 80 - h / 2], [100 + w / 2, 80 + h / 2], [100 - w / 2, 80 + h / 2]]; }
+    else if (type === "tri") { pts = [[rnd(70, 85), 18], [rnd(165, 180), 145], [rnd(20, 35), 145]]; }
+    else if (type === "trirect") { w = rnd(120, 150); pts = [[30, 18], [30, 145], [30 + w, 145]]; }
+    else if (type === "losange") { pts = [[100, 12], [150, 80], [100, 148], [50, 80]]; }
+    return { type: type, pts: pts, r: rnd(55, 66), rot: rot || 0, color: rand(GEO_COLORS) };
+  }
+  function rightMark(p, a, b) {
+    function u(q) { var dx = q[0] - p[0], dy = q[1] - p[1], l = Math.sqrt(dx * dx + dy * dy); return [dx / l * 14, dy / l * 14]; }
+    var ua = u(a), ub = u(b);
+    return '<path d="M' + r1(p[0] + ua[0]) + " " + r1(p[1] + ua[1]) + " L" + r1(p[0] + ua[0] + ub[0]) + " " + r1(p[1] + ua[1] + ub[1]) + " L" + r1(p[0] + ub[0]) + " " + r1(p[1] + ub[1]) + '" fill="none" stroke="#ef2b4f" stroke-width="3"/>';
+  }
+  function rightAngles(sh) {   // indices des sommets qui ont un angle droit
+    return { carre: [0, 1, 2, 3], rect: [0, 1, 2, 3], trirect: [1] }[sh.type] || [];
+  }
+  function drawShape(sh, cls, marks, extra) {
+    var s = '<g transform="rotate(' + sh.rot + ' 100 80)">';
+    if (sh.type === "cercle") s += '<circle cx="100" cy="80" r="' + sh.r + '" fill="' + sh.color + '" stroke="#3b2a5a" stroke-width="4"/>';
+    else {
+      s += '<polygon points="' + sh.pts.map(function (p) { return p.join(","); }).join(" ") + '" fill="' + sh.color + '" stroke="#3b2a5a" stroke-width="4" stroke-linejoin="round"/>';
+      if (marks) rightAngles(sh).forEach(function (i) { var n = sh.pts.length; s += rightMark(sh.pts[i], sh.pts[(i + 1) % n], sh.pts[(i + n - 1) % n]); });
+    }
+    return svgWrap(200, 160, s + "</g>" + (extra || ""), cls, GEO_NAMES[sh.type], "-25 -25 250 210");
+  }
+  // Angle avec l'équerre posée au sommet
+  function angleSVG(deg, rot, withSquare) {
+    var V = [150, 170], A = [300, 170], rad = deg * Math.PI / 180, B = [r1(150 + 140 * Math.cos(rad)), r1(170 - 140 * Math.sin(rad))];
+    var s = '<g transform="rotate(' + rot + ' 175 110)">';
+    if (withSquare) s += '<polygon points="150,170 250,170 150,70" fill="#7dd3fc" fill-opacity=".55" stroke="#0284c7" stroke-width="3"/><path d="M150 152 L168 152 L168 170" fill="none" stroke="#0284c7" stroke-width="3"/>';
+    s += '<line x1="' + V[0] + '" y1="' + V[1] + '" x2="' + A[0] + '" y2="' + A[1] + '" stroke="#3b2a5a" stroke-width="6" stroke-linecap="round"/>' +
+      '<line x1="' + V[0] + '" y1="' + V[1] + '" x2="' + B[0] + '" y2="' + B[1] + '" stroke="#3b2a5a" stroke-width="6" stroke-linecap="round"/><circle cx="150" cy="170" r="6" fill="#ef4444"/>';
+    return svgWrap(320, 200, s + "</g>", "angle", "angle", "-20 -45 360 290");
+  }
+  // Figures pour la symétrie : contour + axe en pointillés rouges
+  var SYM = [
+    { k: "rect-v", d: "M30 40 H170 V120 H30 Z", ax: [100, 15, 100, 145], y: 1 }, { k: "rect-h", d: "M30 40 H170 V120 H30 Z", ax: [10, 80, 190, 80], y: 1 },
+    { k: "rect-d", d: "M30 40 H170 V120 H30 Z", ax: [20, 32, 180, 128], y: 0 }, { k: "carre-d", d: "M45 25 H155 V135 H45 Z", ax: [35, 15, 165, 145], y: 1 },
+    { k: "carre-v", d: "M45 25 H155 V135 H45 Z", ax: [100, 10, 100, 150], y: 1 }, { k: "iso-v", d: "M100 15 L165 145 H35 Z", ax: [100, 5, 100, 155], y: 1 },
+    { k: "trirect-v", d: "M40 15 V145 H170 Z", ax: [105, 5, 105, 155], y: 0 }, { k: "coeur-v", d: "M100 145 C40 100 25 60 55 35 C75 20 95 30 100 50 C105 30 125 20 145 35 C175 60 160 100 100 145 Z", ax: [100, 10, 100, 155], y: 1 },
+    { k: "cercle-d", c: 1, ax: [30, 30, 170, 130], y: 1 }, { k: "L-v", d: "M50 20 H95 V100 H160 V140 H50 Z", ax: [105, 10, 105, 150], y: 0 },
+    { k: "fleche-h", d: "M20 60 H120 V30 L180 80 L120 130 V100 H20 Z", ax: [10, 80, 190, 80], y: 1 }, { k: "fleche-v", d: "M20 60 H120 V30 L180 80 L120 130 V100 H20 Z", ax: [100, 10, 100, 150], y: 0 },
+    { k: "maison-v", d: "M40 70 L100 20 L160 70 V145 H40 Z", ax: [100, 8, 100, 155], y: 1 }, { k: "maison-h", d: "M40 70 L100 20 L160 70 V145 H40 Z", ax: [20, 90, 180, 90], y: 0 },
+    { k: "etoile-v", d: "M100 15 L117 62 L167 62 L127 92 L142 140 L100 111 L58 140 L73 92 L33 62 L83 62 Z", ax: [100, 5, 100, 155], y: 1 },
+    { k: "trapeze-v", d: "M60 40 H140 L175 130 H25 Z", ax: [100, 15, 100, 150], y: 1 }, { k: "parallelo-v", d: "M60 40 H175 L140 130 H25 Z", ax: [100, 15, 100, 150], y: 0 },
+    { k: "E-h", d: "M50 20 H150 V45 H80 V68 H130 V92 H80 V115 H150 V140 H50 Z", ax: [30, 80, 170, 80], y: 1 }, { k: "E-v", d: "M50 20 H150 V45 H80 V68 H130 V92 H80 V115 H150 V140 H50 Z", ax: [100, 10, 100, 150], y: 0 }
+  ];
+  function symSVG(o, color, cls, folded) {
+    var s = o.c ? '<circle cx="100" cy="80" r="62" fill="' + color + '" stroke="#3b2a5a" stroke-width="4"/>' : '<path d="' + o.d + '" fill="' + color + '" stroke="#3b2a5a" stroke-width="4" stroke-linejoin="round"/>';
+    s += '<line x1="' + o.ax[0] + '" y1="' + o.ax[1] + '" x2="' + o.ax[2] + '" y2="' + o.ax[3] + '" stroke="#ef2b4f" stroke-width="5" stroke-dasharray="10 7" stroke-linecap="round"/>';
+    return svgWrap(200, 160, s, cls, "figure et axe", "-10 -5 220 170");
+  }
+  // Polygones pour le périmètre, avec la longueur écrite sur chaque côté
+  function perimSVG(pts, labels) {
+    var cx = 0, cy = 0, s = "";
+    pts.forEach(function (p) { cx += p[0]; cy += p[1]; }); cx /= pts.length; cy /= pts.length;
+    s += '<polygon points="' + pts.map(function (p) { return p.join(","); }).join(" ") + '" fill="#e1efff" stroke="#2f6bff" stroke-width="4" stroke-linejoin="round"/>';
+    pts.forEach(function (p, i) {
+      if (labels[i] === "") return;
+      var q = pts[(i + 1) % pts.length], mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2, dx = q[1] - p[1], dy = p[0] - q[0], l = Math.sqrt(dx * dx + dy * dy);
+      var nx = dx / l, ny = dy / l;
+      if ((mx + nx * 10 - cx) * nx + (my + ny * 10 - cy) * ny < 0) { nx = -nx; ny = -ny; }
+      s += svgText(r1(mx + nx * 22), r1(my + ny * 22 + 6), labels[i], 19, "#c26a00");
+    });
+    return svgWrap(240, 180, s, "geo", "figure", "-25 -20 290 220");
+  }
+  function perimQuestion(L) {
+    var t, P, pts, labels, txt = "", vals;
+    if (L === 0) {
+      t = rand(["carre", "rect"]);
+      if (t === "carre") { var c = rnd(2, 9); vals = [c, c, c, c]; pts = [[60, 20], [180, 20], [180, 140], [60, 140]]; }
+      else { var w = rnd(4, 9), h = rnd(2, w - 1); vals = [w, h, w, h]; pts = [[20, 35], [220, 35], [220, 125], [20, 125]]; }
+      labels = vals.map(function (v) { return v + " cm"; });
+    } else if (L === 1) {
+      t = rand(["tri", "rect2"]);
+      if (t === "tri") { vals = [rnd(3, 9), rnd(3, 9), rnd(3, 9)]; pts = [[110, 15], [215, 150], [20, 150]]; labels = vals.map(function (v) { return v + " cm"; }); }
+      else { var w2 = rnd(5, 12), h2 = rnd(2, w2 - 1); vals = [w2, h2, w2, h2]; pts = [[20, 35], [220, 35], [220, 125], [20, 125]]; labels = [w2 + " cm", h2 + " cm", "", ""]; txt = "C'est un <b>rectangle</b>&nbsp;: les côtés opposés sont égaux."; }
+    } else {
+      t = rand(["L", "maison", "carre2"]);
+      if (t === "L") { var a = rnd(3, 6), b = rnd(2, 4), c2 = rnd(2, 5), d = rnd(2, 4); vals = [a, b, c2, d, a + c2, b + d]; pts = [[20, 15], [110, 15], [110, 80], [220, 80], [220, 160], [20, 160]]; }
+      else if (t === "maison") { var r = rnd(4, 7), hh = rnd(5, 8), bb = rnd(6, 10); vals = [r, hh, bb, hh, r]; pts = [[120, 10], [210, 70], [210, 160], [30, 160], [30, 70]]; }
+      else { var cc = rnd(10, 25); vals = [cc, cc, cc, cc]; pts = [[60, 20], [180, 20], [180, 140], [60, 140]]; labels = [cc + " cm", "", "", ""]; txt = "C'est un <b>carré</b>&nbsp;: ses 4 côtés sont égaux."; }
+      if (!labels) labels = vals.map(function (v) { return v + " cm"; });
+    }
+    P = vals.reduce(function (x, y) { return x + y; }, 0);
+    return { key: "gp-" + t + "-" + vals.join("."), type: "fields", fields: [P],
+      prompt: '<div class="gp">Quel est le <b>périmètre</b> de cette figure&nbsp;?</div>' + perimSVG(pts, labels) + (txt ? '<div class="gp gsmall">' + txt + "</div>" : "") + '<div class="gq gsmall">{0} cm</div>',
+      hint: "Le périmètre, c'est le tour de la figure&nbsp;: on ajoute tous les côtés ✏️",
+      eq: "Périmètre = " + vals.join(" + ") + " = " + P + " cm", explain: perimSVG(pts, vals.map(function (v) { return v + " cm"; })) + '<div class="expl">On ajoute tous les côtés&nbsp;: ' + vals.join(" + ") + " = <b>" + P + " cm</b>.</div>" };
+  }
+  function qGeo(kind, L) {
+    var sh, t, opts, deg, rot;
+    if (kind === "angle") {
+      if (L === 0) {
+        deg = rand([90, 90, 90, 60, 70, 110, 120, 45, 135]); rot = rand([0, 90, 180, 270]);
+        return { key: "ga-" + deg + "-" + rot, type: "choice", optClass: "two", options: ["Oui ✔️", "Non ✖️"], answer: deg === 90 ? 0 : 1,
+          prompt: '<div class="gp">Avec l\'équerre&nbsp;: est-ce un <b>angle droit</b>&nbsp;?</div>' + angleSVG(deg, rot, true),
+          eq: deg === 90 ? "Oui, c'est un angle droit" : "Non, ce n'est pas un angle droit",
+          explain: angleSVG(deg, rot, true) + '<div class="expl">' + (deg === 90 ? "Les deux côtés suivent exactement les bords de l'équerre&nbsp;: c'est un <b>angle droit</b>." :
+            "Un côté ne suit pas le bord de l'équerre&nbsp;: l'angle est " + (deg < 90 ? "plus petit" : "plus grand") + " qu'un angle droit.") + "</div>" };
+      }
+      if (L === 1) {   // quel angle est droit ?
+        sh = makeShape("trirect", rand([0, 90, 180, 270])); var lab = shuffle(["A", "B", "C"]), ex = "";
+        var ra = sh.rot * Math.PI / 180, rotP = function (p) { var x = p[0] - 100, y = p[1] - 80; return [100 + x * Math.cos(ra) - y * Math.sin(ra), 80 + x * Math.sin(ra) + y * Math.cos(ra)]; };
+        var g0 = rotP([(sh.pts[0][0] + sh.pts[1][0] + sh.pts[2][0]) / 3, (sh.pts[0][1] + sh.pts[1][1] + sh.pts[2][1]) / 3]);
+        sh.pts.forEach(function (p, i) { var q = rotP(p), dx = q[0] - g0[0], dy = q[1] - g0[1], l = Math.sqrt(dx * dx + dy * dy); ex += svgText(r1(q[0] + dx / l * 22), r1(q[1] + dy / l * 22 + 7), lab[i], 22, "#7c4dff"); });
+        var pic = drawShape(sh, "geo", false, ex), picOk = drawShape(sh, "geo", true, ex);
+        return { key: "gab-" + sh.rot + "-" + lab.join(""), type: "choice", optClass: "signs3", options: ["A", "B", "C"], answer: ["A", "B", "C"].indexOf(lab[1]),
+          prompt: '<div class="gp">Quel angle est un <b>angle droit</b>&nbsp;?</div>' + pic, hint: "Imagine l'équerre posée dans chaque coin 📐",
+          eq: "L'angle droit est en " + lab[1], explain: picOk + '<div class="expl">L\'angle droit est marqué d\'un petit carré rouge&nbsp;: c\'est l\'angle <b>' + lab[1] + "</b>.</div>" };
+      }
+      t = rand(["carre", "rect", "trirect", "tri", "losange"]); sh = makeShape(t, rand([0, 15, -20]));
+      var nb = rightAngles(sh).length;
+      return { key: "gac-" + t, type: "fields", fields: [nb], prompt: '<div class="gp">Combien d\'<b>angles droits</b> a cette figure&nbsp;?</div>' + drawShape(sh, "geo") + '<div class="gq gsmall">{0}</div>',
+        eq: "Un " + GEO_NAMES[t] + " a " + nb + " angle" + (nb > 1 ? "s" : "") + " droit" + (nb > 1 ? "s" : ""), explain: drawShape(sh, "geo", true) + '<div class="expl">Les angles droits sont marqués en rouge&nbsp;: il y en a <b>' + nb + "</b>.</div>" };
+    }
+    if (kind === "figures") {
+      var basic = L === 0 ? ["carre", "rect", "tri", "cercle"] : ["carre", "rect", "tri", "trirect", "cercle"], f = rand(["name", "find", L === 2 ? "prop" : "name"]);
+      if (f === "name") {
+        t = rand(basic); rot = L === 0 ? 0 : rand([0, 20, -25, t === "carre" ? 45 : 0]); sh = makeShape(t, rot);
+        opts = shuffle([t].concat(shuffle(basic.filter(function (x) { return x !== t; })).slice(0, 2)));
+        return { key: "gn-" + t + "-" + rot, type: "choice", options: opts.map(function (x) { return GEO_NAMES[x]; }), answer: opts.indexOf(t),
+          prompt: '<div class="gp">Comment s\'appelle cette figure&nbsp;?</div>' + drawShape(sh, "geo"),
+          eq: "C'est un " + GEO_NAMES[t], explain: drawShape(sh, "geo", true) + '<div class="expl">' + GEO_PROPS[t] + "</div>" };
+      }
+      if (f === "find") {
+        t = rand(basic); opts = shuffle([t].concat(shuffle(basic.concat(L ? ["losange"] : []).filter(function (x) { return x !== t && !(t === "tri" && x === "trirect") && !(t === "trirect" && x === "tri"); })).slice(0, 2)));
+        var shapes = opts.map(function (x) { return makeShape(x, L === 0 ? 0 : rand([0, 15, -15])); });
+        return { key: "gf-" + t + "-" + L, type: "choice", optClass: "pics", options: shapes.map(function (s2) { return drawShape(s2, "opt"); }), answer: opts.indexOf(t),
+          prompt: '<div class="gp">Quelle figure est un <b>' + GEO_NAMES[t] + "</b>&nbsp;?</div>",
+          eq: "Le " + GEO_NAMES[t] + "&nbsp;: " + GEO_PROPS[t].charAt(0).toLowerCase() + GEO_PROPS[t].slice(1), explain: drawShape(shapes[opts.indexOf(t)], "geo", true) + '<div class="expl">' + GEO_PROPS[t] + "</div>" };
+      }
+      t = rand(["carre", "rect", "trirect", "cercle", "tri"]); opts = shuffle(["carre", "rect", "trirect", "cercle", "tri"].filter(function (x) { return x !== t; })).slice(0, 2).concat([t]); opts = shuffle(opts);
+      return { key: "gpr-" + t, type: "choice", options: opts.map(function (x) { return GEO_NAMES[x]; }), answer: opts.indexOf(t),
+        prompt: '<div class="gp">Quelle figure a&nbsp;: <b>' + GEO_RIDDLE[t] + "</b>&nbsp;?</div>",
+        eq: "C'est le " + GEO_NAMES[t], explain: drawShape(makeShape(t, 0), "geo", true) + '<div class="expl">' + GEO_PROPS[t] + "</div>" };
+    }
+    if (kind === "sym") {
+      if (L === 1 && Math.random() < 0.4) {
+        var c3 = rand([["carre", 4], ["rect", 2], ["iso", 1], ["coeur", 1]]);
+        var o3 = SYM.filter(function (x) { return x.k.indexOf(c3[0]) === 0; })[0];
+        return { key: "gsc-" + c3[0], type: "fields", fields: [c3[1]],
+          prompt: '<div class="gp">Combien d\'<b>axes de symétrie</b> a cette figure&nbsp;?</div>' + svgWrap(200, 160, o3.c ? "" : '<path d="' + o3.d + '" fill="' + rand(GEO_COLORS) + '" stroke="#3b2a5a" stroke-width="4"/>', "geo", "figure", "-10 -5 220 170") + '<div class="gq gsmall">{0}</div>',
+          eq: "Cette figure a " + c3[1] + " axe" + (c3[1] > 1 ? "s" : "") + " de symétrie", explain: '<div class="expl">' + ({ carre: "Le carré a 4 axes&nbsp;: 2 au milieu des côtés et 2 sur les diagonales.", rect: "Le rectangle a 2 axes&nbsp;: au milieu, dans la longueur et dans la largeur (pas les diagonales&nbsp;!).", iso: "Ce triangle a 1 axe&nbsp;: au milieu, de la pointe à la base.", coeur: "Le cœur a 1 axe&nbsp;: au milieu, de haut en bas." }[c3[0]]) + "</div>" };
+      }
+      var pool = L === 0 ? SYM.filter(function (x) { return ["rect-v", "carre-v", "iso-v", "coeur-v", "fleche-v", "L-v", "maison-v", "trirect-v", "E-v", "E-h"].indexOf(x.k) >= 0; }) : SYM;
+      var o = rand(pool), col = rand(GEO_COLORS);
+      return { key: "gs-" + o.k, type: "choice", optClass: "two", options: ["Oui ✔️", "Non ✖️"], answer: o.y ? 0 : 1,
+        prompt: '<div class="gp">La ligne rouge est-elle un <b>axe de symétrie</b>&nbsp;?</div>' + symSVG(o, col, "geo"),
+        hint: "Imagine qu'on plie le dessin sur la ligne rouge 📄",
+        eq: o.y ? "Oui, c'est un axe de symétrie" : "Non, ce n'est pas un axe de symétrie",
+        explain: symSVG(o, col, "geo") + '<div class="expl">' + (o.y ? "Si on plie sur la ligne, les deux moitiés se superposent exactement&nbsp;: c'est un <b>axe de symétrie</b>." : "Si on plie sur la ligne, les deux parties ne se superposent pas&nbsp;: ce n'est <b>pas</b> un axe de symétrie.") + "</div>" };
+    }
+    return perimQuestion(L);
+  }
+  var GEO_PROPS = {
+    carre: "Le carré a 4 côtés égaux et 4 angles droits.", rect: "Le rectangle a 4 angles droits et ses côtés opposés sont égaux (2 longs, 2 courts).",
+    tri: "Le triangle a 3 côtés et 3 sommets.", trirect: "Le triangle rectangle a 3 côtés et un angle droit.",
+    cercle: "Le cercle est tout rond&nbsp;: il n'a ni côté ni sommet.", losange: "Le losange a 4 côtés égaux, mais pas d'angle droit."
+  };
+  var GEO_RIDDLE = { carre: "4 côtés égaux et 4 angles droits", rect: "4 angles droits, 2 longs côtés et 2 courts", trirect: "3 côtés et un angle droit", cercle: "aucun côté, elle est toute ronde", tri: "3 côtés et pas d'angle droit" };
+  function qGeoMode(mode, L) { return qGeo(mode === "melange" ? rand(["angle", "figures", "sym", "perim"]) : mode, L); }
+  var GEO_PB = {
+    angle: [
+      { key: "pga-cahier", a: 4, t: "📒 Lucy vérifie les coins de son cahier avec l'équerre. Combien d'angles droits trouve-t-elle&nbsp;?", x: "Un cahier est un rectangle&nbsp;: 4 angles droits." },
+      { key: "pga-equerre", a: 1, t: "📐 L'équerre de Lucy est un triangle rectangle. Combien a-t-elle d'angles droits&nbsp;?", x: "Un triangle rectangle a 1 angle droit." },
+      { key: "pga-porte", a: 4, t: "🚪 La porte de la classe est un rectangle. Combien a-t-elle d'angles droits&nbsp;?", x: "Un rectangle a 4 angles droits." }],
+    figures: [
+      { key: "pgf-cadre", c: "carre", t: "🖼️ Le cadre de Lucy a 4 côtés égaux et 4 angles droits. Quelle est sa forme&nbsp;?" },
+      { key: "pgf-boite", c: "cercle", t: "🥫 Le dessus d'une boîte de conserve est tout rond. Quelle est sa forme&nbsp;?" },
+      { key: "pgf-tablette", c: "rect", t: "📱 La tablette a 4 angles droits, 2 longs côtés et 2 courts. Quelle est sa forme&nbsp;?" }],
+    sym: [
+      { key: "pgs-papillon", y: 1, t: "🦋 Lucy plie son dessin de papillon en deux&nbsp;: les deux ailes se superposent exactement. La pliure est-elle un axe de symétrie&nbsp;?" },
+      { key: "pgs-enveloppe", y: 0, t: "✉️ Lucy plie une enveloppe rectangulaire en suivant sa diagonale. Les deux parties se superposent-elles exactement&nbsp;?" },
+      { key: "pgs-carte", y: 1, t: "🃏 Lucy plie une carte carrée au milieu&nbsp;: les deux moitiés se superposent. La pliure est-elle un axe de symétrie&nbsp;?" }]
+  };
+  function pbGeo(mode, L) {
+    var m = mode === "melange" ? rand(["angle", "figures", "sym", "perim"]) : mode, it;
+    if (m === "angle") { it = rand(GEO_PB.angle);
+      return { key: it.key, type: "fields", fields: [it.a], prompt: '<div class="gp gstory">' + it.t + '</div><div class="gq gsmall">{0}</div>', eq: it.x, explain: '<div class="expl">' + it.x + "</div>" }; }
+    if (m === "figures") { it = rand(GEO_PB.figures); var opts = shuffle([it.c].concat(shuffle(["carre", "rect", "tri", "cercle"].filter(function (x) { return x !== it.c; })).slice(0, 2)));
+      return { key: it.key, type: "choice", options: opts.map(function (x) { return GEO_NAMES[x]; }), answer: opts.indexOf(it.c), prompt: '<div class="gp gstory">' + it.t + "</div>",
+        eq: "C'est un " + GEO_NAMES[it.c], explain: drawShape(makeShape(it.c, 0), "geo", true) + '<div class="expl">' + GEO_PROPS[it.c] + "</div>" }; }
+    if (m === "sym") { it = rand(GEO_PB.sym);
+      return { key: it.key, type: "choice", optClass: "two", options: ["Oui ✔️", "Non ✖️"], answer: it.y ? 0 : 1, prompt: '<div class="gp gstory">' + it.t + "</div>",
+        eq: it.y ? "Oui&nbsp;: les deux parties se superposent" : "Non&nbsp;: la diagonale d'un rectangle n'est pas un axe de symétrie",
+        explain: '<div class="expl">Un axe de symétrie partage la figure en deux moitiés qui se superposent exactement quand on plie.</div>' }; }
+    var w = rnd(L === 0 ? 5 : 8, L === 0 ? 10 : 25), h = rnd(3, w - 1), unit = rand(["m", "m", "cm"]);
+    var txt = unit === "m" ? "🌻 Papa veut mettre une clôture tout autour du jardin rectangulaire de <b>" + w + " m</b> sur <b>" + h + " m</b>. Combien de mètres de clôture faut-il&nbsp;?" :
+      "🖼️ Lucy colle un ruban tout autour d'un cadre rectangulaire de <b>" + w + " cm</b> sur <b>" + h + " cm</b>. Quelle longueur de ruban lui faut-il&nbsp;?";
+    return { key: "pgp-" + w + "-" + h, type: "fields", fields: [2 * (w + h)], prompt: '<div class="gp gstory">' + txt + '</div><div class="gq gsmall">{0} ' + unit + "</div>",
+      eq: w + " + " + h + " + " + w + " + " + h + " = " + (2 * (w + h)) + " " + unit,
+      explain: perimSVG([[20, 35], [220, 35], [220, 125], [20, 125]], [w + " " + unit, h + " " + unit, w + " " + unit, h + " " + unit]) + '<div class="expl">Tout autour = le périmètre&nbsp;: ' + w + " + " + h + " + " + w + " + " + h + " = <b>" + (2 * (w + h)) + " " + unit + "</b>.</div>" };
+  }
+  function lessonGeo(mode) {
+    var h = "", all = mode === "melange";
+    if (mode === "angle" || all) {
+      h += '<div class="panel"><h2>📐 L\'angle droit</h2><div class="steps">' +
+        stepHTML(1, "Je pose l'équerre bien dans le coin", angleSVG(90, 0, true)) +
+        stepHTML(2, "Les deux côtés suivent l'équerre&nbsp;: <b>angle droit</b> ✔️", angleSVG(90, 0, true)) +
+        stepHTML(3, "Un côté s'écarte&nbsp;: <b>pas un angle droit</b> ✖️", angleSVG(120, 0, true)) + '</div><div class="tip">Sur les dessins, on marque l\'angle droit avec un petit carré rouge.</div></div>';
+    }
+    if (mode === "figures" || mode === "angle" || all) {
+      h += '<div class="panel"><h2>🔷 Les figures</h2><div class="steps">' +
+        ["carre", "rect", "tri", "trirect", "cercle"].map(function (t, i) { return stepHTML(i + 1, "<b>" + cap(GEO_NAMES[t]) + "</b>&nbsp;: " + GEO_PROPS[t].replace(/^Le \S+ /, ""), drawShape(makeShape(t, 0), "geo", true)); }).join("") +
+        "</div></div>";
+    }
+    if (mode === "sym" || all) {
+      h += '<div class="panel"><h2>🦋 L\'axe de symétrie</h2><div class="steps">' +
+        stepHTML(1, "Je plie sur la ligne&nbsp;: les deux moitiés se superposent → <b>axe</b> ✔️", symSVG(SYM[0], "#8ee59b", "geo")) +
+        stepHTML(2, "Sur la diagonale du rectangle, ça ne se superpose pas → <b>pas un axe</b> ✖️", symSVG(SYM[2], "#ffd166", "geo")) +
+        stepHTML(3, "Le cœur a un axe au milieu", symSVG(SYM[7], "#ff8fc7", "geo")) + "</div></div>";
+    }
+    if (mode === "perim" || all) {
+      h += '<div class="panel"><h2>📏 Le périmètre</h2><ul class="rules"><li>Le <b>périmètre</b>, c\'est la longueur du tour de la figure.</li></ul><div class="steps">' +
+        stepHTML(1, "Je repère la longueur de chaque côté", perimSVG([[20, 35], [220, 35], [220, 125], [20, 125]], ["5 cm", "3 cm", "5 cm", "3 cm"])) +
+        stepHTML(2, "J'ajoute tous les côtés", '<div class="gq gsmall">5 + 3 + 5 + 3</div>') + '</div><div class="done">✅ Périmètre = 16 cm</div></div>';
+    }
+    return h;
+  }
+  MODULES.geo = {
+    id: "geo", title: "📐 La géométrie", short: "Géométrie", champ: "de la géométrie",
+    levels: [
+      { id: "angle", label: "L'angle droit", ex: "📐 avec l'équerre", color: "#2f8cff" },
+      { id: "figures", label: "Les figures", ex: "⬛ ▭ 🔺 ⚪", color: "#22b455" },
+      { id: "sym", label: "Axe de symétrie", ex: "🦋 plier en deux", color: "#ff4fa3" },
+      { id: "perim", label: "Le périmètre", ex: "5 + 3 + 5 + 3", color: "#ff7a1a" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonGeo, question: qGeoMode, problem: pbGeo
+  };
+
+  // =========================================================
+  // ---------- PARTIE 13 : PROBLÈMES ----------
+  // Elle choisit d'abord l'opération (+ − × :), puis elle donne le résultat.
+  // =========================================================
+  var OPS = ["+", "−", "×", ":"];
+  var NAMES = ["Lucy", "Tom", "Léa", "Hugo", "Inès", "Noah", "Jade", "Sami"];
+  var PB_T = {
+    add: [
+      function (A, B) { return ["🧺 Au marché, on vend <b>" + fmt(A) + "</b> pommes le matin et <b>" + fmt(B) + "</b> l'après-midi. Combien de pommes en tout&nbsp;?", "pommes"]; },
+      function (A, B) { return ["🚌 Dans le car, il y a <b>" + fmt(A) + "</b> passagers. <b>" + fmt(B) + "</b> autres passagers montent. Combien de passagers maintenant&nbsp;?", "passagers"]; },
+      function (A, B, n) { return ["📚 " + n + " lit <b>" + fmt(A) + "</b> pages en mai et <b>" + fmt(B) + "</b> pages en juin. Combien de pages en tout&nbsp;?", "pages"]; },
+      function (A, B) { return ["🎁 Un jeu coûte <b>" + fmt(A) + "</b>" + NB + "€ et un livre <b>" + fmt(B) + "</b>" + NB + "€. Combien coûtent les deux&nbsp;?", "€"]; }],
+    sub: [
+      function (A, B) { return ["🐦 Il y a <b>" + fmt(A) + "</b> oiseaux dans le parc. <b>" + fmt(B) + "</b> s'envolent. Combien en reste-t-il&nbsp;?", "oiseaux"]; },
+      function (A, B, n) { return ["💰 " + n + " a <b>" + fmt(A) + "</b>" + NB + "€. Un jouet coûte <b>" + fmt(B) + "</b>" + NB + "€. Combien lui reste-t-il après l'achat&nbsp;?", "€"]; },
+      function (A, B, n, m) { return ["🃏 " + n + " a <b>" + fmt(A) + "</b> cartes et " + m + " en a <b>" + fmt(B) + "</b>. Combien de cartes de plus pour " + n + "&nbsp;?", "cartes"]; },
+      function (A, B, n) { return ["📖 Le livre a <b>" + fmt(A) + "</b> pages. " + n + " en a déjà lu <b>" + fmt(B) + "</b>. Combien de pages reste-t-il à lire&nbsp;?", "pages"]; }],
+    mul: [
+      function (A, B) { return ["📦 Il y a <b>" + A + "</b> boîtes de <b>" + B + "</b> crayons. Combien de crayons en tout&nbsp;?", "crayons"]; },
+      function (A, B) { return ["🎟️ Un ticket de cinéma coûte <b>" + B + "</b>" + NB + "€. Combien coûtent <b>" + A + "</b> tickets&nbsp;?", "€"]; },
+      function (A, B) { return ["🥬 Le jardin a <b>" + A + "</b> rangées de <b>" + B + "</b> salades. Combien de salades en tout&nbsp;?", "salades"]; },
+      function (A, B) { return ["🚲 Chaque jour, " + rand(NAMES) + " fait <b>" + B + "</b> km à vélo. Combien de km en <b>" + A + "</b> jours&nbsp;?", "km"]; }],
+    div: [
+      function (N, A) { return ["🍬 On partage <b>" + N + "</b> bonbons entre <b>" + A + "</b> enfants. Combien de bonbons pour chacun&nbsp;?", "bonbons"]; },
+      function (N, A) { return ["⚽ <b>" + N + "</b> élèves font des équipes de <b>" + A + "</b>. Combien d'équipes&nbsp;?", "équipes"]; },
+      function (N, A) { return ["🥚 On range <b>" + N + "</b> œufs dans des boîtes de <b>" + A + "</b>. Combien de boîtes&nbsp;?", "boîtes"]; },
+      function (N, A, n) { return ["🍰 Une part de gâteau coûte <b>" + A + "</b>" + NB + "€. " + n + " a <b>" + N + "</b>" + NB + "€. Combien de parts peut-on acheter&nbsp;?", "parts"]; }]
+  };
+  function pbNums(op, L) {
+    var A, B;
+    if (op === "add") { A = L === 0 ? rnd(12, 60) : L === 1 ? rnd(100, 500) : rnd(1000, 5000); B = L === 0 ? rnd(5, 39) : L === 1 ? rnd(50, 400) : rnd(200, 3000); }
+    else if (op === "sub") { A = L === 0 ? rnd(20, 99) : L === 1 ? rnd(100, 999) : rnd(1000, 9999); B = rnd(L === 0 ? 5 : L === 1 ? 30 : 200, A - (L === 0 ? 5 : 20)); }
+    else if (op === "mul") { A = L === 0 ? rnd(2, 5) : rnd(2, 9); B = L === 0 ? rnd(2, 10) : L === 1 ? rnd(3, 10) : rnd(11, 60); }
+    else { A = L === 0 ? rnd(2, 5) : rnd(2, 9); B = L === 0 ? rnd(2, 6) : rnd(2, 10); }   // division : N = A × B, réponse B
+    return [A, B];
+  }
+  // Schéma en barres
+  function barModel(op, A, B, R) {
+    var h = '<div class="bm">';
+    if (op === "add") h += '<div class="bm-row"><div class="bm-seg c0" style="flex:' + A + '">' + fmt(A) + '</div><div class="bm-seg c1" style="flex:' + B + '">' + fmt(B) + '</div></div><div class="bm-row"><div class="bm-seg q" style="flex:1">Total&nbsp;: ' + fmt(R) + "</div></div>";
+    else if (op === "sub") h += '<div class="bm-row"><div class="bm-seg c0" style="flex:1">' + fmt(A) + '</div></div><div class="bm-row"><div class="bm-seg c1" style="flex:' + B + '">' + fmt(B) + '</div><div class="bm-seg q" style="flex:' + Math.max(R, A / 6) + '">' + fmt(R) + "</div></div>";
+    else if (op === "mul") { h += '<div class="bm-row">' + rep('<div class="bm-seg c0" style="flex:1">' + B + "</div>", A) + '</div><div class="bm-row"><div class="bm-seg q" style="flex:1">' + A + " fois " + B + " = " + fmt(R) + "</div></div>"; }
+    else { h += '<div class="bm-row"><div class="bm-seg c0" style="flex:1">' + (A * R) + '</div></div><div class="bm-row">' + rep('<div class="bm-seg q" style="flex:1">' + R + "</div>", A) + "</div>"; }
+    return h + "</div>";
+  }
+  var OP_WHY = {
+    add: "On cherche un <b>total</b>&nbsp;: on <b>ajoute</b>.", sub: "On enlève, ou on cherche ce qui reste ou l'écart&nbsp;: on <b>soustrait</b>.",
+    mul: "C'est plusieurs fois la même quantité&nbsp;: on <b>multiplie</b>.", div: "On partage en parts égales, ou on fait des groupes&nbsp;: on <b>divise</b>."
+  };
+  function qProb(mode, L) {
+    var op = mode === "melange" ? rand(["add", "sub", "mul", "div"]) : mode, nm = shuffle(NAMES.slice()), ab = pbNums(op, L), A = ab[0], B = ab[1];
+    var t = rand(PB_T[op]), st, R, calc, key;
+    if (op === "div") { var N = A * B; st = t(N, A, nm[0]); R = B; calc = N + " : " + A + " = " + R; key = "pr-div-" + N + "-" + A; }
+    else { st = t(A, B, nm[0], nm[1]); R = op === "add" ? A + B : op === "sub" ? A - B : A * B; calc = fmt(A) + " " + OPS[["add", "sub", "mul"].indexOf(op)] + " " + fmt(B) + " = " + fmt(R); key = "pr-" + op + "-" + A + "-" + B; }
+    return { key: key, type: "fields", fields: [R], ops: OPS, opAnswer: ["add", "sub", "mul", "div"].indexOf(op),
+      prompt: '<div class="gp gstory">' + st[0] + '</div><div class="gp gsmall">1. Choisis l\'opération&nbsp;:</div>{op}<div class="gp gsmall">2. Écris le résultat&nbsp;:</div><div class="gq gsmall">{0} ' + st[1] + "</div>",
+      hint: "Choisis l'opération, puis tape le résultat ✏️",
+      eq: "Opération " + OPS[["add", "sub", "mul", "div"].indexOf(op)] + "&nbsp;: " + calc + " " + st[1],
+      explain: barModel(op, op === "div" ? A : A, B, R) + '<div class="expl">' + OP_WHY[op] + " " + calc + " " + st[1] + ".</div>" };
+  }
+  function lessonProb(mode) {
+    var h = '<div class="panel"><h2>🔎 Comment résoudre un problème</h2><div class="steps">' +
+      stepHTML(1, "Je lis l'énoncé en entier 📖", "") + stepHTML(2, "Je trouve la question&nbsp;: que cherche-t-on&nbsp;? ❓", "") +
+      stepHTML(3, "Je choisis l'opération ➕➖✖️➗", "") + stepHTML(4, "Je calcule et j'écris la réponse avec l'unité ✏️", "") + "</div></div>";
+    var ex = {
+      add: ["➕ Ajouter", "On vend 25 pommes le matin et 17 l'après-midi. Combien en tout&nbsp;?", "25 + 17 = 42 pommes", 25, 17, 42],
+      sub: ["➖ Enlever, chercher l'écart", "Il y a 30 oiseaux, 12 s'envolent. Combien en reste-t-il&nbsp;?", "30 − 12 = 18 oiseaux", 30, 12, 18],
+      mul: ["✖️ Plusieurs fois la même quantité", "4 boîtes de 6 crayons. Combien de crayons&nbsp;?", "4 × 6 = 24 crayons", 4, 6, 24],
+      div: ["➗ Partager, faire des groupes", "On partage 15 bonbons entre 3 enfants. Combien chacun&nbsp;?", "15 : 3 = 5 bonbons", 3, 5, 5]
+    };
+    ["add", "sub", "mul", "div"].forEach(function (op) {
+      if (mode !== op && mode !== "melange") return;
+      var e = ex[op];
+      h += '<div class="panel"><h2>' + e[0] + '</h2><div class="gp gstory">' + e[1] + "</div>" + barModel(op, e[3], e[4], e[5]) +
+        '<div class="tip">' + OP_WHY[op] + '</div><div class="done">✅ ' + e[2] + "</div></div>";
+    });
+    return h;
+  }
+  MODULES.prob = {
+    id: "prob", title: "🔎 Les problèmes", short: "Problèmes", champ: "des problèmes",
+    levels: [
+      { id: "add", label: "Ajouter", ex: "➕ le total", color: "#22b455" },
+      { id: "sub", label: "Enlever, comparer", ex: "➖ ce qui reste", color: "#ef4444" },
+      { id: "mul", label: "Plusieurs fois", ex: "✖️ 4 boîtes de 6", color: "#2f8cff" },
+      { id: "div", label: "Partager", ex: "➗ parts égales", color: "#ff7a1a" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Quelle opération&nbsp;?", color: "#7c4dff" }
+    ],
+    lesson: lessonProb, question: qProb, problem: qProb
+  };
+  ["calc", "frac", "mes", "heure", "money", "geo", "prob"].forEach(function (id) {
+    $("#go-" + id).addEventListener("click", function () { gOpen(id); });
+  });
 })();
 </script>
 </body>

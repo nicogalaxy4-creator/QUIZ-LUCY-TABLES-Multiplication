@@ -1,6 +1,6 @@
 <!--
   ==========================================================================
-  LES MATHS DE LUCY — RÈGLES À RESPECTER POUR TOUS LES FUTURS AJOUTS
+  LES RÉVISIONS DE LUCY — RÈGLES À RESPECTER POUR TOUS LES FUTURS AJOUTS
   ==========================================================================
   Public : Lucy, 8 ans, en CE2. Tout en français, un seul fichier index.html.
 
@@ -73,6 +73,27 @@
      - Fractions : du demi au huitième (2, 3, 4, 5, 6, 8 parts égales) ; le
        dénominateur (en bas) = parts égales, le numérateur (en haut) = parts
        prises. Pour colorier, on touche les parts du dessin.
+  6. Navigation générale et partie FRANÇAIS
+     - Écran de départ "Les révisions de Lucy" : deux très gros boutons MATHS
+       et FRANÇAIS. Un bouton rond "🏠 Accueil" (en bas à gauche) ramène à
+       ce choix depuis tous les écrans.
+     - Les parties de maths ne changent pas : elles sont derrière MATHS.
+     - Menu Français, dans cet ordre : 1. Lecture fluence, 2. Grammaire,
+       3. Conjugaison, 4. Orthographe, 5. Vocabulaire.
+     - Parties 2 à 5 : même déroulé que la règle 4 (rappel de cours avec
+       exemples, 20 questions, correction immédiate et explication courte,
+       "Mélange"). Questions : QCM, phrase à trous avec choix, toucher le bon
+       mot dans la phrase. Grandes zones à toucher.
+     - Lecture fluence : choix du texte (niveaux 1, 2, 3) ; le texte n'apparaît
+       qu'au GO ; chrono d'1 minute visible ; signal sonore à la fin (même si
+       le son est coupé) ; bouton Stop (le vrai temps est alors utilisé).
+       L'adulte touche le DERNIER mot lu (vert) puis les mots mal lus (rouge,
+       toucher encore pour annuler). Score = mots correctement lus par minute,
+       repère 90 en fin de CE2. Puis 3 questions de compréhension.
+       Historique (date, texte, score) gardé sur la tablette, avec courbe,
+       ligne à 90 et bouton pour effacer (avec confirmation).
+     - Toutes les données de français (textes, phrases, verbes, mots, rappels
+       de cours) sont dans le premier <script>, en listes faciles à compléter.
   ==========================================================================
 -->
 <!doctype html>
@@ -81,7 +102,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#7c4dff">
-<title>Les maths de Lucy</title>
+<title>Les révisions de Lucy</title>
+<meta name="application-name" content="Les révisions de Lucy">
+<meta name="apple-mobile-web-app-title" content="Les révisions de Lucy">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🦄%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -816,17 +840,199 @@
   .bm-seg.c0 { background: #dbeafe; color: #1d5fd1; }
   .bm-seg.c1 { background: #dcfce7; color: #138a3e; }
   .bm-seg.q { background: #fff3c4; color: #8a5a00; border-style: dashed; }
+
+  /* =========================================================
+     DÉPART (MATHS / FRANÇAIS), BOUTON ACCUEIL, PARTIE FRANÇAIS
+     ========================================================= */
+  .start-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 18px 0 24px; }
+  .start-card {
+    border-radius: 40px; padding: 34px 18px 30px; color: #fff; min-height: clamp(300px, 38vh, 440px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    text-shadow: 0 3px 0 rgba(0,0,0,.18); box-shadow: 0 12px 0 rgba(0,0,0,.2); transition: transform .08s;
+  }
+  .start-card:hover { transform: translateY(-3px) rotate(-1deg); }
+  .start-card:active { transform: translateY(8px); box-shadow: 0 4px 0 rgba(0,0,0,.2); }
+  .start-card.maths { background: linear-gradient(150deg, #3ec7ff, #7c4dff); }
+  .start-card.francais { background: linear-gradient(150deg, #ff6fb5, #ff9f1c); }
+  .sc-emoji {
+    font-size: clamp(3.4rem, 9vw, 4.6rem); line-height: 1; width: 1.7em; height: 1.7em; border-radius: 50%;
+    background: rgba(255,255,255,.92); display: flex; align-items: center; justify-content: center; text-shadow: none;
+  }
+  .sc-title { font-size: clamp(2.6rem, 8vw, 3.8rem); font-weight: 700; letter-spacing: 2px; line-height: 1; }
+  .sc-sub { font-size: clamp(1.15rem, 3vw, 1.4rem); font-weight: 500; }
+  .accueil-btn {
+    position: fixed; left: 10px; bottom: 10px; z-index: 50;
+    width: 64px; height: 64px; border-radius: 50%; background: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;
+    font-size: 1.6rem; box-shadow: 0 4px 0 #d9cbff, 0 6px 16px rgba(124,77,255,.25);
+  }
+  .accueil-btn span { font-size: .72rem; font-weight: 700; color: var(--purple); margin-top: 3px; }
+  .accueil-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #d9cbff; }
+  body[data-screen="start"] .accueil-btn, body:not([data-screen]) .accueil-btn { display: none; }
+  body[data-screen] .screen:not(#screen-start) { padding-bottom: 86px; }   /* place pour le bouton Accueil */
+  .home-card.fluence { background: linear-gradient(150deg, #ff6fb5, #ff4f7b); }
+  .home-card.gram { background: linear-gradient(150deg, #3ec7ff, #2f6bff); }
+  .home-card.conj { background: linear-gradient(150deg, #a78bfa, #6d28d9); }
+  .home-card.orth { background: linear-gradient(150deg, #2fd27a, #12a07c); }
+  .home-card.voc { background: linear-gradient(150deg, #ffcf3d, #ff8a1f); }
+
+  /* Rappels de cours en français */
+  .frex { font-size: clamp(1.2rem, 3.2vw, 1.5rem); font-weight: 500; background: #fffbe6; border-left: 6px solid var(--yellow); border-radius: 12px; padding: 8px 14px; margin: 0 0 10px; }
+  .tip { font-size: clamp(1.1rem, 3vw, 1.35rem); background: #e9f7ff; border-radius: 16px; padding: 8px 14px; margin: 0 0 14px; }
+  #gl-body .panel h2 + .rules, #gl-body .panel h2 + .frex { margin-top: 8px; }
+  #gl-body .panel h2:not(:first-child) { margin-top: 12px; }
+  .ctabs { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-top: 8px; }
+  .ctab { background: #f6f1ff; border-radius: 16px; padding: 8px 12px; font-size: 1.15rem; line-height: 1.45; }
+  .ctab-v { font-weight: 700; color: var(--purple); font-size: 1.25rem; border-bottom: 2px dashed #d9cbff; margin-bottom: 4px; }
+  .ctab .cpr { color: var(--ink-soft); }
+  .ctab .hl { background: #fff3c4; border-radius: 8px; outline: 3px solid #ffb800; padding: 0 4px; }
+  .correction .ctab { text-align: left; min-width: 200px; }
+
+  /* Questions de français */
+  .gsent { font-size: clamp(1.35rem, 3.8vw, 1.85rem); font-weight: 600; background: #f6f1ff; border-radius: 18px; padding: 12px 16px; margin: 8px 0; line-height: 1.5; }
+  .gblank { display: inline-block; min-width: 2.4em; text-align: center; border-bottom: 4px dashed var(--purple); color: var(--purple); padding: 0 6px; }
+  .gbigword { font-size: clamp(2.4rem, 7vw, 3.4rem); font-weight: 700; text-align: center; letter-spacing: 2px; margin: 10px 0; }
+  .gwords { font-size: clamp(1.35rem, 3.8vw, 1.85rem); font-weight: 600; background: #f6f1ff; border-radius: 18px; padding: 12px 10px; margin: 8px 0; line-height: 2.3; }
+  .gword {
+    background: #fff; border: 3px solid #e1d6ff; border-radius: 14px; padding: 2px 10px; min-height: 48px;
+    font-size: inherit; font-weight: 600; box-shadow: 0 3px 0 #d9cbff; margin: 2px 0; vertical-align: middle;
+  }
+  .gword:active { transform: translateY(2px); box-shadow: 0 1px 0 #d9cbff; }
+  .gword.sel { border-color: #ffb800; background: #fff3c4; }
+  .gword.w-ok { border-color: var(--green); background: #e7fbe9; color: var(--green-dark); }
+  .gword.w-ko { border-color: var(--orange); background: #fff4e3; text-decoration: line-through; }
+  .gwp { font-weight: 700; }
+  .units3 .gopt { overflow-wrap: normal; word-break: normal; }
+
+  /* Lecture fluence : menu */
+  .fl-levels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .fl-levels button {
+    background: #f3eeff; color: var(--purple); border-radius: 18px; min-height: 60px; font-size: clamp(1.1rem, 3vw, 1.4rem); font-weight: 700;
+    box-shadow: 0 4px 0 #d9cbff; border: 4px solid transparent;
+  }
+  .fl-levels button.on { background: var(--purple); color: #fff; box-shadow: 0 4px 0 var(--purple-dark); }
+  .fl-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .fl-card {
+    background: #fff; border: 4px solid #e1d6ff; border-radius: 24px; padding: 14px; min-height: 120px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 6px 0 #d9cbff;
+  }
+  .fl-card:active { transform: translateY(4px); box-shadow: 0 2px 0 #d9cbff; }
+  .fl-genre { font-size: 1.05rem; font-weight: 600; color: var(--ink-soft); }
+  .fl-title { font-size: clamp(1.35rem, 3.6vw, 1.7rem); font-weight: 700; color: var(--purple); }
+  .fl-meta { font-size: 1.05rem; color: var(--ink-soft); }
+  .fl-bottom { display: flex; justify-content: center; margin: 0 0 20px; }
+  .fl-howto .rules { font-size: clamp(1.05rem, 2.8vw, 1.25rem); }
+
+  /* Lecture fluence : lecture */
+  .fl-wrap { width: 100%; max-width: 1100px; display: flex; flex-direction: column; flex: 1; gap: 14px; }
+  .fl-top { position: sticky; top: 0; z-index: 20; background: rgba(253, 240, 255, .94); border-radius: 0 0 22px 22px; padding: 8px 4px; margin: -16px 0 0; padding-top: 16px; }
+  .fl-ttl { flex: 1; min-width: 0; text-align: center; font-size: clamp(1.3rem, 3.6vw, 1.8rem); font-weight: 700; color: var(--purple); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fl-timer { position: relative; width: 92px; height: 92px; flex: none; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; font-weight: 700; }
+  .fl-ring { --p: 1; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--green) calc(var(--p) * 360deg), #e9e2fb 0); }
+  .fl-ring::after { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: #fff; }
+  .fl-timer span { position: relative; }
+  .fl-timer.soon .fl-ring { background: conic-gradient(var(--orange) calc(var(--p) * 360deg), #e9e2fb 0); }
+  .fl-timer.soon span { color: var(--orange-dark); }
+  .fl-ready { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; flex: 1; text-align: center; }
+  .fl-ready-msg { font-size: clamp(1.3rem, 3.6vw, 1.7rem); font-weight: 500; color: var(--ink-soft); margin: 0; max-width: 560px; }
+  .fl-go {
+    width: min(70vw, 300px); height: min(70vw, 300px); border-radius: 50%; background: var(--green); color: #fff;
+    font-size: clamp(3rem, 10vw, 4.6rem); font-weight: 700; box-shadow: 0 12px 0 var(--green-dark); text-shadow: 0 3px 0 rgba(0,0,0,.15);
+    animation: pop .4s ease;
+  }
+  .fl-go:active { transform: translateY(8px); box-shadow: 0 4px 0 var(--green-dark); }
+  .fl-text {
+    background: #fff; border-radius: 28px; padding: 18px clamp(16px, 3vw, 34px);
+    font-size: clamp(1.55rem, 3.4vw, 2.1rem); line-height: 2.05; word-spacing: .28em; font-weight: 500;
+    box-shadow: 0 8px 0 rgba(124, 77, 255, .15), 0 12px 30px rgba(124, 77, 255, .12);
+  }
+  .fl-text p { margin: 0 0 .5em; }
+  .flw { border-radius: 10px; padding: 2px 1px; }
+  .fl-text.marking .flw[data-n] { cursor: pointer; }
+  .fl-text.marking .flw.after { color: #b8aecb; }
+  .flw.last { background: #c9f5d5; outline: 3px solid var(--green); color: var(--green-dark); font-weight: 700; }
+  .flw.err { background: #ffd6d6; outline: 3px solid #ef4444; color: #b91c1c; text-decoration: line-through; }
+  .fl-stop {
+    position: sticky; bottom: 14px; align-self: center; z-index: 20;
+    background: #ef4444; color: #fff; font-size: clamp(1.6rem, 4.5vw, 2.1rem); font-weight: 700;
+    padding: 14px 48px; border-radius: 999px; box-shadow: 0 7px 0 #b91c1c;
+  }
+  .fl-stop:active { transform: translateY(5px); box-shadow: 0 2px 0 #b91c1c; }
+  .fl-mark {
+    position: sticky; bottom: 0; z-index: 20; background: rgba(255,255,255,.97); border-radius: 26px 26px 0 0;
+    padding: 12px 12px 14px 84px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    box-shadow: 0 -6px 20px rgba(124,77,255,.15);
+  }
+  .fl-tools { display: flex; gap: 8px; flex: 1 1 360px; }
+  .fl-tools button {
+    flex: 1; min-height: 56px; border-radius: 18px; background: #f3eeff; font-size: clamp(1.05rem, 2.8vw, 1.25rem); font-weight: 700;
+    border: 4px solid transparent; box-shadow: 0 4px 0 #d9cbff;
+  }
+  #fl-tool-last.on { border-color: var(--green); background: #e7fbe9; }
+  #fl-tool-err.on { border-color: #ef4444; background: #ffecec; }
+  .fl-mark-info { flex: 1 1 260px; font-size: clamp(1.05rem, 2.8vw, 1.3rem); text-align: center; }
+  .fl-mark .validate { flex: 1 1 200px; }
+
+  /* Lecture fluence : résultat et progrès */
+  .fr-goalbar { position: relative; width: min(100%, 520px); height: 22px; background: #fff; border-radius: 999px; margin: 6px auto 26px; box-shadow: inset 0 2px 4px rgba(0,0,0,.08); }
+  .fr-goalfill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--pink), var(--orange), var(--green)); transition: width 1s ease; }
+  .fr-goalmark { position: absolute; left: 75%; top: -6px; bottom: -6px; width: 4px; background: var(--green-dark); border-radius: 2px; }
+  .fr-goalmark span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); font-weight: 700; color: var(--green-dark); font-size: 1rem; white-space: nowrap; }
+  .fr-goalmark span::after { content: " 🎯"; }
+  .fr-detail { font-size: clamp(1.1rem, 3vw, 1.35rem); color: var(--ink-soft); margin: 0 0 16px; text-align: center; }
+  .fr-quiz-panel { width: 100%; text-align: left; }
+  .fr-qnum { font-weight: 700; color: var(--ink-soft); font-size: 1.1rem; }
+  .fr-qfb { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 12px; text-align: center; }
+  .fr-qdone { font-size: clamp(1.3rem, 3.6vw, 1.7rem); text-align: center; padding: 8px; }
+  .fh-svg { width: 100%; height: auto; display: block; }
+  .fh-cap { text-align: center; color: var(--ink-soft); font-size: 1.05rem; margin-top: 4px; }
+  #fh-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .fh-row { display: grid; grid-template-columns: auto 1fr auto auto; gap: 10px; align-items: center; background: #f6f1ff; border-radius: 16px; padding: 8px 12px; font-size: 1.1rem; }
+  .fh-date { color: var(--ink-soft); font-weight: 600; }
+  .fh-t { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fh-s { font-weight: 700; color: var(--pink); }
+  .fh-s.ok { color: var(--green-dark); }
+  .fh-s small { font-size: .8rem; }
+  @media (max-width: 560px) { .fh-row { grid-template-columns: auto 1fr auto; } .fh-c { display: none; } }
 </style>
 </head>
 <body>
 
 <canvas id="confetti"></canvas>
 
-<!-- ================= ACCUEIL ================= -->
-<section class="screen active" id="screen-home">
+<!-- Bouton Accueil (sur tous les écrans sauf l'écran de départ) : retour au choix Maths / Français -->
+<button class="accueil-btn" id="accueil-btn" aria-label="Accueil : choisir Maths ou Français">🏠<span>Accueil</span></button>
+
+<!-- ================= DÉPART : MATHS OU FRANÇAIS ================= -->
+<section class="screen active" id="screen-start">
   <div class="home-wrap">
     <header class="menu-header">
-      <h1>🌈 Les maths de Lucy 🦄</h1>
+      <h1>🌈 Les révisions de Lucy 🦄</h1>
+      <p class="subtitle">Qu'est-ce qu'on révise aujourd'hui&nbsp;?</p>
+      <button class="sound-btn" id="start-sound" aria-label="Son activé ou coupé">🔊</button>
+    </header>
+    <div class="start-choices">
+      <button class="start-card maths" id="go-maths">
+        <span class="sc-emoji">🔢</span>
+        <span class="sc-title">MATHS</span>
+        <span class="sc-sub">Nombres, calculs, mesures, géométrie…</span>
+      </button>
+      <button class="start-card francais" id="go-francais">
+        <span class="sc-emoji">📚</span>
+        <span class="sc-title">FRANÇAIS</span>
+        <span class="sc-sub">Lecture, grammaire, conjugaison…</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= ACCUEIL ================= -->
+<section class="screen" id="screen-home">
+  <div class="home-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="home-back" aria-label="Retour au choix Maths / Français">⬅️</button>
+      <h1>🔢 Les maths</h1>
       <p class="subtitle">Qu'est-ce qu'on révise aujourd'hui&nbsp;?</p>
       <button class="sound-btn" id="home-sound" aria-label="Son activé ou coupé">🔊</button>
     </header>
@@ -1191,6 +1397,634 @@
   </div>
 </section>
 
+<!-- ================= FRANÇAIS : MENU ================= -->
+<section class="screen" id="screen-frhome">
+  <div class="home-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="frhome-back" aria-label="Retour au choix Maths / Français">⬅️</button>
+      <h1>📚 Le français</h1>
+      <p class="subtitle">Qu'est-ce qu'on révise aujourd'hui&nbsp;?</p>
+    </header>
+    <div class="home-choices">
+      <button class="home-card fluence" id="go-fluence">
+        <span class="hc-emoji">📖</span>
+        <span class="hc-title">1. Lecture fluence</span>
+        <span class="hc-sub">Lire à voix haute pendant 1 minute</span>
+      </button>
+      <button class="home-card gram" id="go-gram">
+        <span class="hc-emoji">✏️</span>
+        <span class="hc-title">2. Grammaire</span>
+        <span class="hc-sub">Phrase, nature des mots, sujet</span>
+      </button>
+      <button class="home-card conj" id="go-conj">
+        <span class="hc-emoji">⏳</span>
+        <span class="hc-title">3. Conjugaison</span>
+        <span class="hc-sub">Présent, futur, imparfait, passé composé</span>
+      </button>
+      <button class="home-card orth" id="go-orth">
+        <span class="hc-emoji">🔤</span>
+        <span class="hc-title">4. Orthographe</span>
+        <span class="hc-sub">a/à, et/est, accords, sons</span>
+      </button>
+      <button class="home-card voc" id="go-voc">
+        <span class="hc-emoji">📗</span>
+        <span class="hc-title">5. Vocabulaire</span>
+        <span class="hc-sub">Dictionnaire, familles, synonymes</span>
+      </button>
+      <!-- Place pour les prochaines parties de français : ajouter ici un bouton "home-card" -->
+    </div>
+  </div>
+</section>
+
+<!-- ================= FRANÇAIS : LECTURE FLUENCE — CHOIX DU TEXTE ================= -->
+<section class="screen" id="screen-flmenu">
+  <div class="menu-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="fl-back" aria-label="Retour au menu Français">⬅️</button>
+      <h1>📖 Lecture fluence</h1>
+      <p class="subtitle">Choisis un texte. Tu vas lire pendant 1 minute&nbsp;!</p>
+    </header>
+    <div class="panel">
+      <div class="fl-levels" id="fl-levels">
+        <button data-lv="1">⭐ Niveau 1</button>
+        <button data-lv="2">⭐⭐ Niveau 2</button>
+        <button data-lv="3">⭐⭐⭐ Niveau 3</button>
+      </div>
+      <div class="fl-list" id="fl-list"></div>
+    </div>
+    <div class="fl-bottom"><button class="go-btn purple" id="fl-histbtn">📈 Mes progrès</button></div>
+    <div class="panel fl-howto">
+      <h2>👩‍🏫 Pour l'adulte</h2>
+      <ul class="rules">
+        <li>1. Appuyez sur <b>GO</b>&nbsp;: le texte apparaît et le chrono d'1 minute démarre.</li>
+        <li>2. Lucy lit à voix haute. Au bout d'1 minute, un signal sonne. (<b>Stop</b> si elle finit avant&nbsp;: le vrai temps est utilisé.)</li>
+        <li>3. Touchez le <b class="td">dernier mot lu</b>, puis les <b class="tr">mots mal lus</b> (toucher encore pour annuler).</li>
+        <li>4. <b>Valider</b> donne le score en mots correctement lus par minute. Repère&nbsp;: environ 90 en fin de CE2.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FRANÇAIS : LECTURE FLUENCE — LECTURE ================= -->
+<section class="screen" id="screen-flread">
+  <div class="fl-wrap">
+    <div class="topbar fl-top">
+      <button class="home-btn" id="fl-quit" aria-label="Retour aux textes">⬅️ <span class="lbl">Textes</span></button>
+      <div class="fl-ttl" id="fl-title">Texte</div>
+      <div class="fl-timer" id="fl-timer"><div class="fl-ring" id="fl-ring"></div><span id="fl-time">1:00</span></div>
+    </div>
+    <div class="fl-ready" id="fl-ready">
+      <p class="fl-ready-msg">Prête&nbsp;? Le texte apparaîtra quand tu appuieras sur <b>GO</b>.</p>
+      <button class="fl-go" id="fl-go">GO&nbsp;! 🚀</button>
+    </div>
+    <div class="fl-text hidden" id="fl-text"></div>
+    <button class="fl-stop hidden" id="fl-stop">⏹️ Stop</button>
+    <div class="fl-mark hidden" id="fl-mark">
+      <div class="fl-tools">
+        <button id="fl-tool-last">🟢 Dernier mot lu</button>
+        <button id="fl-tool-err">🔴 Mots mal lus</button>
+      </div>
+      <div class="fl-mark-info" id="fl-mark-info"></div>
+      <button class="validate" id="fl-validate">Valider ✔</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FRANÇAIS : LECTURE FLUENCE — RÉSULTAT ================= -->
+<section class="screen" id="screen-flres">
+  <div class="end-wrap">
+    <div class="end-emoji" id="fr-emoji">🏆</div>
+    <h1 class="end-title">Ton score de lecture</h1>
+    <div class="score-big"><span id="fr-score">0</span> <small>mots / min</small></div>
+    <div class="fr-goalbar" aria-hidden="true"><div class="fr-goalfill" id="fr-goal"></div><div class="fr-goalmark"><span>90</span></div></div>
+    <p class="end-msg" id="fr-msg"></p>
+    <p class="fr-detail" id="fr-detail"></p>
+    <div class="panel fr-quiz-panel">
+      <h2>🧠 As-tu bien compris&nbsp;?</h2>
+      <div id="fr-quiz"></div>
+    </div>
+    <div class="end-actions hidden" id="fr-actions">
+      <button class="go-btn" id="fr-again">🔁 Relire ce texte</button>
+      <button class="go-btn purple" id="fr-other">📖 Autre texte</button>
+      <button class="go-btn purple" id="fr-hist">📈 Mes progrès</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FRANÇAIS : LECTURE FLUENCE — PROGRÈS ================= -->
+<section class="screen" id="screen-flhist">
+  <div class="menu-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="fh-back" aria-label="Retour aux textes">⬅️</button>
+      <h1>📈 Mes progrès</h1>
+      <p class="subtitle">Mots correctement lus par minute</p>
+    </header>
+    <div class="panel"><div id="fh-chart"></div></div>
+    <div class="panel"><h2>📅 Historique</h2><div id="fh-list"></div></div>
+    <div class="fl-bottom"><button class="small-btn" id="fh-clear">🗑️ Effacer l'historique</button></div>
+  </div>
+</section>
+
+<script>
+// =====================================================================
+//  DONNÉES DE LA PARTIE FRANÇAIS — on peut ajouter des textes, phrases, mots… ici.
+//  (Le programme du quiz est dans le <script> suivant.)
+// =====================================================================
+// =====================================================================
+//  1. LECTURE FLUENCE — 12 textes originaux (150 à 200 mots), du niveau 1 au niveau 3.
+//  Pour ajouter un texte : copier un bloc { ... } et changer id, niveau, titre, texte, questions.
+//  Dans "texte", "\n" commence un nouveau paragraphe. "bonne" = numéro de la bonne réponse (0, 1 ou 2).
+// =====================================================================
+var FLUENCE_TEXTES = [
+  { id: "chaton", niveau: 1, genre: "📖 Histoire", titre: "Le chaton de Mamie",
+    texte: "Mamie a un petit chaton. Il s'appelle Pompon. Il est tout gris avec des pattes blanches. Pompon aime jouer avec une pelote de laine. Il court partout dans la maison. Il saute sur le canapé, puis il grimpe sur la table. Mamie rit et dit : « Pompon, descends tout de suite ! » Mais Pompon ne l'écoute pas.\nUn matin, Pompon a disparu. Mamie le cherche dans la cuisine, dans le salon et dans le jardin. Elle l'appelle très fort. Lucy arrive pour l'aider. Elle regarde sous le lit, derrière les rideaux et dans le placard. Pas de Pompon !\nSoudain, Lucy entend un petit bruit. Le bruit vient du panier à linge. Lucy soulève une serviette. Pompon est là, roulé en boule, au milieu des chaussettes. Il dort comme un bébé. Mamie est soulagée. Elle prend le chaton dans ses bras et lui fait un gros câlin. Lucy sourit. Maintenant, elle sait où chercher quand Pompon se cache !",
+    questions: [
+      { q: "Comment s'appelle le chaton ?", choix: ["Pompon", "Caramel", "Moustache"], bonne: 0 },
+      { q: "Où Lucy trouve-t-elle le chaton ?", choix: ["Dans le panier à linge", "Sous le lit", "Dans le jardin"], bonne: 0 },
+      { q: "Que fait le chaton quand Lucy le trouve ?", choix: ["Il dort", "Il mange", "Il joue avec la laine"], bonne: 0 }] },
+  { id: "karate1", niveau: 1, genre: "🥋 Histoire", titre: "Lucy au karaté",
+    texte: "Tous les mercredis, Lucy va au karaté. Elle met son kimono blanc et serre bien sa ceinture. Dans la salle, les enfants enlèvent leurs chaussures. Ils marchent pieds nus sur le tatami. Le professeur s'appelle Maître Kenji. Il est grand et très calme.\nAu début du cours, tout le monde se met en ligne. Les élèves saluent le maître en s'inclinant. Puis ils font l'échauffement. Ils courent, ils sautent et ils s'étirent. Ensuite, Lucy apprend un nouveau mouvement. Elle doit lever la jambe et donner un coup de pied rapide. Au début, elle perd l'équilibre et tombe sur le tapis. Ses amis rigolent gentiment.\nLucy ne se décourage pas. Elle essaie encore et encore. Maître Kenji lui dit : « Regarde un point devant toi et garde ton dos bien droit. » Lucy recommence. Cette fois, elle reste debout ! Son coup de pied est rapide et précis. Le maître lève le pouce. À la fin du cours, Lucy est fatiguée, mais très fière.",
+    questions: [
+      { q: "Quel jour Lucy va-t-elle au karaté ?", choix: ["Le mercredi", "Le samedi", "Le lundi"], bonne: 0 },
+      { q: "Comment s'appelle le professeur ?", choix: ["Maître Kenji", "Maître Tom", "Maître Hugo"], bonne: 0 },
+      { q: "Que fait Lucy quand elle tombe ?", choix: ["Elle essaie encore", "Elle rentre chez elle", "Elle pleure longtemps"], bonne: 0 }] },
+  { id: "abeilles", niveau: 1, genre: "🐝 Documentaire", titre: "Les abeilles",
+    texte: "Les abeilles sont de petits insectes qui vivent en groupe. Elles habitent dans une ruche. Dans une ruche, il peut y avoir des milliers d'abeilles ! Chaque abeille a un travail.\nLa reine est la plus grande. Elle pond des œufs toute la journée. Les ouvrières sont les plus nombreuses. Certaines nettoient la ruche, d'autres nourrissent les bébés abeilles. Les plus âgées sortent pour chercher de la nourriture. Elles volent de fleur en fleur. Avec leur longue langue, elles aspirent le nectar, un liquide sucré caché au fond des fleurs. Elles récoltent aussi le pollen, une poudre jaune qui colle à leurs pattes.\nDe retour à la ruche, les abeilles transforment le nectar en miel. Le miel leur sert de nourriture pendant l'hiver. Les abeilles sont très utiles. En passant d'une fleur à l'autre, elles transportent le pollen. Grâce à elles, les fleurs deviennent des fruits. Sans les abeilles, nous aurions beaucoup moins de pommes, de cerises et de fraises !",
+    questions: [
+      { q: "Où vivent les abeilles ?", choix: ["Dans une ruche", "Dans un nid", "Dans un terrier"], bonne: 0 },
+      { q: "Que fait la reine ?", choix: ["Elle pond des œufs", "Elle cherche du nectar", "Elle nettoie la ruche"], bonne: 0 },
+      { q: "Pourquoi les abeilles sont-elles utiles ?", choix: ["Elles aident les fleurs à devenir des fruits", "Elles mangent les insectes", "Elles font peur aux oiseaux"], bonne: 0 }] },
+  { id: "piquenique", niveau: 1, genre: "💬 Dialogue", titre: "Le pique-nique",
+    texte: "— Maman, on peut faire un pique-nique aujourd'hui ? demande Lucy.\n— Bonne idée ! Il fait beau. Qu'est-ce qu'on emporte ?\n— Des sandwichs, des tomates et des fraises !\nLucy prépare le panier avec son petit frère Tom. Ils mettent aussi une grande nappe à carreaux, des serviettes et un ballon rouge. Toute la famille part au parc à vélo. Papa porte le panier sur son dos. Ils s'installent sous un grand chêne, près de l'étang. Les canards s'approchent en faisant coin-coin.\n— Je peux leur donner du pain ? demande Tom.\n— Non, le pain leur fait mal au ventre, répond Papa. On va plutôt les regarder.\nMaman sort les sandwichs et chacun choisit le sien. Après le repas, Lucy et Tom jouent au ballon. Soudain, de gros nuages arrivent.\n— Oh non, il va pleuvoir ! crie Lucy.\nTout le monde range vite le panier. Ils rentrent à la maison en pédalant très fort. Ils arrivent juste avant l'orage. Ils sont un peu mouillés, mais ils rient beaucoup !",
+    questions: [
+      { q: "Où va la famille ?", choix: ["Au parc", "À la plage", "À la montagne"], bonne: 0 },
+      { q: "Pourquoi ne donne-t-on pas de pain aux canards ?", choix: ["Ça leur fait mal au ventre", "Ils n'aiment pas le pain", "Il n'y a plus de pain"], bonne: 0 },
+      { q: "Pourquoi rentrent-ils vite à la maison ?", choix: ["Il va pleuvoir", "Il fait nuit", "Tom est fatigué"], bonne: 0 }] },
+  { id: "herisson", niveau: 2, genre: "🦔 Documentaire", titre: "Le hérisson",
+    texte: "Le hérisson est un petit animal sauvage que l'on peut rencontrer dans les jardins, les haies et les forêts. Son dos est couvert de piquants. Un hérisson adulte en possède environ six mille ! Quand il a peur, il se roule en boule. Ses piquants se dressent alors pour le protéger des renards et des chiens.\nLe hérisson vit surtout la nuit. Le jour, il dort caché sous un tas de feuilles ou de branches. Quand la nuit tombe, il part chercher sa nourriture en reniflant le sol avec son museau pointu. Il mange des vers de terre, des limaces, des escargots et des insectes. C'est pourquoi les jardiniers l'aiment bien : il protège leurs salades !\nEn automne, le hérisson mange beaucoup pour faire des réserves. Puis, quand il fait froid, il construit un nid bien abrité et s'endort pour tout l'hiver. On dit qu'il hiberne. Il se réveille au printemps, très maigre et affamé. Attention : il ne faut jamais lui donner de lait, car cela le rend malade. Une coupelle d'eau fraîche lui fait bien plus plaisir.",
+    questions: [
+      { q: "Que fait le hérisson quand il a peur ?", choix: ["Il se roule en boule", "Il grimpe dans un arbre", "Il court très vite"], bonne: 0 },
+      { q: "Pourquoi les jardiniers aiment-ils le hérisson ?", choix: ["Il mange les limaces qui abîment les salades", "Il arrose le jardin", "Il chasse les oiseaux"], bonne: 0 },
+      { q: "Que faut-il lui donner à boire ?", choix: ["De l'eau fraîche", "Du lait", "Du jus de fruits"], bonne: 0 }] },
+  { id: "cabane", niveau: 2, genre: "📖 Histoire", titre: "La cabane dans le jardin",
+    texte: "Pendant les vacances, Lucy et son cousin Hugo décident de construire une cabane au fond du jardin de Papi. Papi leur prête de vieilles planches, une boîte de clous et un marteau. « Faites attention à vos doigts ! » dit-il en souriant.\nLes deux enfants choisissent un endroit à l'ombre, entre deux grands arbres. D'abord, ils posent les planches sur le sol pour faire un plancher. Ensuite, ils attachent une bâche bleue aux branches pour fabriquer un toit. Hugo tient les planches pendant que Lucy plante les clous. Le travail est long et difficile. Plusieurs fois, la bâche s'envole avec le vent et il faut tout recommencer. Mais les cousins ne baissent pas les bras.\nÀ la fin de l'après-midi, la cabane est enfin terminée. Lucy accroche une pancarte sur la porte : « Club secret. Entrée interdite aux grands ! » Papi fait semblant d'être vexé. Pour se faire pardonner, les enfants l'invitent à goûter dans la cabane. Ils partagent des biscuits et une limonade bien fraîche.",
+    questions: [
+      { q: "Avec qui Lucy construit-elle la cabane ?", choix: ["Son cousin Hugo", "Son frère Tom", "Sa copine Léa"], bonne: 0 },
+      { q: "Avec quoi font-ils le toit ?", choix: ["Une bâche bleue", "Des planches", "Des feuilles"], bonne: 0 },
+      { q: "Qu'écrit Lucy sur la pancarte ?", choix: ["Club secret. Entrée interdite aux grands !", "Maison de Papi", "Attention au chien !"], bonne: 0 }] },
+  { id: "marche", niveau: 2, genre: "💬 Dialogue", titre: "Au marché",
+    texte: "Ce samedi, Lucy accompagne son papa au marché. Il y a beaucoup de monde et les marchands crient pour attirer les clients.\n— Belles fraises ! Fraises toutes fraîches ! lance une dame.\n— Papa, on peut en acheter ? demande Lucy.\n— D'accord, mais c'est toi qui paies. Voici un billet de cinq euros.\nLucy s'approche du stand, un peu intimidée.\n— Bonjour madame, je voudrais une barquette de fraises, s'il vous plaît.\n— Bien sûr, ma grande. Cela fait trois euros.\nLucy tend le billet. La marchande lui rend deux pièces d'un euro.\n— Merci beaucoup, au revoir !\nPapa la félicite. Ils achètent ensuite des carottes, un gros melon et une baguette encore chaude. Devant le stand du fromager, Lucy fronce le nez.\n— Pouah, ça sent fort !\n— C'est normal, ce fromage est très affiné, explique Papa en riant. Tu veux goûter ?\nLucy hésite, puis prend un minuscule morceau. Elle le croque du bout des dents et fait une drôle de grimace. Finalement, elle préfère largement les fraises !",
+    questions: [
+      { q: "Combien coûte la barquette de fraises ?", choix: ["Trois euros", "Cinq euros", "Deux euros"], bonne: 0 },
+      { q: "Combien la marchande rend-elle à Lucy ?", choix: ["Deux euros", "Un euro", "Trois euros"], bonne: 0 },
+      { q: "Que pense Lucy du fromage ?", choix: ["Elle préfère les fraises", "Elle l'adore", "Elle en achète beaucoup"], bonne: 0 }] },
+  { id: "karate2", niveau: 2, genre: "🥋 Histoire", titre: "La ceinture jaune",
+    texte: "Depuis des semaines, Lucy s'entraîne pour son passage de ceinture. Si elle réussit, elle aura enfin la ceinture jaune ! Le grand jour est arrivé. Dans le gymnase, les parents sont assis sur des bancs. Lucy a le cœur qui bat très fort. Elle serre les poings pour se donner du courage.\nMaître Kenji appelle son nom. Lucy s'avance au milieu du tatami et salue le jury. D'abord, elle doit montrer un kata, une suite de mouvements apprise par cœur. Elle se concentre et commence. Blocage, coup de poing, coup de pied, demi-tour… Elle n'oublie aucun geste. Ensuite, le maître lui demande quelques techniques avec un partenaire. Lucy reste calme et précise, comme on le lui a appris.\nLe jury discute à voix basse. Lucy attend, les mains tremblantes. Enfin, Maître Kenji s'approche avec un sourire. Il lui tend une ceinture jaune toute neuve. Les parents applaudissent. Lucy noue sa nouvelle ceinture avec fierté. Le soir, elle refuse de l'enlever, même pour aller dormir !",
+    questions: [
+      { q: "Quelle ceinture Lucy veut-elle obtenir ?", choix: ["La ceinture jaune", "La ceinture noire", "La ceinture verte"], bonne: 0 },
+      { q: "Qu'est-ce qu'un kata ?", choix: ["Une suite de mouvements apprise par cœur", "Un tapis de karaté", "Une sorte de ceinture"], bonne: 0 },
+      { q: "Que fait Lucy le soir ?", choix: ["Elle garde sa ceinture pour dormir", "Elle range sa ceinture", "Elle prête sa ceinture à Tom"], bonne: 0 }] },
+  { id: "manchots", niveau: 3, genre: "🐧 Documentaire", titre: "Les manchots empereurs",
+    texte: "Le manchot empereur vit en Antarctique, la région la plus froide du monde, près du pôle Sud. Là-bas, la température peut descendre à moins cinquante degrés et le vent souffle très fort. Pour résister, le manchot possède une épaisse couche de graisse sous la peau et des plumes serrées, imperméables comme un manteau.\nContrairement à ce que l'on croit souvent, le manchot n'est pas un pingouin. Il ne sait pas voler, mais c'est un excellent nageur. Sous l'eau, il se sert de ses ailes comme de nageoires pour attraper des poissons et des calmars.\nAu début de l'hiver, la femelle pond un seul œuf. Elle le confie aussitôt au mâle, puis elle part se nourrir dans l'océan. Pendant deux mois, le mâle garde l'œuf bien au chaud, posé sur ses pattes et recouvert d'un repli de peau. Il ne mange rien pendant tout ce temps ! Pour lutter contre le froid, les mâles se serrent les uns contre les autres. Chacun prend son tour au centre du groupe, là où il fait plus chaud. Quand le poussin éclot, la femelle revient enfin pour le nourrir.",
+    questions: [
+      { q: "Où vit le manchot empereur ?", choix: ["En Antarctique, près du pôle Sud", "Dans la forêt", "Au pôle Nord"], bonne: 0 },
+      { q: "Qui garde l'œuf pendant deux mois ?", choix: ["Le mâle", "La femelle", "Le poussin"], bonne: 0 },
+      { q: "Comment les mâles se protègent-ils du froid ?", choix: ["Ils se serrent les uns contre les autres", "Ils creusent un terrier", "Ils partent nager dans l'océan"], bonne: 0 }] },
+  { id: "foret", niveau: 3, genre: "📖 Histoire", titre: "Le secret de la forêt",
+    texte: "Ce matin-là, Lucy se promène dans la forêt avec son chien, Filou. Les feuilles d'automne craquent sous ses bottes et l'air sent la mousse et les champignons. Soudain, Filou se met à aboyer et s'élance entre les arbres. « Filou, reviens ! » crie Lucy en courant derrière lui.\nLe chien s'arrête devant un vieux chêne au tronc creux. Il remue la queue en gémissant doucement. Intriguée, Lucy s'approche et se penche vers le trou. Au fond, sur un lit de feuilles sèches, trois petits renardeaux la regardent avec de grands yeux inquiets. Ils sont roux, avec le bout de la queue tout blanc.\nLucy retient son souffle. Elle sait qu'il ne faut surtout pas les toucher, sinon leur mère pourrait les abandonner. Elle attrape Filou par son collier et recule lentement, sans faire de bruit. Cachée derrière un buisson, elle attend quelques minutes. Bientôt, une renarde apparaît, une souris dans la gueule. Elle se glisse dans le tronc pour nourrir ses petits. Lucy sourit. De retour à la maison, elle dessine les renardeaux dans son carnet secret. Elle ne révélera à personne l'endroit de leur cachette.",
+    questions: [
+      { q: "Qu'y a-t-il dans le tronc du vieux chêne ?", choix: ["Trois renardeaux", "Un hérisson", "Un nid d'oiseaux"], bonne: 0 },
+      { q: "Pourquoi Lucy ne touche-t-elle pas les petits ?", choix: ["Leur mère pourrait les abandonner", "Ils pourraient la mordre", "Filou serait jaloux"], bonne: 0 },
+      { q: "Que fait Lucy en rentrant chez elle ?", choix: ["Elle dessine les renardeaux dans son carnet", "Elle raconte tout à ses amis", "Elle retourne chercher les renardeaux"], bonne: 0 }] },
+  { id: "volcan", niveau: 3, genre: "🌋 Documentaire", titre: "Le volcan",
+    texte: "Un volcan est une montagne pas comme les autres. Sous nos pieds, très profondément, il fait si chaud que les roches fondent. Elles forment un liquide brûlant et épais qu'on appelle le magma. Parfois, ce magma remonte vers la surface par une fissure. Quand il sort du volcan, on l'appelle la lave. C'est une éruption !\nIl existe plusieurs sortes d'éruptions. Certaines sont plutôt calmes : la lave coule lentement sur les pentes, comme une rivière de feu. D'autres sont explosives : le volcan projette dans le ciel des cendres, des gaz et des blocs de pierre, parfois à plusieurs kilomètres de hauteur. En refroidissant, la lave durcit et devient de la roche. Au fil des éruptions, les couches s'empilent et le volcan grandit.\nEn France, il y a de nombreux volcans endormis dans le Massif central. Le plus célèbre est le puy de Dôme. Sur l'île de La Réunion, le piton de la Fournaise, lui, est bien réveillé : il entre en éruption presque chaque année. Des scientifiques, les volcanologues, le surveillent jour et nuit pour prévenir les habitants en cas de danger.",
+    questions: [
+      { q: "Comment appelle-t-on le magma quand il sort du volcan ?", choix: ["La lave", "La cendre", "La fissure"], bonne: 0 },
+      { q: "Comment s'appelle le volcan très actif de La Réunion ?", choix: ["Le piton de la Fournaise", "Le puy de Dôme", "Le mont Blanc"], bonne: 0 },
+      { q: "Que font les volcanologues ?", choix: ["Ils surveillent les volcans", "Ils éteignent la lave", "Ils construisent des volcans"], bonne: 0 }] },
+  { id: "musee", niveau: 3, genre: "💬 Dialogue", titre: "La sortie au musée",
+    texte: "Aujourd'hui, la classe de Lucy visite le musée d'histoire naturelle. Dans le car, tout le monde est excité.\n— On va voir des dinosaures ? demande Inès.\n— Oui, et bien d'autres choses, répond la maîtresse. Mais n'oubliez pas les règles : on reste en groupe et on ne touche à rien.\nÀ l'entrée, un guide les accueille. Il les conduit dans une immense salle. Au milieu se dresse le squelette d'un dinosaure, si grand que sa tête touche presque le plafond.\n— Waouh ! s'écrie Hugo. Il mangeait des enfants ?\n— Pas du tout, rit le guide. Celui-ci était herbivore : il se nourrissait uniquement de plantes. Regardez ses dents plates, faites pour mâcher des feuilles.\nLucy lève la main.\n— Comment sait-on qu'il a vraiment existé ?\n— Grâce aux fossiles. Ce sont des os transformés en pierre, restés enfouis dans le sol pendant des millions d'années. Les paléontologues les déterrent avec patience, puis les assemblent comme un puzzle géant.\nAvant de partir, chaque élève reçoit un petit fossile de coquillage. Sur le chemin du retour, Lucy le serre précieusement dans sa main. Plus tard, elle sera peut-être paléontologue !",
+    questions: [
+      { q: "Que mangeait le dinosaure du musée ?", choix: ["Des plantes", "Des enfants", "Des poissons"], bonne: 0 },
+      { q: "Qu'est-ce qu'un fossile ?", choix: ["Un os transformé en pierre", "Un dinosaure vivant", "Une plante du musée"], bonne: 0 },
+      { q: "Que reçoit chaque élève ?", choix: ["Un petit fossile de coquillage", "Un livre sur les dinosaures", "Une dent de dinosaure"], bonne: 0 }] }
+];
+
+
+// =====================================================================
+//  2. GRAMMAIRE
+// =====================================================================
+// Phrases étiquetées : chaque mot est suivi de | et de sa nature :
+//   D = déterminant, N = nom commun, NP = nom propre, A = adjectif, V = verbe,
+//   P = pronom personnel, x = autre mot. La ponctuation n'a pas d'étiquette.
+//   { } entoure le SUJET du verbe ; [ ] entoure un COMPLÉMENT qu'on peut déplacer ou supprimer
+//   (un complément qu'on ne peut pas enlever, comme « au karaté » après « va », reste sans crochets).
+var GRAM_PHRASES = [
+  "{Le|D petit|A chat|N} dort|V [sur|x le|D canapé|N] .",
+  "{Lucy|NP} met|V son|D kimono|N blanc|A .",
+  "[Le|D mercredi|N] , {Lucy|NP} va|V au|x karaté|N .",
+  "{Les|D oiseaux|N} chantent|V [dans|x le|D grand|A jardin|N] .",
+  "{Tom|NP} mange|V une|D pomme|N rouge|A .",
+  "{Elle|P} regarde|V les|D étoiles|N [le|D soir|N] .",
+  "{Le|D chien|N} court|V [dans|x le|D parc|N] .",
+  "[Demain|x] , {nous|P} irons|V à|x la|D plage|N .",
+  "{Les|D enfants|N} construisent|V un|D château|N [sur|x la|D plage|N] .",
+  "{Paris|NP} est|V une|D grande|A ville|N .",
+  "{Ma|D petite|A sœur|N} dessine|V un|D dragon|N vert|A .",
+  "{Tu|P} ranges|V tes|D jouets|N [dans|x ta|D chambre|N] .",
+  "{Hugo|NP} promène|V son|D chien|N [tous|x les|D matins|N] .",
+  "[En|x hiver|N] , {les|D ours|N} dorment|V [dans|x leur|D tanière|N] .",
+  "{Vous|P} chantez|V une|D jolie|A chanson|N .",
+  "{La|D tortue|N} avance|V [lentement|x] .",
+  "{Ils|P} visitent|V le|D musée|N [avec|x leur|D classe|N] .",
+  "{Une|D abeille|N} butine|V les|D fleurs|N jaunes|A .",
+  "{Inès|NP} adore|V les|D crêpes|N .",
+  "{Je|P} prends|V le|D bus|N [à|x huit|x heures|N] .",
+  "{Le|D soleil|N} brille|V [dans|x le|D ciel|N bleu|A] .",
+  "{Les|D petits|A lapins|N} mangent|V des|D carottes|N .",
+  "{Grand-mère|N} tricote|V une|D écharpe|N rouge|A .",
+  "{Le|D petit|A poisson|N} nage|V [dans|x l'|D aquarium|N] .",
+  "{Mamie|NP} habite|V à|x Lyon|NP .",
+  "[Cet|D été|N] , {nous|P} partons|V à|x la|D montagne|N .",
+  "{Le|D chat|N} attrape|V une|D souris|N grise|A .",
+  "{Les|D élèves|N} écoutent|V la|D maîtresse|N .",
+  "{La|D grande|A girafe|N} mange|V des|D feuilles|N .",
+  "{On|P} joue|V [dans|x la|D cour|N] [à|x la|D récréation|N] .",
+  "{Tu|P} portes|V un|D pull|N chaud|A .",
+  "{Le|D vieux|A pirate|N} cache|V un|D trésor|N [sur|x une|D île|N] .",
+  "[Chaque|D samedi|N] , {Léa|NP} fait|V du|D vélo|N .",
+  "{Mon|D cousin|N} lit|V une|D bande|N dessinée|A [dans|x son|D lit|N] .",
+  "{Le|D boulanger|N} prépare|V du|D pain|N [très|x tôt|x] .",
+  "{Les|D pompiers|N} arrivent|V [rapidement|x] ."
+];
+var NATURES = { D: "déterminant", N: "nom commun", NP: "nom propre", A: "adjectif", V: "verbe", P: "pronom personnel" };
+var NATURE_AIDE = {
+  D: "Le déterminant est le petit mot placé devant le nom : le, la, les, un, une, des, mon, ta, ce…",
+  N: "Le nom commun désigne une personne, un animal, une chose ou une idée. On peut mettre un déterminant devant.",
+  NP: "Le nom propre est le nom d'une personne, d'une ville, d'un pays… Il commence par une majuscule.",
+  A: "L'adjectif donne une précision sur le nom : il dit comment il est (petit, rouge, jolie…).",
+  V: "Le verbe dit ce que fait le sujet. Il change quand on change le temps : il dort, il dormait, il dormira.",
+  P: "Le pronom personnel remplace un nom : je, tu, il, elle, on, nous, vous, ils, elles."
+};
+// Groupes de mots qui ne sont PAS des groupes nominaux (pour les questions à choix)
+var PAS_GN = ["court très vite", "il mange", "sous la", "a chanté", "et puis", "très gentiment", "nous dormons", "dans le", "va jouer", "ne pas"];
+
+// Types de phrases (t = déclarative, interrogative, exclamative ou impérative)
+var TYPES_PHRASES = [
+  { p: "Lucy va au karaté le mercredi.", t: "déclarative" }, { p: "Le chat dort sur le lit.", t: "déclarative" },
+  { p: "Nous mangeons des crêpes ce soir.", t: "déclarative" }, { p: "Il pleut depuis ce matin.", t: "déclarative" },
+  { p: "Mon frère a perdu sa dent.", t: "déclarative" }, { p: "Les feuilles tombent en automne.", t: "déclarative" },
+  { p: "Le train arrive à huit heures.", t: "déclarative" },
+  { p: "Est-ce que tu viens jouer ?", t: "interrogative" }, { p: "Où as-tu caché le ballon ?", t: "interrogative" },
+  { p: "Quelle heure est-il ?", t: "interrogative" }, { p: "Aimes-tu les fraises ?", t: "interrogative" },
+  { p: "Pourquoi le ciel est-il bleu ?", t: "interrogative" }, { p: "Qui a mangé le gâteau ?", t: "interrogative" },
+  { p: "Comment s'appelle ton chien ?", t: "interrogative" },
+  { p: "Quelle belle journée !", t: "exclamative" }, { p: "Comme ce gâteau est bon !", t: "exclamative" },
+  { p: "Que tu as grandi !", t: "exclamative" }, { p: "Quel beau dessin !", t: "exclamative" },
+  { p: "Ce film était vraiment génial !", t: "exclamative" }, { p: "Comme il fait chaud !", t: "exclamative" },
+  { p: "Quelle surprise !", t: "exclamative" },
+  { p: "Range ta chambre.", t: "impérative" }, { p: "Ferme la porte, s'il te plaît.", t: "impérative" },
+  { p: "Lave-toi les mains.", t: "impérative" }, { p: "Écoutez bien la consigne.", t: "impérative" },
+  { p: "Prends ton manteau.", t: "impérative" }, { p: "Mettons nos chaussures.", t: "impérative" },
+  { p: "Viens manger !", t: "impérative" }
+];
+var TYPES_AIDE = {
+  "déclarative": "La phrase déclarative raconte ou explique quelque chose. Elle se termine par un point.",
+  "interrogative": "La phrase interrogative pose une question. Elle se termine par un point d'interrogation ?",
+  "exclamative": "La phrase exclamative montre une émotion (joie, surprise, colère…). Elle se termine par un point d'exclamation !",
+  "impérative": "La phrase impérative donne un ordre ou un conseil. Elle se termine par un point ou un point d'exclamation."
+};
+
+// Forme affirmative / forme négative : a = affirmative, n = négative, faux = une mauvaise négation
+var NEGATIONS = [
+  { a: "Lucy aime les épinards.", n: "Lucy n'aime pas les épinards.", faux: "Lucy aime pas les épinards." },
+  { a: "Tom mange encore du gâteau.", n: "Tom ne mange plus de gâteau.", faux: "Tom ne plus mange de gâteau." },
+  { a: "Le chat dort toujours sur mon lit.", n: "Le chat ne dort jamais sur mon lit.", faux: "Le chat dort jamais sur mon lit." },
+  { a: "Je regarde la télévision.", n: "Je ne regarde pas la télévision.", faux: "Je regarde ne pas la télévision." },
+  { a: "Nous allons à la piscine.", n: "Nous n'allons pas à la piscine.", faux: "Nous allons pas à la piscine." },
+  { a: "Il pleut encore.", n: "Il ne pleut plus.", faux: "Il pleut ne plus." },
+  { a: "Hugo range toujours sa chambre.", n: "Hugo ne range jamais sa chambre.", faux: "Hugo ne jamais range sa chambre." },
+  { a: "Tu as peur du noir.", n: "Tu n'as pas peur du noir.", faux: "Tu as pas peur du noir." },
+  { a: "Les oiseaux chantent.", n: "Les oiseaux ne chantent pas.", faux: "Les oiseaux chantent ne pas." },
+  { a: "Mamie habite encore à Lyon.", n: "Mamie n'habite plus à Lyon.", faux: "Mamie habite plus à Lyon." },
+  { a: "Léa joue souvent du piano.", n: "Léa ne joue jamais du piano.", faux: "Léa joue jamais du piano." },
+  { a: "Le bébé dort.", n: "Le bébé ne dort pas.", faux: "Le bébé dort pas." },
+  { a: "Vous êtes en retard.", n: "Vous n'êtes pas en retard.", faux: "Vous êtes pas en retard." },
+  { a: "Mon frère fait toujours du bruit.", n: "Mon frère ne fait jamais de bruit.", faux: "Mon frère fait jamais de bruit." },
+  { a: "Elle porte encore ses lunettes.", n: "Elle ne porte plus ses lunettes.", faux: "Elle porte plus ses lunettes." },
+  { a: "Les élèves écoutent la maîtresse.", n: "Les élèves n'écoutent pas la maîtresse.", faux: "Les élèves écoutent pas la maîtresse." },
+  { a: "Le magasin est ouvert.", n: "Le magasin n'est pas ouvert.", faux: "Le magasin est pas ouvert." },
+  { a: "Je mange toujours des bonbons.", n: "Je ne mange jamais de bonbons.", faux: "Je mange jamais de bonbons." },
+  { a: "Le chien aboie encore.", n: "Le chien n'aboie plus.", faux: "Le chien aboie plus." },
+  { a: "Nous aimons la soupe.", n: "Nous n'aimons pas la soupe.", faux: "Nous aimons pas la soupe." },
+  { a: "Lucy va souvent au cinéma.", n: "Lucy ne va jamais au cinéma.", faux: "Lucy va jamais au cinéma." },
+  { a: "Tu cours vite.", n: "Tu ne cours pas vite.", faux: "Tu cours pas vite." }
+];
+
+// =====================================================================
+//  3. CONJUGAISON
+// =====================================================================
+// Verbes irréguliers : 6 formes (je, tu, il, nous, vous, ils). Au passé composé, les formes sont séparées par des virgules.
+var CONJUGAISONS = {
+  "être": { present: "suis es est sommes êtes sont", futur: "serai seras sera serons serez seront", imparfait: "étais étais était étions étiez étaient", passe: "ai été,as été,a été,avons été,avez été,ont été" },
+  "avoir": { present: "ai as a avons avez ont", futur: "aurai auras aura aurons aurez auront", imparfait: "avais avais avait avions aviez avaient", passe: "ai eu,as eu,a eu,avons eu,avez eu,ont eu" },
+  "aller": { present: "vais vas va allons allez vont", futur: "irai iras ira irons irez iront", imparfait: "allais allais allait allions alliez allaient", passe: "suis allé,es allé,est allé,sommes allés,êtes allés,sont allés" },
+  "faire": { present: "fais fais fait faisons faites font", futur: "ferai feras fera ferons ferez feront", imparfait: "faisais faisais faisait faisions faisiez faisaient", passe: "ai fait,as fait,a fait,avons fait,avez fait,ont fait" },
+  "dire": { present: "dis dis dit disons dites disent", futur: "dirai diras dira dirons direz diront", imparfait: "disais disais disait disions disiez disaient", passe: "ai dit,as dit,a dit,avons dit,avez dit,ont dit" },
+  "venir": { present: "viens viens vient venons venez viennent", futur: "viendrai viendras viendra viendrons viendrez viendront", imparfait: "venais venais venait venions veniez venaient", passe: "suis venu,es venu,est venu,sommes venus,êtes venus,sont venus" },
+  "pouvoir": { present: "peux peux peut pouvons pouvez peuvent", futur: "pourrai pourras pourra pourrons pourrez pourront", imparfait: "pouvais pouvais pouvait pouvions pouviez pouvaient", passe: "ai pu,as pu,a pu,avons pu,avez pu,ont pu" },
+  "voir": { present: "vois vois voit voyons voyez voient", futur: "verrai verras verra verrons verrez verront", imparfait: "voyais voyais voyait voyions voyiez voyaient", passe: "ai vu,as vu,a vu,avons vu,avez vu,ont vu" },
+  "vouloir": { present: "veux veux veut voulons voulez veulent", futur: "voudrai voudras voudra voudrons voudrez voudront", imparfait: "voulais voulais voulait voulions vouliez voulaient", passe: "ai voulu,as voulu,a voulu,avons voulu,avez voulu,ont voulu" },
+  "prendre": { present: "prends prends prend prenons prenez prennent", futur: "prendrai prendras prendra prendrons prendrez prendront", imparfait: "prenais prenais prenait prenions preniez prenaient", passe: "ai pris,as pris,a pris,avons pris,avez pris,ont pris" }
+};
+// Verbes en -er réguliers (conjugués automatiquement)
+var VERBES_ER = ["chanter", "jouer", "danser", "parler", "regarder", "sauter", "dessiner", "marcher", "aimer", "écouter", "travailler", "cuisiner"];
+// Un complément pour faire des phrases avec chaque verbe
+var COMPLEMENTS = {
+  "être": "à la maison", "avoir": "un nouveau vélo", "aller": "au parc", "faire": "un gâteau", "dire": "bonjour à Mamie",
+  "venir": "à la fête", "pouvoir": "nager très loin", "voir": "un arc-en-ciel", "vouloir": "une glace à la fraise", "prendre": "le bus",
+  "chanter": "une chanson", "jouer": "au ballon", "danser": "dans le salon", "parler": "à la maîtresse", "regarder": "un dessin animé",
+  "sauter": "dans les flaques", "dessiner": "un dragon", "marcher": "dans la forêt", "aimer": "les crêpes", "écouter": "une histoire",
+  "travailler": "dans le jardin", "cuisiner": "une soupe"
+};
+// Sujets possibles pour chaque personne (0 = je … 5 = ils). f = féminin
+var SUJETS_CONJ = [
+  [{ s: "je" }], [{ s: "tu" }],
+  [{ s: "il" }, { s: "elle", f: 1 }, { s: "on" }, { s: "Lucy", f: 1 }, { s: "Mon frère" }],
+  [{ s: "nous" }], [{ s: "vous" }],
+  [{ s: "ils" }, { s: "elles", f: 1 }, { s: "Les enfants" }, { s: "Mes cousines", f: 1 }]
+];
+var MOTS_TEMPS = {
+  passe: ["Hier,", "Ce matin,", "La semaine dernière,"], imparfait: ["Autrefois,", "Avant,", "L'an dernier,"],
+  present: ["Aujourd'hui,", "En ce moment,", "Maintenant,"], futur: ["Demain,", "La semaine prochaine,", "Plus tard,"]
+};
+// Infinitifs et groupes (1 = -er sauf aller ; 2 = -ir qui fait -issons ; 3 = les autres)
+var GROUPES_VERBES = [
+  ["chanter", 1], ["jouer", 1], ["danser", 1], ["manger", 1], ["regarder", 1], ["marcher", 1], ["sauter", 1], ["parler", 1], ["aimer", 1], ["dessiner", 1],
+  ["finir", 2], ["grandir", 2], ["choisir", 2], ["rougir", 2], ["réfléchir", 2], ["remplir", 2], ["obéir", 2], ["bondir", 2],
+  ["aller", 3], ["prendre", 3], ["faire", 3], ["dire", 3], ["venir", 3], ["voir", 3], ["vouloir", 3], ["pouvoir", 3], ["partir", 3], ["courir", 3], ["lire", 3], ["mettre", 3]
+];
+// Groupes nominaux et le pronom qui les remplace
+var PRONOMS_GN = [
+  ["Lucy", "elle"], ["Tom", "il"], ["Lucy et Léa", "elles"], ["Tom et Lucy", "ils"], ["Mes parents", "ils"], ["La maîtresse", "elle"],
+  ["Le chat", "il"], ["Toi et moi", "nous"], ["Toi et ta sœur", "vous"], ["Les filles", "elles"], ["Mon frère et moi", "nous"],
+  ["Les chevaux", "ils"], ["La lune", "elle"], ["Le soleil", "il"], ["Les tortues", "elles"], ["Papa et toi", "vous"],
+  ["Mamie", "elle"], ["Les garçons", "ils"], ["Léa et moi", "nous"], ["Tom et toi", "vous"]
+];
+
+
+// =====================================================================
+//  4. ORTHOGRAPHE
+// =====================================================================
+// Homophones : "_" marque le trou, r = la bonne réponse.
+var HOMOPHONES = {
+  "a": [
+    ["Lucy _ un nouveau kimono.", "a"], ["Tom va _ la piscine le samedi.", "à"], ["Le chat _ faim ce matin.", "a"], ["Nous allons _ Paris en train.", "à"],
+    ["Mon frère _ perdu sa casquette.", "a"], ["Je joue _ cache-cache avec Léa.", "à"], ["La maîtresse _ une jolie voix.", "a"], ["Il pense _ son anniversaire.", "à"],
+    ["Léa _ mal au ventre.", "a"], ["Hugo arrive _ l'école en vélo.", "à"], ["Papa _ préparé des crêpes.", "a"], ["Elle offre un dessin _ sa mamie.", "à"],
+    ["Le chien _ trouvé un os.", "a"], ["Nous rentrons _ la maison.", "à"], ["Inès _ gagné la course.", "a"], ["J'ai mal _ la tête.", "à"],
+    ["Le bébé _ deux dents.", "a"], ["On mange une tarte _ la fraise.", "à"], ["Lucy _ une ceinture jaune.", "a"], ["Le train part _ huit heures.", "à"],
+    ["Mon oncle _ un grand jardin.", "a"], ["Tu écris _ ton ami.", "à"], ["Le lapin _ de longues oreilles.", "a"], ["Nous habitons _ côté de l'école.", "à"]],
+  "et": [
+    ["Le ciel _ bleu.", "est"], ["Lucy _ Tom jouent au ballon.", "et"], ["Mon chat _ très gourmand.", "est"], ["J'achète du pain _ des croissants.", "et"],
+    ["La soupe _ chaude.", "est"], ["Il fait froid _ il neige.", "et"], ["Léa _ dans sa chambre.", "est"], ["Je mange une pomme _ une banane.", "et"],
+    ["Le karaté _ un sport.", "est"], ["Papa _ Maman sont au cinéma.", "et"], ["Cette histoire _ drôle.", "est"], ["Le lion rugit _ s'en va.", "et"],
+    ["Mon frère _ malade aujourd'hui.", "est"], ["Elle chante _ elle danse.", "et"], ["La forêt _ calme.", "est"], ["J'ai un crayon rouge _ un crayon vert.", "et"],
+    ["Le gâteau _ délicieux.", "est"], ["Hugo _ Inès vont à l'école.", "et"], ["L'eau _ froide.", "est"], ["Le chien aboie _ court.", "et"],
+    ["Ma maison _ grande.", "est"], ["Il prend son sac _ part.", "et"], ["La lune _ ronde ce soir.", "est"], ["Nous lisons _ nous écrivons.", "et"]],
+  "son": [
+    ["Lucy range _ kimono.", "son"], ["Les enfants _ dans la cour.", "sont"], ["Tom cherche _ ballon.", "son"], ["Les fleurs _ jolies.", "sont"],
+    ["Le chat lèche _ museau.", "son"], ["Mes cousins _ en vacances.", "sont"], ["Léa mange _ goûter.", "son"], ["Les oiseaux _ sur la branche.", "sont"],
+    ["Hugo prête _ vélo.", "son"], ["Les pommes _ mûres.", "sont"], ["Le chien dort dans _ panier.", "son"], ["Mes parents _ au travail.", "sont"],
+    ["Papa lave _ camion.", "son"], ["Les élèves _ sages.", "sont"], ["Inès promène _ chien.", "son"], ["Les étoiles _ brillantes.", "sont"],
+    ["Le roi porte _ manteau rouge.", "son"], ["Ils _ très contents.", "sont"], ["Mamie arrose _ jardin.", "son"], ["Les tigres _ dangereux.", "sont"],
+    ["Tom fait _ lit.", "son"], ["Les gâteaux _ prêts.", "sont"], ["Lucy noue _ ruban.", "son"], ["Mes chaussures _ neuves.", "sont"]],
+  "on": [
+    ["_ va au parc cet après-midi.", "on"], ["Les enfants _ faim.", "ont"], ["Demain, _ ira à la piscine.", "on"], ["Mes amis _ un chien.", "ont"],
+    ["_ joue au karaté le mercredi.", "on"], ["Les oiseaux _ construit un nid.", "ont"], ["Quand il pleut, _ reste à la maison.", "on"], ["Les élèves _ fini leur travail.", "ont"],
+    ["_ mange des crêpes ce soir.", "on"], ["Mes parents _ une voiture bleue.", "ont"], ["Ce matin, _ a vu un écureuil.", "on"], ["Les chats _ des moustaches.", "ont"],
+    ["_ entend la mer au loin.", "on"], ["Tom et Lucy _ gagné le match.", "ont"], ["À la récré, _ joue à chat.", "on"], ["Les fleurs _ besoin d'eau.", "ont"],
+    ["_ chante une chanson en classe.", "on"], ["Mes cousines _ un poney.", "ont"], ["Le soir, _ lit une histoire.", "on"], ["Les pompiers _ éteint le feu.", "ont"],
+    ["_ part en vacances demain.", "on"], ["Ils _ peur de l'orage.", "ont"], ["Dans la forêt, _ cherche des champignons.", "on"], ["Les lapins _ de grandes oreilles.", "ont"]]
+};
+// L'astuce pour chaque homophone : le mot qu'on peut mettre à la place
+var HOMO_ASTUCE = {
+  "a": ["avait", "a = le verbe avoir : on peut dire « avait »."], "à": ["avait", "à = un petit mot invariable : on ne peut pas dire « avait »."],
+  "est": ["était", "est = le verbe être : on peut dire « était »."], "et": ["était", "et = le mot qui relie (« et puis ») : on ne peut pas dire « était »."],
+  "sont": ["étaient", "sont = le verbe être : on peut dire « étaient »."], "son": ["étaient", "son = « le sien » : on peut dire « mon », pas « étaient »."],
+  "ont": ["avaient", "ont = le verbe avoir : on peut dire « avaient »."], "on": ["avaient", "on = un pronom : on peut dire « il », pas « avaient »."]
+};
+var HOMO_PAIRES = { "a": ["a", "à"], "et": ["et", "est"], "son": ["son", "sont"], "on": ["on", "ont"] };
+
+// Noms : singulier, pluriel, genre (m/f)
+var NOMS_ACCORD = [
+  ["chat", "chats", "m"], ["cheval", "chevaux", "m"], ["jeu", "jeux", "m"], ["bateau", "bateaux", "m"], ["hibou", "hiboux", "m"], ["gâteau", "gâteaux", "m"],
+  ["oiseau", "oiseaux", "m"], ["journal", "journaux", "m"], ["chou", "choux", "m"], ["bijou", "bijoux", "m"], ["genou", "genoux", "m"], ["caillou", "cailloux", "m"],
+  ["clou", "clous", "m"], ["trou", "trous", "m"], ["sac", "sacs", "m"], ["cheveu", "cheveux", "m"], ["feu", "feux", "m"], ["animal", "animaux", "m"],
+  ["souris", "souris", "f"], ["nez", "nez", "m"], ["fleur", "fleurs", "f"], ["maison", "maisons", "f"], ["robe", "robes", "f"], ["voiture", "voitures", "f"],
+  ["château", "châteaux", "m"], ["pneu", "pneus", "m"], ["tortue", "tortues", "f"], ["ballon", "ballons", "m"], ["poupée", "poupées", "f"], ["tasse", "tasses", "f"]
+];
+// Adjectifs : masculin, féminin, masculin pluriel, féminin pluriel, avant = se met devant le nom
+var ADJ_ACCORD = [
+  ["petit", "petite", "petits", "petites", 1], ["grand", "grande", "grands", "grandes", 1], ["joli", "jolie", "jolis", "jolies", 1],
+  ["gros", "grosse", "gros", "grosses", 1], ["beau", "belle", "beaux", "belles", 1], ["gentil", "gentille", "gentils", "gentilles", 1],
+  ["long", "longue", "longs", "longues", 1], ["blanc", "blanche", "blancs", "blanches", 0], ["vert", "verte", "verts", "vertes", 0],
+  ["noir", "noire", "noirs", "noires", 0], ["heureux", "heureuse", "heureux", "heureuses", 0], ["doux", "douce", "doux", "douces", 0],
+  ["sportif", "sportive", "sportifs", "sportives", 0], ["rouge", "rouge", "rouges", "rouges", 0]
+];
+// Masculin → féminin (et une erreur fréquente)
+var FEMININS = [
+  ["un lion", "une lionne", "une lione"], ["un chat", "une chatte", "une chate"], ["un boulanger", "une boulangère", "une boulangeuse"],
+  ["un chanteur", "une chanteuse", "une chanteure"], ["un ami", "une amie", "une ami"], ["un voisin", "une voisine", "une voisinne"],
+  ["un cousin", "une cousine", "une cousinne"], ["un danseur", "une danseuse", "une danseure"], ["un roi", "une reine", "une roie"],
+  ["un loup", "une louve", "une loupe"], ["un champion", "une championne", "une champione"], ["un coiffeur", "une coiffeuse", "une coiffeure"],
+  ["un fermier", "une fermière", "une fermiere"], ["un prince", "une princesse", "une princeuse"]
+];
+// Accord sujet / verbe : sujets (p = personne 0 à 5)
+var SUJETS_ACCORD = [
+  ["Les enfants", 5], ["Lucy", 2], ["Mes cousines", 5], ["Le chien", 2], ["Tom et Hugo", 5], ["Tu", 1], ["Nous", 3], ["Vous", 4],
+  ["La maîtresse", 2], ["Les oiseaux", 5], ["Mon papi", 2], ["Léa et moi", 3], ["Toi et ton frère", 4], ["Les élèves", 5], ["Mon chat", 2]
+];
+// Les lettres qui changent le son : m = mot avec "_" à la place des lettres, r = réponse, c = catégorie
+var SONS_LETTRES = [
+  ["gar_on", "ç", "c"], ["le_on", "ç", "c"], ["ma_on", "ç", "c"], ["gla_on", "ç", "c"], ["re_u", "ç", "c"], ["fa_ade", "ç", "c"], ["fran_ais", "ç", "c"], ["commen_ons", "ç", "c"], ["balan_oire", "ç", "c"],
+  ["_erise", "c", "c"], ["_inéma", "c", "c"], ["_itron", "c", "c"], ["fa_ile", "c", "c"], ["gla_e", "c", "c"], ["pou_e", "c", "c"],
+  ["pi_on", "ge", "g"], ["na_oire", "ge", "g"], ["bou_ons", "ge", "g"], ["oran_ade", "ge", "g"], ["plon_on", "ge", "g"],
+  ["_itare", "gu", "g"], ["_êpe", "gu", "g"], ["ba_e", "gu", "g"], ["fati_é", "gu", "g"], ["lan_e", "gu", "g"], ["_irlande", "gu", "g"],
+  ["_irafe", "g", "g"], ["_âteau", "g", "g"], ["_orille", "g", "g"], ["ma_ie", "g", "g"], ["_ilet", "g", "g"],
+  ["cha_ure", "ss", "s"], ["ta_e", "ss", "s"], ["a_iette", "ss", "s"], ["sauci_e", "ss", "s"], ["poi_on rouge", "ss", "s"], ["cou_in (pour la tête)", "ss", "s"], ["de_ert (au chocolat)", "ss", "s"],
+  ["mai_on", "s", "s"], ["ro_e", "s", "s"], ["bi_ou", "s", "s"], ["va_e", "s", "s"], ["cou_in (Tom, mon cousin)", "s", "s"], ["ca_erole", "s", "s"], ["chemi_e", "s", "s"],
+  ["ja_be", "m", "m"], ["ta_bour", "m", "m"], ["po_pier", "m", "m"], ["cha_pion", "m", "m"], ["la_pe", "m", "m"], ["cha_bre", "m", "m"], ["o_bre", "m", "m"], ["ti_bre", "m", "m"], ["e_mener", "m", "m"],
+  ["e_fant", "n", "m"], ["ro_de", "n", "m"], ["cha_ter", "n", "m"], ["me_ton", "n", "m"], ["pi_ceau", "n", "m"], ["o_cle", "n", "m"], ["pa_talon", "n", "m"]
+];
+var SONS_CHOIX = { c: ["c", "ç"], g: ["g", "ge", "gu"], s: ["s", "ss"], m: ["m", "n"] };
+var SONS_REGLE = {
+  c: "Devant a, o, u, le c fait [k] (cadeau). Pour faire [s], on met une cédille : ç (garçon). Devant e, i, y, le c fait déjà [s] (cerise).",
+  g: "Devant a, o, u, le g fait [g] (gâteau). Pour faire [j], on ajoute un e : ge (pigeon). Devant e, i, pour faire [g], on ajoute un u : gu (guitare).",
+  s: "Entre deux voyelles, un seul s fait [z] (maison). Pour faire [s] entre deux voyelles, on double : ss (poisson).",
+  m: "Devant m, b, p, on écrit m au lieu de n (jambe, pompier, emmener). Sinon, on écrit n (enfant)."
+};
+// Mots invariables du CE2 : m = mot, faux = erreurs fréquentes, p = phrase avec un trou "_"
+var INVARIABLES = [
+  ["toujours", "toujour", "toujoure", "Lucy arrive _ à l'heure au karaté."], ["beaucoup", "beaucou", "bocoup", "J'aime _ les fraises."],
+  ["maintenant", "maintenan", "mintenant", "Range ta chambre _ !"], ["avec", "avek", "avecque", "Je joue _ mon frère."],
+  ["aujourd'hui", "aujourdhui", "aujour d'hui", "_, il fait beau."], ["demain", "deumain", "demin", "_, nous irons à la piscine."],
+  ["hier", "hiere", "yer", "_, j'ai vu un film."], ["jamais", "jamé", "jammais", "Je ne mange _ de bonbons le matin."],
+  ["souvent", "souvant", "souven", "Nous allons _ au parc."], ["parfois", "parfoi", "parfoie", "_, le chat dort sur mon lit."],
+  ["bientôt", "bientot", "bientô", "Ce sera _ les vacances !"], ["aussi", "ausi", "aussie", "Moi _, je veux jouer !"],
+  ["très", "trè", "trés", "Ce gâteau est _ bon."], ["trop", "tro", "trau", "Il fait _ chaud."],
+  ["encore", "encor", "enkore", "Je veux _ du chocolat."], ["déjà", "deja", "déja", "Tu as _ fini ?"],
+  ["longtemps", "lontemps", "longtemp", "J'ai attendu le bus _."], ["ensuite", "ansuite", "ensuit", "Je me lave, _ je m'habille."],
+  ["pendant", "pandant", "pendan", "Je lis _ les vacances."], ["devant", "devan", "devent", "Le chien attend _ la porte."],
+  ["derrière", "derrier", "dèrière", "Le chat se cache _ le rideau."], ["dans", "dan", "dens", "Les poissons nagent _ l'eau."],
+  ["sous", "sou", "soue", "La balle roule _ la table."], ["chez", "chè", "chés", "Je vais _ Mamie."],
+  ["mais", "mé", "mes", "Je voudrais sortir, _ il pleut."], ["avant", "avan", "avent", "Je me lave les mains _ de manger."],
+  ["après", "aprè", "apré", "On joue _ l'école."], ["vite", "vitte", "vit", "Le lapin court très _."],
+  ["ici", "issi", "icie", "Viens _, s'il te plaît !"], ["dehors", "deor", "dehor", "Les enfants jouent _."],
+  ["puis", "pui", "puit", "Je mange, _ je vais au lit."], ["quand", "kan", "quan", "_ il pleut, je mets mes bottes."]
+];
+
+// =====================================================================
+//  5. VOCABULAIRE
+// =====================================================================
+var MOTS_DICO = [
+  "abeille", "arbre", "avion", "araignée", "ballon", "banane", "bateau", "bague", "balle", "cerise", "chat", "cheval", "chemin", "chien", "chocolat", "carotte", "castor", "canard",
+  "dragon", "domino", "dauphin", "école", "éléphant", "étoile", "fusée", "fraise", "fourmi", "gâteau", "girafe", "gorille", "hibou", "hérisson", "île", "igloo", "jardin", "judo",
+  "kimono", "karaté", "lapin", "lampe", "lait", "lune", "loup", "maison", "montagne", "moto", "mouton", "monstre", "nuage", "neige", "ours", "orange", "papillon", "pomme",
+  "poisson", "pompier", "porte", "renard", "robot", "radis", "soleil", "sapin", "souris", "tortue", "tomate", "toupie", "train", "tigre", "table", "vache", "vélo", "violon", "zèbre"
+];
+// Familles de mots (le dernier mot "piege" ressemble mais n'est PAS de la famille)
+var FAMILLES = [
+  { mots: ["dent", "dentiste", "dentifrice", "dentier"], piege: "dinde" }, { mots: ["jardin", "jardinier", "jardiner", "jardinage"], piege: "jaune" },
+  { mots: ["fleur", "fleuriste", "fleurir", "fleuri"], piege: "flûte" }, { mots: ["chant", "chanter", "chanteur", "chanson"], piege: "chanceux" },
+  { mots: ["terre", "terrain", "terrier", "enterrer"], piege: "terrible" }, { mots: ["lait", "laitier", "laitage", "allaiter"], piege: "laid" },
+  { mots: ["mer", "marin", "marine", "amerrir"], piege: "merci" }, { mots: ["neige", "neiger", "enneigé", "neigeux"], piege: "nez" },
+  { mots: ["froid", "refroidir", "froidement", "froideur"], piege: "fromage" }, { mots: ["dessin", "dessiner", "dessinateur", "dessinatrice"], piege: "dessert" },
+  { mots: ["danse", "danser", "danseur", "danseuse"], piege: "dent" }, { mots: ["coiffer", "coiffeur", "coiffure", "décoiffer"], piege: "coffre" },
+  { mots: ["glace", "glacier", "glaçon", "glacé"], piege: "glisser" }, { mots: ["peur", "peureux", "apeuré", "peureuse"], piege: "pétale" },
+  { mots: ["long", "longueur", "allonger", "rallonger"], piege: "loup" }, { mots: ["rire", "sourire", "rieur", "rigoler"], piege: "riz" },
+  { mots: ["boulanger", "boulangerie", "boulangère"], piege: "boule" }, { mots: ["lune", "lunaire", "alunir"], piege: "lunettes" }
+];
+// Préfixes : mot, mot de base, préfixe, sens
+var PREFIXES = [
+  ["relire", "lire", "re", "lire de nouveau"], ["refaire", "faire", "re", "faire de nouveau"], ["repartir", "partir", "re", "partir de nouveau"], ["revenir", "venir", "re", "venir de nouveau"],
+  ["défaire", "faire", "dé", "le contraire de faire"], ["déplier", "plier", "dé", "le contraire de plier"], ["décoller", "coller", "dé", "le contraire de coller"], ["débrancher", "brancher", "dé", "le contraire de brancher"],
+  ["impossible", "possible", "im", "qui n'est pas possible"], ["impatient", "patient", "im", "qui n'est pas patient"], ["inconnu", "connu", "in", "qui n'est pas connu"], ["invisible", "visible", "in", "qui n'est pas visible"],
+  ["malheureux", "heureux", "mal", "qui n'est pas heureux"], ["malhonnête", "honnête", "mal", "qui n'est pas honnête"]
+];
+// Suffixes : mot, mot de base, suffixe, sens
+var SUFFIXES = [
+  ["pommier", "pomme", "ier", "l'arbre qui donne des pommes"], ["cerisier", "cerise", "ier", "l'arbre qui donne des cerises"], ["poirier", "poire", "ier", "l'arbre qui donne des poires"], ["abricotier", "abricot", "ier", "l'arbre qui donne des abricots"],
+  ["chanteur", "chanter", "eur", "celui qui chante"], ["danseur", "danser", "eur", "celui qui danse"], ["nageur", "nager", "eur", "celui qui nage"], ["joueur", "jouer", "eur", "celui qui joue"],
+  ["fillette", "fille", "ette", "une petite fille"], ["maisonnette", "maison", "ette", "une petite maison"], ["camionnette", "camion", "ette", "un petit camion"],
+  ["lavage", "laver", "age", "l'action de laver"], ["arrosage", "arroser", "age", "l'action d'arroser"], ["nettoyage", "nettoyer", "age", "l'action de nettoyer"],
+  ["boulangerie", "boulanger", "erie", "le magasin du boulanger"], ["fromagerie", "fromage", "erie", "le magasin où l'on vend du fromage"]
+];
+var SYNONYMES = [
+  ["content", "joyeux"], ["beau", "joli"], ["commencer", "débuter"], ["finir", "terminer"], ["regarder", "observer"], ["crier", "hurler"],
+  ["petit", "minuscule"], ["triste", "malheureux"], ["voiture", "auto"], ["gentil", "aimable"], ["bizarre", "étrange"], ["trouver", "découvrir"],
+  ["maison", "habitation"], ["peur", "frayeur"], ["courageux", "brave"], ["calme", "tranquille"], ["énorme", "gigantesque"], ["rapide", "vif"],
+  ["bavarder", "papoter"], ["parler", "discuter"]
+];
+var CONTRAIRES = [
+  ["grand", "petit"], ["chaud", "froid"], ["jour", "nuit"], ["rapide", "lent"], ["monter", "descendre"], ["ouvrir", "fermer"], ["gagner", "perdre"],
+  ["propre", "sale"], ["plein", "vide"], ["lourd", "léger"], ["toujours", "jamais"], ["avant", "après"], ["entrer", "sortir"], ["allumer", "éteindre"],
+  ["facile", "difficile"], ["gentil", "méchant"], ["haut", "bas"], ["jeune", "vieux"], ["dur", "mou"], ["sec", "mouillé"], ["content", "triste"],
+  ["beau", "laid"], ["acheter", "vendre"], ["riche", "pauvre"], ["calme", "agité"]
+];
+// Sens propre / sens figuré : phrase (le mot ou l'expression entre * *), sens, et ce que ça veut dire (pour le figuré)
+var SENS = [
+  ["Le boulanger *coupe* le pain.", "propre"], ["Lucy a *un cœur d'or* : elle aide tout le monde.", "figuré", "elle est très gentille"],
+  ["Il *pleut des cordes* ce matin.", "figuré", "il pleut très fort"], ["J'ai *un chat dans la gorge*, je tousse.", "figuré", "j'ai la voix enrouée"],
+  ["*Le chat* dort dans son panier.", "propre"], ["Tom a *la tête dans les nuages* en classe.", "figuré", "il est distrait, il rêve"],
+  ["L'avion vole *dans les nuages*.", "propre"], ["Papa a *une faim de loup*.", "figuré", "il a très faim"],
+  ["Le *loup* hurle dans la forêt.", "propre"], ["Léa *a la main verte* : ses fleurs poussent bien.", "figuré", "elle sait bien faire pousser les plantes"],
+  ["Lucy lève *la main* pour répondre.", "propre"], ["Hugo *donne sa langue au chat* : il ne trouve pas la réponse.", "figuré", "il abandonne, il ne sait pas"],
+  ["Le chien tire *la langue* quand il a chaud.", "propre"], ["Ce film m'a *glacé le sang*.", "figuré", "il m'a fait très peur"],
+  ["Mon jus est trop froid, il est *glacé*.", "propre"], ["Grand-père est *doux comme un agneau*.", "figuré", "il est très gentil et calme"],
+  ["Le bébé *dort comme un loir*.", "figuré", "il dort profondément"], ["Tom *casse* un verre en le faisant tomber.", "propre"],
+  ["Ce bruit me *casse les oreilles* !", "figuré", "il est trop fort"], ["Lucy *marche* jusqu'à l'école.", "propre"],
+  ["Ma montre ne *marche* plus.", "figuré", "elle ne fonctionne plus"], ["Il fait *un froid de canard*.", "figuré", "il fait très froid"],
+  ["Le *canard* nage sur la mare.", "propre"], ["Au karaté, Lucy *garde la tête froide*.", "figuré", "elle reste calme"]
+];
+
+
+// =====================================================================
+//  RAPPELS DE COURS (un par notion). Couleurs : <b class="tu"> bleu, "td" vert, "tc" rose, "tr" rouge, "tm" violet.
+// =====================================================================
+var COURS = {
+  "gram.phrase": '<h2>✏️ La phrase</h2><ul class="rules"><li>Une phrase commence par une <b class="tc">Majuscule</b> et finit par un <b class="tr">point</b> (. ? ou !).</li><li>Elle a un sens : on comprend ce qu\'elle veut dire.</li></ul>' +
+    '<div class="frex"><b class="tc">L</b>ucy va au karaté<b class="tr">.</b></div><h2>🗂️ Les 4 types de phrases</h2><ul class="rules">' +
+    '<li>📢 <b>Déclarative</b> : elle raconte. <i>Le chat dort<b class="tr">.</b></i></li><li>❓ <b>Interrogative</b> : elle pose une question. <i>Tu viens<b class="tr"> ?</b></i></li>' +
+    '<li>😮 <b>Exclamative</b> : elle montre une émotion. <i>Quelle belle journée<b class="tr"> !</b></i></li><li>👉 <b>Impérative</b> : elle donne un ordre. <i>Range ta chambre<b class="tr">.</b></i></li></ul>',
+  "gram.neg": '<h2>🙅 Forme affirmative et forme négative</h2><ul class="rules"><li>La forme <b class="td">affirmative</b> dit « oui » : <i>Lucy aime les épinards.</i></li>' +
+    '<li>La forme <b class="tr">négative</b> dit « non ». On entoure le verbe avec deux petits mots : <b class="tr">ne … pas</b>, <b class="tr">ne … plus</b>, <b class="tr">ne … jamais</b>.</li></ul>' +
+    '<div class="frex">Lucy <b class="tr">n\'</b>aime <b class="tr">pas</b> les épinards.</div><div class="frex">Il <b class="tr">ne</b> pleut <b class="tr">plus</b>.</div>' +
+    '<div class="tip">⚠️ N\'oublie pas le « ne » ! Devant une voyelle, il devient « n\' ».</div>',
+  "gram.nature": '<h2>🏷️ La nature des mots</h2><ul class="rules"><li>🔵 <b class="tu">Nom commun</b> : une personne, un animal, une chose (chat, école, maman).</li>' +
+    '<li>🟣 <b class="tm">Nom propre</b> : un prénom, une ville… avec une majuscule (Lucy, Paris).</li><li>🟢 <b class="td">Déterminant</b> : le petit mot devant le nom (le, la, un, des, mon…).</li>' +
+    '<li>🌸 <b class="tc">Adjectif</b> : il dit comment est le nom (petit, rouge, jolie).</li><li>🔴 <b class="tr">Verbe</b> : il dit ce qu\'on fait ; il change avec le temps (dort, dormira).</li>' +
+    '<li>👤 <b>Pronom personnel</b> : il remplace un nom (je, tu, il, elle, on, nous, vous, ils, elles).</li></ul>' +
+    '<div class="frex"><b class="td">Le</b> <b class="tc">petit</b> <b class="tu">chat</b> de <b class="tm">Lucy</b> <b class="tr">dort</b>.</div>',
+  "gram.gn": '<h2>🧩 Le groupe nominal</h2><ul class="rules"><li>Le groupe nominal (GN) est un groupe de mots construit autour d\'un <b class="tu">nom</b>.</li>' +
+    '<li>Il a toujours un <b class="td">déterminant</b> + un <b class="tu">nom</b>. On peut ajouter un ou des <b class="tc">adjectifs</b>.</li></ul>' +
+    '<div class="frex"><b class="td">une</b> <b class="tu">robe</b> → <b class="td">une</b> <b class="tc">jolie</b> <b class="tu">robe</b> <b class="tc">rouge</b></div>' +
+    '<div class="tip">Le nom est le mot le plus important du groupe : c\'est le « chef » du GN.</div>',
+  "gram.sujet": '<h2>🎯 Le verbe et son sujet</h2><ul class="rules"><li>Le <b class="tr">verbe</b> dit ce qui se passe. Pour le trouver, on change le temps : <i>aujourd\'hui il <b class="tr">dort</b>, demain il <b class="tr">dormira</b>.</i></li>' +
+    '<li>Le <b class="tu">sujet</b> dit <b>qui</b> fait l\'action. On pose la question : <b>« Qui est-ce qui … ? »</b></li></ul>' +
+    '<div class="frex"><b class="tu">Le petit chat</b> <b class="tr">dort</b> sur le canapé.</div><div class="tip">Qui est-ce qui dort ? → <b class="tu">le petit chat</b> : c\'est le sujet.</div>',
+  "gram.compl": '<h2>🧳 Les compléments</h2><ul class="rules"><li>Certains groupes de mots disent <b>où</b>, <b>quand</b> ou <b>comment</b> : ce sont des <b class="td">compléments</b>.</li>' +
+    '<li>On peut souvent les <b>déplacer</b> ou les <b>supprimer</b> : la phrase garde un sens.</li></ul>' +
+    '<div class="frex">Lucy va au karaté <b class="td">le mercredi</b>.</div><div class="frex">→ <b class="td">Le mercredi</b>, Lucy va au karaté. (déplacé)</div><div class="frex">→ Lucy va au karaté. (supprimé)</div>' +
+    '<div class="tip">⚠️ Le sujet et le verbe, eux, ne peuvent pas être supprimés !</div>',
+  "conj.temps": '<h2>⏳ Passé, présent, futur</h2><ul class="rules"><li>⬅️ <b class="tm">Passé</b> : c\'est déjà arrivé. <i>Hier, j\'<b>ai joué</b>.</i></li>' +
+    '<li>⏺️ <b class="td">Présent</b> : ça se passe maintenant. <i>Aujourd\'hui, je <b>joue</b>.</i></li><li>➡️ <b class="tu">Futur</b> : ça va arriver. <i>Demain, je <b>jouerai</b>.</i></li></ul>' +
+    '<div class="tip">Les mots « hier », « aujourd\'hui », « demain » aident, mais regarde surtout le verbe !</div>',
+  "conj.infinitif": '<h2>📕 L\'infinitif et les groupes</h2><ul class="rules"><li>L\'<b>infinitif</b>, c\'est le verbe « au repos », comme dans le dictionnaire : <i>nous chantons → <b>chanter</b></i>.</li>' +
+    '<li>🟢 <b class="td">1er groupe</b> : les verbes en <b>-er</b> (chanter, jouer). Attention : <b>aller</b> n\'en fait pas partie !</li>' +
+    '<li>🔵 <b class="tu">2e groupe</b> : les verbes en <b>-ir</b> qui font <b>-issons</b> avec nous (finir → nous finissons).</li>' +
+    '<li>🌸 <b class="tc">3e groupe</b> : tous les autres (aller, faire, prendre, venir, voir…).</li></ul><div class="tip">Être et avoir sont à part : ce sont les auxiliaires.</div>',
+  "conj.pronoms": '<h2>👥 Les pronoms personnels sujets</h2><ul class="rules"><li><b>je</b> (moi), <b>tu</b> (toi), <b>il / elle / on</b> (une personne)</li><li><b>nous</b> (moi + d\'autres), <b>vous</b> (toi + d\'autres), <b>ils / elles</b> (plusieurs)</li></ul>' +
+    '<div class="frex"><b class="tu">Lucy</b> danse → <b class="tu">Elle</b> danse.</div><div class="frex"><b class="tu">Tom et Lucy</b> jouent → <b class="tu">Ils</b> jouent.</div>' +
+    '<div class="tip">S\'il y a au moins un garçon dans le groupe, on dit « ils ».</div>',
+  "conj.present": '<h2>⏺️ Le présent</h2><ul class="rules"><li>Il dit ce qui se passe maintenant.</li><li>Verbes en -er : <b class="tc">-e, -es, -e, -ons, -ez, -ent</b>.</li></ul>',
+  "conj.futur": '<h2>➡️ Le futur</h2><ul class="rules"><li>Il dit ce qui va arriver.</li><li>Les terminaisons sont toujours : <b class="tc">-ai, -as, -a, -ons, -ez, -ont</b>.</li><li>Verbes en -er : on garde tout l\'infinitif → je <b>chanter</b>ai.</li></ul>',
+  "conj.imparfait": '<h2>🕰️ L\'imparfait</h2><ul class="rules"><li>C\'est un temps du passé pour raconter ou décrire (« autrefois », « avant »).</li><li>Les terminaisons sont toujours : <b class="tc">-ais, -ais, -ait, -ions, -iez, -aient</b>.</li></ul>',
+  "conj.passe": '<h2>✅ Le passé composé</h2><ul class="rules"><li>Il dit qu\'une action est finie. Il a <b>deux mots</b> : <b class="tu">avoir</b> ou <b class="tm">être</b> au présent + le <b class="tc">participe passé</b>.</li>' +
+    '<li>Verbes en -er : le participe se termine par <b class="tc">-é</b> → j\'<b class="tu">ai</b> <b class="tc">chanté</b>.</li><li>Avec être, on accorde : elle est allé<b class="tc">e</b>, ils sont allé<b class="tc">s</b>.</li></ul>' +
+    '<div class="tip">Astuce : -é ou -er ? Remplace par « mordu » : j\'ai mordu → j\'ai chant<b>é</b>.</div>',
+  "orth.a": '<h2>🔤 a ou à ?</h2><ul class="rules"><li><b class="tu">a</b> : c\'est le verbe <b>avoir</b>. On peut dire « <b>avait</b> ». <i>Lucy <b>a</b> (avait) un vélo.</i></li>' +
+    '<li><b class="tc">à</b> : petit mot invariable. On ne peut pas dire « avait ». <i>Je vais <b>à</b> la piscine.</i></li></ul>',
+  "orth.et": '<h2>🔤 et ou est ?</h2><ul class="rules"><li><b class="tu">est</b> : c\'est le verbe <b>être</b>. On peut dire « <b>était</b> ». <i>Le ciel <b>est</b> (était) bleu.</i></li>' +
+    '<li><b class="tc">et</b> : il relie deux mots. On peut dire « <b>et puis</b> ». <i>Lucy <b>et</b> Tom.</i></li></ul>',
+  "orth.son": '<h2>🔤 son ou sont ?</h2><ul class="rules"><li><b class="tu">sont</b> : c\'est le verbe <b>être</b>. On peut dire « <b>étaient</b> ». <i>Les enfants <b>sont</b> (étaient) dehors.</i></li>' +
+    '<li><b class="tc">son</b> : « le sien ». On peut dire « <b>mon</b> ». <i>Lucy range <b>son</b> (mon) kimono.</i></li></ul>',
+  "orth.on": '<h2>🔤 on ou ont ?</h2><ul class="rules"><li><b class="tu">ont</b> : c\'est le verbe <b>avoir</b>. On peut dire « <b>avaient</b> ». <i>Les enfants <b>ont</b> (avaient) faim.</i></li>' +
+    '<li><b class="tc">on</b> : un pronom. On peut dire « <b>il</b> ». <i><b>On</b> (il) va au parc.</i></li></ul>',
+  "orth.accgn": '<h2>👫 Les accords dans le groupe nominal</h2><ul class="rules"><li>Dans le GN, le déterminant et l\'adjectif prennent le <b>genre</b> et le <b>nombre</b> du nom.</li>' +
+    '<li>👧 Féminin : on ajoute souvent un <b class="tc">e</b> → un petit chat, une petit<b class="tc">e</b> souris.</li>' +
+    '<li>👨‍👩‍👧 Pluriel : on ajoute un <b class="tc">s</b> → des chat<b class="tc">s</b>. Mais <b>-eau, -eu</b> prennent un <b class="tc">x</b> (bateaux, jeux), <b>-al</b> devient <b class="tc">-aux</b> (chevaux).</li>' +
+    '<li>Les 7 mots en -ou avec x : bijou, caillou, chou, genou, hibou, joujou, pou.</li></ul>',
+  "orth.sv": '<h2>🤝 L\'accord du verbe avec son sujet</h2><ul class="rules"><li>Le verbe s\'accorde avec son <b class="tu">sujet</b>.</li><li>Sujet au pluriel (= ils, elles) → le verbe se termine souvent par <b class="tc">-nt</b>.</li></ul>' +
+    '<div class="frex"><b class="tu">Le chien</b> jou<b class="tc">e</b>. <b class="tu">Les chiens</b> jou<b class="tc">ent</b>.</div><div class="tip">Remplace le sujet par un pronom : « Les enfants » → ils → ils jouent.</div>',
+  "orth.sons": '<h2>🎵 Les lettres qui changent le son</h2><ul class="rules"><li><b class="tc">c / ç</b> : ' + "garçon, leçon (ç devant a, o, u)" + '</li><li><b class="tc">g / ge / gu</b> : gâteau, pigeon, guitare</li><li><b class="tc">s / ss</b> : maison [z], poisson [s]</li><li><b class="tc">m devant m, b, p</b> : jambe, pompier, emmener</li></ul>',
+  "orth.invar": '<h2>🧱 Les mots invariables</h2><ul class="rules"><li>Ils ne changent <b>jamais</b> : pas de -s, pas de -e. Il faut les apprendre par cœur !</li></ul>' +
+    '<div class="frex">toujours · beaucoup · maintenant · avec · aujourd\'hui · demain · hier · jamais · souvent · bientôt · très · trop · encore · déjà · dans · sous · chez · mais · après · avant</div>',
+  "voc.dico": '<h2>🔠 L\'ordre alphabétique et le dictionnaire</h2><ul class="rules"><li>Dans le dictionnaire, les mots sont rangés dans l\'ordre de l\'alphabet : <b>a b c d e f g h i j k l m n o p q r s t u v w x y z</b>.</li>' +
+    '<li>Si la 1<sup>re</sup> lettre est la même, on regarde la 2<sup>e</sup>, puis la 3<sup>e</sup>… <i>c<b class="tc">a</b>rotte, c<b class="tc">h</b>at, c<b class="tc">i</b>tron</i>.</li>' +
+    '<li>📖 Début du dictionnaire : a → f · milieu : g → o · fin : p → z.</li></ul>',
+  "voc.famille": '<h2>👨‍👩‍👧 Les familles de mots</h2><ul class="rules"><li>Les mots d\'une même famille ont une <b>partie commune</b> (le radical) et un <b>sens proche</b>.</li></ul>' +
+    '<div class="frex"><b class="tc">dent</b> · <b class="tc">dent</b>iste · <b class="tc">dent</b>ifrice</div><div class="tip">⚠️ « dinde » ressemble, mais n\'a rien à voir avec les dents : ce n\'est pas de la famille !</div>',
+  "voc.affixes": '<h2>🧩 Préfixes et suffixes</h2><ul class="rules"><li>Le <b class="tc">préfixe</b> se met <b>devant</b> le mot : <b class="tc">re</b>lire (lire de nouveau), <b class="tc">dé</b>faire (le contraire), <b class="tc">im</b>possible (pas possible).</li>' +
+    '<li>Le <b class="tu">suffixe</b> se met <b>à la fin</b> : pomm<b class="tu">ier</b> (l\'arbre), chant<b class="tu">eur</b> (celui qui chante), maisonn<b class="tu">ette</b> (petite maison).</li></ul>',
+  "voc.synant": '<h2>🔁 Synonymes et contraires</h2><ul class="rules"><li><b class="td">Synonymes</b> : des mots qui veulent dire <b>presque la même chose</b> (content = joyeux).</li>' +
+    '<li><b class="tr">Contraires</b> : des mots qui veulent dire <b>l\'inverse</b> (chaud ≠ froid).</li></ul>',
+  "voc.sens": '<h2>🎭 Sens propre et sens figuré</h2><ul class="rules"><li><b class="tu">Sens propre</b> : le sens habituel, « pour de vrai ». <i>Le loup hurle dans la forêt.</i></li>' +
+    '<li><b class="tc">Sens figuré</b> : une image, on ne le prend pas au pied de la lettre. <i>J\'ai une faim de loup = j\'ai très faim.</i></li></ul>'
+};
+
+</script>
+
 <script>
 (function () {
   "use strict";
@@ -1235,6 +2069,7 @@
   function showScreen(id) {
     document.querySelectorAll(".screen").forEach(function (s) { s.classList.remove("active"); });
     $("#screen-" + id).classList.add("active");
+    document.body.setAttribute("data-screen", id);
     window.scrollTo(0, 0);
   }
 
@@ -2085,6 +2920,7 @@
   // =========================================================
   var MODULES = {};
   var PROBLEM_SLOTS = [5, 12, 18];   // 3 petits problèmes de la vie courante par série
+  function fmtItem(x) { return typeof x === "string" ? x : fmt(x); }   // mots (français) ou nombres
   function fmt(n) { var s = String(n); return s.length > 3 ? s.slice(0, -3) + NB + s.slice(-3) : s; }
   function dig(n, i) { var s = String(n); return i < s.length ? +s.charAt(s.length - 1 - i) : null; }
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
@@ -2932,7 +3768,7 @@
   }
   $("#gl-back").addEventListener("click", function () { showScreen("gmenu"); });
   $("#gl-go").addEventListener("click", function () { gStart(G.mode); });
-  $("#gm-home").addEventListener("click", goHome);
+  $("#gm-home").addEventListener("click", function () { if (G.mod && G.mod.fr) showScreen("frhome"); else goHome(); });
   ["num", "add", "mulp", "div"].forEach(function (id) {
     $("#go-" + id).addEventListener("click", function () { gOpen(id); });
   });
@@ -2956,6 +3792,7 @@
     if (q.type === "fields") G.st = { vals: q.fields.map(function () { return ""; }), active: 0, op: -1 };
     else if (q.type === "choice") G.st = { sel: -1 };
     else if (q.type === "order") G.st = { placed: [] };
+    else if (q.type === "words") G.st = { sel: [] };
     else if (q.type === "color") G.st = { on: rep(" ", q.n).split("").map(function () { return false; }) };
     else {
       var n = colInfo(q.op, q.a, q.b).n;
@@ -2995,6 +3832,7 @@
     if (q.type === "fields") return st.vals.join("") === "";
     if (q.type === "choice") return st.sel < 0;
     if (q.type === "order") return st.placed.length === 0;
+    if (q.type === "words") return st.sel.length === 0;
     if (q.type === "color") return st.on.indexOf(true) < 0;
     return st.res.join("") === "";
   }
@@ -3015,6 +3853,7 @@
           return '<button type="button" class="' + c + '" data-op="' + k + '" aria-label="Opération ' + o + '">' + o + "</button>";
         }).join("") + "</div>";
       });
+      if (q.type === "words") card.innerHTML += wordsHTML(q, st);
       if (q.type === "color") card.innerHTML += fracDrawing(q.sh, q.n, q.k, q.sh === "strip" ? "wide" : "big", st.fix ? null : st.on, !st.fix && G.phase === "answer");
     }
     if (q.type === "choice") {
@@ -3028,17 +3867,19 @@
       var cnt = st.fix ? q.k : st.on.filter(Boolean).length;
       z.innerHTML = '<div class="gcount">Parts coloriées&nbsp;: <b>' + cnt + "</b> sur " + q.n + "</div>" +
         (G.phase === "answer" ? '<button type="button" class="gopt" data-clear="1">🧽 Tout effacer</button>' : "");
+    } else if (q.type === "words") {
+      z.innerHTML = "";
     } else if (q.type === "order") {
       var shown = st.fix ? q.sorted.map(function (x) { return q.items.indexOf(x); }) : st.placed, slots = "", chips = "";
       for (var k = 0; k < q.items.length; k++) {
         var has = k < shown.length;
         var scls = "gslot" + (has ? " filled" : "") + (st.fix ? " fix" : (G.phase === "feedback" ? " right" : ""));
-        slots += '<button type="button" class="' + scls + '" data-slot="' + k + '">' + (has ? fmt(q.items[shown[k]]) : '<span class="sn">' + (k + 1) + "</span>") + "</button>";
+        slots += '<button type="button" class="' + scls + '" data-slot="' + k + '">' + (has ? fmtItem(q.items[shown[k]]) : '<span class="sn">' + (k + 1) + "</span>") + "</button>";
       }
       if (!st.fix) q.items.forEach(function (x, k2) {
-        if (st.placed.indexOf(k2) < 0) chips += '<button type="button" class="gchip" data-chip="' + k2 + '">' + fmt(x) + "</button>";
+        if (st.placed.indexOf(k2) < 0) chips += '<button type="button" class="gchip" data-chip="' + k2 + '">' + fmtItem(x) + "</button>";
       });
-      z.innerHTML = '<div class="gorder-lbl">' + (q.asc ? "Du plus petit ⬆️ au plus grand" : "Du plus grand ⬇️ au plus petit") + "</div>" +
+      z.innerHTML = '<div class="gorder-lbl">' + (q.orderLbl || (q.asc ? "Du plus petit ⬆️ au plus grand" : "Du plus grand ⬇️ au plus petit")) + "</div>" +
         '<div class="gslots">' + slots + '</div><div class="gchips">' + chips + "</div>";
     }
     $("#g-validate").classList.toggle("dim", G.phase === "answer" && gIsEmpty());
@@ -3082,6 +3923,11 @@
     if (!t) return;
     if (t.hasAttribute("data-op")) { st.op = +t.dataset.op; soundTap(); }
     else if (t.hasAttribute("data-f")) { st.active = +t.dataset.f; }
+    else if (t.hasAttribute("data-w")) {   // français : toucher un mot (encore une fois pour l'enlever)
+      var w = +t.dataset.w, iw = st.sel.indexOf(w);
+      if (iw >= 0) st.sel.splice(iw, 1); else if (q.multi) st.sel.push(w); else st.sel = [w];
+      soundTap();
+    }
     else if (t.hasAttribute("data-cr")) { st.active = { kind: "r", i: +t.dataset.cr }; st.retR = +t.dataset.cr; }
     else if (t.hasAttribute("data-cc")) {
       var i = +t.dataset.cc;
@@ -3119,9 +3965,13 @@
       return { ok: (!q.ops || st.op === q.opAnswer) && q.fields.every(function (f, k) { return parseInt(st.vals[k], 10) === f; }) };
     }
     if (q.type === "choice") return st.sel < 0 ? { empty: "Choisis une réponse 😉" } : { ok: st.sel === q.answer };
+    if (q.type === "words") {
+      if (!st.sel.length) return { empty: q.multi ? "Touche les mots dans la phrase 😉" : "Touche un mot dans la phrase 😉" };
+      return { ok: st.sel.length === q.answer.length && q.answer.every(function (k) { return st.sel.indexOf(k) >= 0; }) };
+    }
     if (q.type === "color") { var nOn = st.on.filter(Boolean).length; return nOn ? { ok: nOn === q.k } : { empty: "Touche des parts pour les colorier 🖍️" }; }
     if (q.type === "order") {
-      if (st.placed.length < q.items.length) return { empty: "Range tous les nombres 😉" };
+      if (st.placed.length < q.items.length) return { empty: q.orderLbl ? "Range tous les mots 😉" : "Range tous les nombres 😉" };
       return { ok: st.placed.every(function (k, j) { return q.items[k] === q.sorted[j]; }) };
     }
     var hi = -1;
@@ -3170,7 +4020,7 @@
       $("#g-keypad").classList.add("hidden");
       corr.classList.remove("hidden");
       // Parties 7 à 13 : si la correction est longue, on fait juste apparaître le bouton "J'ai compris"
-      if (["calc", "frac", "mes", "heure", "money", "geo", "prob"].indexOf(G.mod.id) >= 0) {
+      if (["calc", "frac", "mes", "heure", "money", "geo", "prob"].indexOf(G.mod.id) >= 0 || G.mod.fr) {
         requestAnimationFrame(function () { if (v.getBoundingClientRect().bottom > window.innerHeight) v.scrollIntoView({ block: "nearest", behavior: "smooth" }); });
       }
       v.textContent = "J'ai compris ➜";
@@ -4402,6 +5252,787 @@
   };
   ["calc", "frac", "mes", "heure", "money", "geo", "prob"].forEach(function (id) {
     $("#go-" + id).addEventListener("click", function () { gOpen(id); });
+  });
+
+  // =====================================================================
+  // ---------- FRANÇAIS : outils communs ----------
+  // Les données (textes, phrases, verbes, mots…) sont dans le premier <script>, en haut de la page.
+  // =====================================================================
+  function capFirst(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function opts3(correct, others) {
+    var o = [correct];
+    shuffle(others.slice()).forEach(function (x) { if (o.length < 3 && o.indexOf(x) < 0) o.push(x); });
+    return shuffle(o);
+  }
+  function qChoice(key, prompt, options, correct, eq, explain, extra) {
+    var q = { key: key, type: "choice", options: options, answer: options.indexOf(correct), prompt: prompt, eq: eq, explain: '<div class="expl">' + explain + "</div>" };
+    for (var k in (extra || {})) q[k] = extra[k];
+    return q;
+  }
+  function blank(s, lab) { return s.replace("_", '<span class="gblank">' + (lab || "…") + "</span>"); }
+  function sent(s) { return '<div class="gsent">' + s + "</div>"; }
+  // Phrase étiquetée → mots { t, tag, glue } + sujet + compléments
+  function parseTagged(str) {
+    var toks = [], subj = [], compl = [], inS = false, inC = -1;
+    str.replace(/([{}\[\]])/g, " $1 ").split(/\s+/).forEach(function (w) {
+      if (!w) return;
+      if (w === "{") { inS = true; return; }
+      if (w === "}") { inS = false; return; }
+      if (w === "[") { compl.push([]); inC = compl.length - 1; return; }
+      if (w === "]") { inC = -1; return; }
+      var bar = w.lastIndexOf("|"), text = bar > 0 ? w.slice(0, bar) : w, tag = bar > 0 ? w.slice(bar + 1) : "", i = toks.length;
+      toks.push({ t: text, tag: tag, punct: !tag, glue: (!tag && /^[.,]$/.test(text)) || (i > 0 && /'$/.test(toks[i - 1].t)) });
+      if (inS) subj.push(i);
+      if (inC >= 0) compl[inC].push(i);
+    });
+    return { toks: toks, subj: subj, compl: compl };
+  }
+  function grpText(P, idx) {   // groupe de mots en minuscule (sauf nom propre), pour ne pas trahir la réponse
+    var s = tokText(P.toks, idx);
+    return P.toks[idx[0]].tag === "NP" ? s : s.charAt(0).toLowerCase() + s.slice(1);
+  }
+  function tokText(toks, idx) {
+    var s = "";
+    idx.forEach(function (i, k) { s += (k && !toks[i].glue ? " " : "") + toks[i].t; });
+    return s;
+  }
+  // Phrase sans certains mots (pour « si on supprime… »)
+  function phraseWithout(P, skip) {
+    var keep = [];
+    P.toks.forEach(function (tk, i) { if (skip.indexOf(i) < 0) keep.push(i); });
+    var s = tokText(P.toks, keep).replace(/^\s*,\s*/, "").replace(/\s*,\s*\./, ".").replace(/,\s*,/, ",").replace(/\s+/g, " ").trim();
+    return capFirst(s);
+  }
+  // Mots d'une phrase simple (pour toucher les mots), l' / n' collés au mot suivant
+  function simpleTokens(str) {
+    var toks = [];
+    str.split(/\s+/).forEach(function (w) {
+      var m = w.match(/^(.*?)([.,!?;:]*)$/), core = m[1], tail = m[2];
+      var ap = core.match(/^((?:qu|[ljndcsmt])')(.+)$/i);
+      if (ap) { toks.push({ t: ap[1], glue: false }); toks.push({ t: ap[2], glue: true }); }
+      else if (core) toks.push({ t: core, glue: false });
+      if (tail) toks.push({ t: tail, punct: true, glue: /^[.,]$/.test(tail) });
+    });
+    return toks;
+  }
+  function wordsQ(key, prompt, toks, answer, eq, explain, multi) {
+    return { key: key, type: "words", toks: toks, answer: answer, multi: !!multi, prompt: prompt, eq: eq, explain: '<div class="expl">' + explain + "</div>",
+      hint: multi ? "Touche tous les bons mots, puis Valider 👆" : "Touche le bon mot, puis Valider 👆" };
+  }
+  function hl(toks, idx, cls) {   // phrase avec certains mots surlignés
+    var s = "";
+    toks.forEach(function (tk, i) { s += (i && !tk.glue ? " " : "") + (idx.indexOf(i) >= 0 ? '<b class="' + (cls || "tc") + '">' + tk.t + "</b>" : tk.t); });
+    return s;
+  }
+  function frLesson(dom, modes, mode) {
+    var list = mode === "melange" ? modes : [mode];
+    return list.map(function (m) { return '<div class="panel">' + (COURS[dom + "." + m] || "") + (FR_EXTRA[dom + "." + m] && mode !== "melange" ? FR_EXTRA[dom + "." + m]() : "") + "</div>"; }).join("");
+  }
+  var FR_EXTRA = {};
+
+  // =====================================================================
+  // ---------- FRANÇAIS : GRAMMAIRE ----------
+  // =====================================================================
+  var GP = GRAM_PHRASES.map(parseTagged);
+  var NAT_PLUR = { D: "tous les déterminants", N: "tous les noms communs", NP: "tous les noms propres", A: "tous les adjectifs", V: "tous les verbes", P: "tous les pronoms" };
+  var NAT_SING = { D: "le déterminant", N: "le nom commun", NP: "le nom propre", A: "l'adjectif", V: "le verbe", P: "le pronom personnel" };
+  function gnSpans(P) {   // groupes nominaux : déterminant + (adjectifs) + nom + (adjectifs)
+    var out = [];
+    for (var i = 0; i < P.toks.length; i++) {
+      if (P.toks[i].tag !== "D") continue;
+      var j = i + 1, span = [i], hasN = false;
+      while (j < P.toks.length && P.toks[j].tag === "A") span.push(j++);
+      if (j < P.toks.length && (P.toks[j].tag === "N")) { span.push(j++); hasN = true; }
+      while (hasN && j < P.toks.length && P.toks[j].tag === "A") span.push(j++);
+      if (hasN) out.push(span);
+    }
+    return out;
+  }
+  function qGram(kind, L) {
+    var i, P, T, t;
+    if (kind === "phrase") {
+      i = rnd(0, TYPES_PHRASES.length - 1); T = TYPES_PHRASES[i]; t = T.t;
+      var sub = rand(t === "impérative" ? ["type", "maj"] : ["type", "ponct", "maj"]);
+      if (sub === "type") return qChoice("gt-" + i, '<div class="gp">Quel est le <b>type</b> de cette phrase&nbsp;?</div>' + sent(T.p),
+        ["déclarative", "interrogative", "exclamative", "impérative"], t, "C'est une phrase " + t + ".", TYPES_AIDE[t]);
+      if (sub === "ponct") {
+        var end = T.p.slice(-1), body = T.p.replace(/\s*[.?!]$/, "");
+        return qChoice("gpc-" + i, '<div class="gp">Quel signe faut-il à la fin&nbsp;?</div>' + sent(body + ' <span class="gblank">?</span>'), [".", "?", "!"], end,
+          T.p, TYPES_AIDE[t], { optClass: "signs3" });
+      }
+      var low = T.p.charAt(0).toLowerCase() + T.p.slice(1), nopt = T.p.replace(/\s*[.?!]$/, "");
+      return qChoice("gm-" + i, '<div class="gp">Quelle phrase est <b>bien écrite</b>&nbsp;?</div>', shuffle([T.p, low, nopt]), T.p,
+        T.p, "Une phrase commence par une <b>majuscule</b> et se termine par un <b>point</b> (. ? ou !).");
+    }
+    if (kind === "neg") {
+      i = rnd(0, NEGATIONS.length - 1); var N = NEGATIONS[i], sub2 = rand(["forme", "choix", "touche"]);
+      if (sub2 === "forme") {
+        var isNeg = Math.random() < 0.5, ph = isNeg ? N.n : N.a;
+        return qChoice("gn1-" + i + isNeg, '<div class="gp">Cette phrase est-elle à la forme <b>affirmative</b> ou <b>négative</b>&nbsp;?</div>' + sent(ph),
+          ["affirmative", "négative"], isNeg ? "négative" : "affirmative", "Forme " + (isNeg ? "négative" : "affirmative"),
+          isNeg ? "On voit les deux mots de la négation autour du verbe (ne … pas / plus / jamais)." : "Il n'y a pas de « ne … pas » : la phrase dit oui.", { optClass: "two" });
+      }
+      if (sub2 === "choix") return qChoice("gn2-" + i, '<div class="gp">Quelle est la <b>forme négative</b> de cette phrase&nbsp;?</div>' + sent(N.a), shuffle([N.n, N.faux, N.a]), N.n,
+        N.n, "La négation a <b>deux mots</b> qui entourent le verbe : <b>ne</b> (ou n') … <b>pas / plus / jamais</b>.");
+      var toks = simpleTokens(N.n), ans = [];
+      toks.forEach(function (tk, k) { if (/^(ne|n')$/i.test(tk.t) || /^(pas|plus|jamais)$/i.test(tk.t)) ans.push(k); });
+      return wordsQ("gn3-" + i, '<div class="gp">Touche les <b>deux mots de la négation</b>&nbsp;:</div>', toks, ans, "Les mots de la négation : " + ans.map(function (k) { return toks[k].t; }).join(" … "),
+        "La négation entoure le verbe : " + hl(toks, ans, "tr"), true);
+    }
+    i = rnd(0, GP.length - 1); P = GP[i];
+    if (kind === "nature") {
+      var tags = ["V", "N", "NP", "A", "D", "P"].filter(function (g) { return P.toks.some(function (x) { return x.tag === g; }); });
+      var g = rand(tags), idx = [];
+      P.toks.forEach(function (x, k) { if (x.tag === g) idx.push(k); });
+      if (Math.random() < 0.6) {
+        var multi = idx.length > 1;
+        return wordsQ("gna-" + i + g, '<div class="gp">Touche ' + (multi ? "<b>" + NAT_PLUR[g] + "</b>" : "<b>" + NAT_SING[g] + "</b>") + " de la phrase&nbsp;:</div>", P.toks, idx,
+          cap(NAT_SING[g]) + "&nbsp;: " + idx.map(function (k) { return P.toks[k].t; }).join(", "), NATURE_AIDE[g] + '<div class="frex">' + hl(P.toks, idx) + "</div>", multi);
+      }
+      var w = rand(idx), others = Object.keys(NATURES).filter(function (x) { return x !== g; }).map(function (x) { return NATURES[x]; });
+      return qChoice("gnq-" + i + "-" + w, '<div class="gp">Quelle est la nature du mot en couleur&nbsp;?</div>' + sent(hl(P.toks, [w])), opts3(NATURES[g], others), NATURES[g],
+        "« " + P.toks[w].t + " » est un " + NATURES[g] + ".", NATURE_AIDE[g]);
+    }
+    if (kind === "gn") {
+      var spans = gnSpans(P);
+      if (!spans.length) return qGram("gn", L);
+      var sp = rand(spans), gnText = grpText(P, sp), nounIdx = sp.filter(function (k) { return P.toks[k].tag === "N"; })[0], sub3 = rand(["nom", "lequel", "touche"]);
+      if (sub3 === "nom" && sp.length > 1) {
+        var words = sp.map(function (k) { return P.toks[k].tag === "NP" ? P.toks[k].t : P.toks[k].t.toLowerCase(); });
+        return qChoice("gg1-" + i + "-" + sp[0], '<div class="gp">Dans le groupe nominal <b>« ' + gnText + ' »</b>, quel mot est le <b>nom</b>&nbsp;?</div>', shuffle(words.slice()), P.toks[nounIdx].t,
+          "Le nom de « " + gnText + " » est « " + P.toks[nounIdx].t + " ».", "Le nom est le « chef » du groupe : le déterminant et l'adjectif l'accompagnent.");
+      }
+      if (sub3 === "lequel") return qChoice("gg2-" + i + "-" + sp[0], '<div class="gp">Quel groupe de mots est un <b>groupe nominal</b>&nbsp;?</div>', opts3(gnText, PAS_GN), gnText,
+        "« " + gnText + " » est un groupe nominal.", "Un groupe nominal a un <b>déterminant</b> et un <b>nom</b> (et parfois des adjectifs).");
+      return wordsQ("gg3-" + i + "-" + sp[0], '<div class="gp">Touche tous les mots du <b>groupe nominal</b> qui contient « ' + P.toks[nounIdx].t + ' »&nbsp;:</div>', P.toks, sp,
+        "Le groupe nominal : « " + gnText + " »", "Déterminant + nom (+ adjectifs) : " + hl(P.toks, sp), true);
+    }
+    var vIdx = P.toks.map(function (x, k) { return x.tag === "V" ? k : -1; }).filter(function (k) { return k >= 0; });
+    if (kind === "sujet") {
+      var verb = P.toks[vIdx[0]].t, subjText = grpText(P, P.subj), sub4 = rand(["verbe", "qui", "touche"]);
+      if (sub4 === "verbe") return wordsQ("gs1-" + i, '<div class="gp">Touche le <b>verbe</b> de la phrase&nbsp;:</div>', P.toks, vIdx, "Le verbe : « " + verb + " »",
+        "Le verbe change avec le temps : aujourd'hui « " + verb + " », hier… demain… " + hl(P.toks, vIdx, "tr"));
+      if (sub4 === "qui") {
+        var others2 = P.compl.map(function (c) { return grpText(P, c); }).concat(gnSpans(P).map(function (s2) { return grpText(P, s2); }));
+        others2 = others2.filter(function (x) { return x && x.toLowerCase() !== subjText.toLowerCase(); });
+        if (others2.length < 2) others2.push(verb, "le jardin");
+        return qChoice("gs2-" + i, '<div class="gp">Quel est le <b>sujet</b> du verbe « <b class="tr">' + verb + "</b> »&nbsp;?</div>" + sent(tokText(P.toks, P.toks.map(function (x, k) { return k; }))),
+          opts3(subjText, others2), subjText, "Le sujet de « " + verb + " » : " + subjText, "Qui fait l'action « " + verb + " » ? → <b>" + subjText + "</b> : c'est le sujet.");
+      }
+      return wordsQ("gs3-" + i, '<div class="gp">Touche tous les mots du <b>sujet</b> du verbe « ' + verb + ' »&nbsp;:</div>', P.toks, P.subj, "Le sujet : « " + subjText + " »",
+        "Qui fait l'action « " + verb + " » ? → " + hl(P.toks, P.subj, "tu"), P.subj.length > 1);
+    }
+    // compléments
+    var withC = GP.map(function (x, k) { return k; }).filter(function (k) { return GP[k].compl.length; });
+    i = rand(withC); P = GP[i];
+    var ci = rnd(0, P.compl.length - 1), C = P.compl[ci], cText = grpText(P, C), sub5 = rand(P.compl.length === 1 ? ["quel", "touche", "suppr"] : ["quel", "suppr"]);
+    var full = tokText(P.toks, P.toks.map(function (x, k) { return k; })), vText = P.toks[P.toks.map(function (x) { return x.tag; }).indexOf("V")].t;
+    if (sub5 === "quel") return qChoice("gc1-" + i + "-" + ci, '<div class="gp">Quel groupe de mots peut-on <b>déplacer ou supprimer</b>&nbsp;?</div>' + sent(full),
+      opts3(cText, [grpText(P, P.subj), vText]), cText, "Le complément : « " + cText + " »", "On peut l'enlever : « " + phraseWithout(P, C) + " ». La phrase a encore un sens !");
+    if (sub5 === "touche") return wordsQ("gc2-" + i, '<div class="gp">Touche les mots du <b>complément</b> qu\'on peut supprimer&nbsp;:</div>', P.toks, C, "Le complément : « " + cText + " »",
+      "Sans lui, la phrase garde un sens : « " + phraseWithout(P, C) + " ».", true);
+    return qChoice("gc3-" + i + "-" + ci, '<div class="gp">On <b>supprime le complément</b>. Quelle phrase reste&nbsp;?</div>' + sent(full),
+      shuffle([phraseWithout(P, C), phraseWithout(P, P.subj), phraseWithout(P, [P.toks.map(function (x) { return x.tag; }).indexOf("V")])]), phraseWithout(P, C),
+      phraseWithout(P, C), "On enlève seulement « " + cText + " ». Le sujet et le verbe restent toujours !");
+  }
+  var GRAM_MODES = ["phrase", "neg", "nature", "gn", "sujet", "compl"];
+  MODULES.gram = {
+    id: "gram", fr: true, title: "✏️ La grammaire", short: "Grammaire", champ: "de grammaire",
+    levels: [
+      { id: "phrase", label: "La phrase", ex: "Majuscule, point, types", color: "#2f8cff" },
+      { id: "neg", label: "Forme négative", ex: "ne … pas, ne … plus", color: "#ef4444" },
+      { id: "nature", label: "Nature des mots", ex: "nom, verbe, adjectif…", color: "#22b455" },
+      { id: "gn", label: "Le groupe nominal", ex: "la jolie robe rouge", color: "#ff7a1a" },
+      { id: "sujet", label: "Verbe et sujet", ex: "Qui est-ce qui… ?", color: "#c23ee0" },
+      { id: "compl", label: "Les compléments", ex: "déplacer, supprimer", color: "#10b3a3" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: function (mode) { return frLesson("gram", GRAM_MODES, mode); },
+    question: function (mode) { return qGram(mode === "melange" ? rand(GRAM_MODES) : mode); },
+    problem: function (mode) { return qGram(mode === "melange" ? rand(GRAM_MODES) : mode); }
+  };
+  // Type de question "words" : toucher un ou plusieurs mots dans une phrase
+  function wordsHTML(q, st) {
+    var fix = !!st.fix, fb = G.phase === "feedback";
+    return '<div class="gwords">' + q.toks.map(function (tk, k) {
+      var sp = (k && !tk.glue) ? " " : "";
+      if (tk.punct) return sp + '<span class="gwp">' + tk.t + "</span>";
+      var on = st.sel.indexOf(k) >= 0, ans = q.answer.indexOf(k) >= 0, c = "gword";
+      if (fix) { if (ans) c += " w-ok"; else if (on) c += " w-ko"; }
+      else if (fb && on) c += " w-ok";
+      else if (on) c += " sel";
+      return sp + '<button type="button" class="' + c + '" data-w="' + k + '">' + tk.t + "</button>";
+    }).join("") + "</div>";
+  }
+
+  // =====================================================================
+  // ---------- FRANÇAIS : CONJUGAISON ----------
+  // =====================================================================
+  var PERS = ["je", "tu", "il", "nous", "vous", "ils"];
+  var PERS2 = ["je", "tu", "il ou elle", "nous", "vous", "ils ou elles"];
+  var TEMPS_NOM = { present: "présent", futur: "futur", imparfait: "imparfait", passe: "passé composé" };
+  function auTemps(t) { return t === "imparfait" ? "à l'imparfait" : "au " + TEMPS_NOM[t]; }
+  var TERM_ER = {
+    present: ["e", "es", "e", "ons", "ez", "ent"], futur: ["erai", "eras", "era", "erons", "erez", "eront"],
+    imparfait: ["ais", "ais", "ait", "ions", "iez", "aient"]
+  };
+  var AUX = { avoir: CONJUGAISONS["avoir"].present.split(" "), etre: CONJUGAISONS["être"].present.split(" ") };
+  var VERBES_CONJ = Object.keys(CONJUGAISONS).concat(VERBES_ER);
+  function isEr(v) { return VERBES_ER.indexOf(v) >= 0; }
+  // Les 6 formes d'un verbe à un temps (sans le sujet)
+  function conjForms(v, t) {
+    if (CONJUGAISONS[v]) return CONJUGAISONS[v][t].split(t === "passe" ? "," : " ");
+    var rad = v.slice(0, -2);
+    if (t === "passe") return AUX.avoir.map(function (a) { return a + " " + rad + "é"; });
+    return TERM_ER[t].map(function (e) { return rad + e; });
+  }
+  function accordPP(form, fem) {   // passé composé avec être : allée, venues…
+    if (fem && /^(suis|es|est|sommes|êtes|sont) /.test(form)) return form.replace(/([éu])(s?)$/, "$1e$2");
+    return form;
+  }
+  function withSubj(s, form) { return (/^je$/i.test(s) && /^[aeiouyéèêh]/i.test(form)) ? (s.charAt(0) === "J" ? "J'" : "j'") + form : s + " " + form; }
+  function lowSubj(s) { return /^(Lucy)$/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1); }
+  function pickSubj(p) { return rand(SUJETS_CONJ[p]); }
+  // Tableau de conjugaison (pour le rappel et la correction)
+  function conjTable(v, t, hlP) {
+    var f = conjForms(v, t);
+    return '<div class="ctab"><div class="ctab-v">' + v + "</div>" + f.map(function (x, p) {
+      return "<div" + (p === hlP ? ' class="hl"' : "") + ">" + withSubj(PERS[p], x).replace(/^(j'|je|tu|il|nous|vous|ils) ?/, '<span class="cpr">$&</span>') + "</div>";
+    }).join("") + "</div>";
+  }
+  function conjTables(t) {
+    return '<h2>📋 Les tableaux à connaître</h2><div class="ctabs">' + ["être", "avoir", "chanter", "aller", "faire", "dire", "venir", "pouvoir", "voir", "vouloir", "prendre"].map(function (v) { return conjTable(v, t); }).join("") + "</div>";
+  }
+  ["present", "futur", "imparfait", "passe"].forEach(function (t) { FR_EXTRA["conj." + t] = function () { return conjTables(t); }; });
+
+  function qConjTemps(t) {   // une question sur un temps donné
+    var v = rand(VERBES_CONJ), p = rnd(0, 5), S = pickSubj(p), forms = conjForms(v, t), good = accordPP(forms[p], S.f), sub = rand(isEr(v) && t !== "passe" ? ["forme", "forme", "term", "sujet"] : (t === "passe" ? ["forme", "forme", "aux", "sujet"] : ["forme", "forme", "sujet"]));
+    var when = rand(MOTS_TEMPS[t === "imparfait" ? "imparfait" : t]), compl = COMPLEMENTS[v] || "", tn = TEMPS_NOM[t];
+    var expl = capFirst(auTemps(t)) + ", avec « " + PERS[p] + " », le verbe <b>" + v + "</b> s'écrit&nbsp;: <b class=\"tc\">" + withSubj(lowSubj(S.s), good) + "</b>" + conjTable(v, t, p);
+    if (sub === "forme") {
+      var wrong = [];
+      forms.forEach(function (f, k) { if (k !== p && f !== forms[p]) wrong.push(accordPP(f, S.f)); });
+      ["present", "futur", "imparfait", "passe"].forEach(function (t2) { if (t2 !== t) { var f2 = conjForms(v, t2)[p]; if (f2 !== forms[p]) wrong.push(accordPP(f2, S.f)); } });
+      var showSubj = p === 0, opts = opts3(good, shuffle(wrong).slice(0, 4));
+      if (showSubj) opts = opts.map(function (o) { return withSubj("je", o); });
+      var subj = showSubj ? "" : "<b>" + lowSubj(S.s) + "</b> ";
+      return qChoice("cf-" + t + v + p + S.s, '<div class="gp">Conjugue le verbe <b class="tr">' + v + "</b> " + auTemps(t).replace(/(\S+)$/, "<b>$1</b>") + "&nbsp;:</div>" +
+        sent(when + " " + subj + '<span class="gblank">(' + v + ")</span> " + compl + "."), opts, showSubj ? withSubj("je", good) : good,
+        when + " " + withSubj(lowSubj(S.s), good) + " " + compl + ".", expl);
+    }
+    if (sub === "term") {
+      var rad = v.slice(0, -2), ends = TERM_ER[t], e = ends[p], others = ends.filter(function (x) { return x !== e; });
+      return qChoice("ct-" + t + v + p, '<div class="gp">Choisis la bonne <b>terminaison</b> (' + tn + ")&nbsp;:</div>" +
+        sent(when + " <b>" + lowSubj(S.s) + "</b> " + rad + '<span class="gblank">…</span> ' + compl + "."), opts3("-" + e, others.map(function (x) { return "-" + x; })), "-" + e,
+        when + " " + withSubj(lowSubj(S.s), good) + " " + compl + ".", capFirst(auTemps(t)) + ", les verbes en -er se terminent par&nbsp;: " + ends.map(function (x, k) { return k === p ? '<b class="tc">-' + x + "</b>" : "-" + x; }).join(", ") + ".", { optClass: "units3" });
+    }
+    if (sub === "aux") {
+      var aux = good.split(" ")[0], pp = good.slice(aux.length + 1), isEtre = AUX.etre.indexOf(aux) >= 0, other = (isEtre ? AUX.avoir : AUX.etre)[p];
+      var w2 = (isEtre ? AUX.etre : AUX.avoir).filter(function (x) { return x !== aux; });
+      return qChoice("ca-" + v + p + S.s, '<div class="gp">Passé composé&nbsp;: choisis le bon <b>auxiliaire</b>.</div>' + sent(when + " <b>" + lowSubj(S.s) + '</b> <span class="gblank">…</span> ' + pp + " " + compl + "."),
+        opts3(aux, [other, rand(w2)]), aux, when + " " + withSubj(lowSubj(S.s), good) + " " + compl + ".",
+        "Le passé composé = l'auxiliaire <b>" + (isEtre ? "être" : "avoir") + "</b> au présent + le participe passé (" + pp + ")." + conjTable(v, t, p), { optClass: "units3" });
+    }
+    // sujet : quel pronom va avec cette forme ?
+    var cand = [];
+    PERS.forEach(function (pr, k) { if (forms[k] !== forms[p]) cand.push(pr === "je" && /^[aeiouyéèêh]/i.test(forms[p]) ? "j'" : pr); });
+    var prGood = p === 0 && /^[aeiouyéèêh]/i.test(forms[p]) ? "j'" : PERS[p];
+    return qChoice("cs-" + t + v + p, '<div class="gp">Quel <b>pronom</b> va avec ce verbe&nbsp;?</div>' + sent('<span class="gblank">…</span> <b class="tr">' + forms[p] + "</b> " + compl + "."),
+      opts3(prGood, cand.filter(function (x) { return x !== "je" || prGood !== "j'"; })), prGood, withSubj(PERS[p], forms[p]) + " " + compl + ".", capFirst(auTemps(t)) + ", « " + forms[p] + " » va avec <b class=\"tc\">" + PERS[p] + "</b>." + conjTable(v, t, p), { optClass: "units3" });
+  }
+  function qConj(kind) {
+    var v, p, t, i;
+    if (kind === "temps") {
+      v = rand(VERBES_CONJ); p = rnd(0, 5); t = rand(["present", "futur", "passe", "imparfait"]);
+      var S = pickSubj(p), f = accordPP(conjForms(v, t)[p], S.f), ans = t === "present" ? "présent" : (t === "futur" ? "futur" : "passé");
+      if (Math.random() < 0.6) {
+        var ph = capFirst(withSubj(S.s, f)) + " " + COMPLEMENTS[v] + ".";
+        return qChoice("tt-" + v + p + t, '<div class="gp">Cette phrase est-elle au <b>passé</b>, au <b>présent</b> ou au <b>futur</b>&nbsp;?</div>' + sent(ph),
+          ["passé", "présent", "futur"], ans, ph + " → " + ans, "Le verbe « " + f + " » est " + auTemps(t) + " : c'est " + (ans === "passé" ? "déjà arrivé." : ans === "présent" ? "maintenant." : "plus tard."), { optClass: "units3" });
+      }
+      var ph2 = withSubj(lowSubj(S.s), f) + " " + COMPLEMENTS[v] + ".", tk = t === "passe" || t === "imparfait" ? "passe" : t, good = rand(MOTS_TEMPS[tk]);
+      var bad = ["passe", "present", "futur"].filter(function (x) { return x !== tk; }).map(function (x) { return rand(MOTS_TEMPS[x]); });
+      return qChoice("tw-" + v + p + t, '<div class="gp">Quel mot va au début de la phrase&nbsp;?</div>' + sent('<span class="gblank">…</span> ' + ph2),
+        shuffle([good].concat(bad)), good, good + " " + ph2, "Le verbe « " + f + " » est " + auTemps(t) + " : on dit « " + good.replace(",", "") + " ».", { optClass: "units3" });
+    }
+    if (kind === "infinitif") {
+      if (Math.random() < 0.5) {
+        i = rnd(0, GROUPES_VERBES.length - 1);
+        var G1 = GROUPES_VERBES[i], gn = ["1er groupe", "2e groupe", "3e groupe"][G1[1] - 1];
+        return qChoice("ig-" + i, '<div class="gp">À quel <b>groupe</b> appartient le verbe <b class="tr">' + G1[0] + "</b>&nbsp;?</div>", ["1er groupe", "2e groupe", "3e groupe"], gn,
+          G1[0] + " → " + gn, G1[1] === 1 ? "Il se termine par -er (et ce n'est pas « aller ») : 1er groupe." : G1[1] === 2 ? "Il se termine par -ir et fait « nous " + G1[0].slice(0, -1) + "ssons » : 2e groupe." :
+            (G1[0] === "aller" ? "Attention : « aller » finit par -er mais il est du 3e groupe !" : "Ni -er, ni -ir en -issons : 3e groupe."), { optClass: "units3" });
+      }
+      v = rand(VERBES_CONJ); p = rnd(0, 5); t = rand(["present", "futur", "imparfait"]);
+      var fo = withSubj(PERS[p], conjForms(v, t)[p]), oth = VERBES_CONJ.filter(function (x) { return x !== v; });
+      return qChoice("ii-" + v + p + t, '<div class="gp">Quel est l\'<b>infinitif</b> de ce verbe&nbsp;?</div>' + sent("<b class=\"tr\">" + fo + "</b>"), opts3(v, shuffle(oth)), v,
+        fo + " → verbe <b>" + v + "</b>", "L'infinitif, c'est le nom du verbe dans le dictionnaire. On peut dire : « il faut <b>" + v + "</b> ».");
+    }
+    // pronoms
+    if (Math.random() < 0.55) {
+      i = rnd(0, PRONOMS_GN.length - 1);
+      var PG = PRONOMS_GN[i], prs = ["il", "elle", "ils", "elles", "nous", "vous"].filter(function (x) { return x !== PG[1]; });
+      return qChoice("pg-" + i, '<div class="gp">Par quel <b>pronom</b> peut-on remplacer le groupe en couleur&nbsp;?</div>' + sent('<b class="tu">' + PG[0] + "</b> …"), opts3(PG[1], prs), PG[1],
+        PG[0] + " → " + PG[1], /moi/.test(PG[0]) ? "Quand il y a « moi » dans le groupe, on dit « nous »." : /toi/.test(PG[0]) ? "Quand il y a « toi » (sans « moi »), on dit « vous »." : "Une seule personne → il / elle. Plusieurs → ils / elles (« ils » s'il y a au moins un garçon).", { optClass: "units3" });
+    }
+    v = rand(VERBES_CONJ); p = rnd(0, 5);
+    var ph3 = capFirst(withSubj(PERS[p], conjForms(v, "present")[p])) + " " + COMPLEMENTS[v] + ".", toks = simpleTokens(ph3);
+    return wordsQ("pt-" + v + p, '<div class="gp">Touche le <b>pronom personnel sujet</b>&nbsp;:</div>', toks, [0], "Le pronom : « " + toks[0].t + " »",
+      "Le pronom personnel sujet est devant le verbe : je, tu, il, elle, on, nous, vous, ils, elles.");
+  }
+  function qConjMode(m) { return (m === "temps" || m === "infinitif" || m === "pronoms") ? qConj(m) : qConjTemps(m); }
+  var CONJ_MODES = ["temps", "infinitif", "pronoms", "present", "futur", "imparfait", "passe"];
+  MODULES.conj = {
+    id: "conj", fr: true, title: "⏳ La conjugaison", short: "Conjugaison", champ: "de conjugaison",
+    levels: [
+      { id: "temps", label: "Passé, présent, futur", ex: "hier, aujourd'hui, demain", color: "#2f8cff" },
+      { id: "infinitif", label: "Infinitif et groupes", ex: "chanter, finir, prendre", color: "#22b455" },
+      { id: "pronoms", label: "Les pronoms sujets", ex: "je, tu, il, nous…", color: "#ff7a1a" },
+      { id: "present", label: "Le présent", ex: "nous allons", color: "#c23ee0" },
+      { id: "futur", label: "Le futur", ex: "nous irons", color: "#10b3a3" },
+      { id: "imparfait", label: "L'imparfait", ex: "nous allions", color: "#ef4444" },
+      { id: "passe", label: "Le passé composé", ex: "nous sommes allés", color: "#f5b400" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: function (mode) { return frLesson("conj", CONJ_MODES, mode); },
+    question: function (mode) { return qConjMode(mode === "melange" ? rand(CONJ_MODES) : mode); },
+    problem: function (mode) { return qConjMode(mode === "melange" ? rand(CONJ_MODES) : mode); }
+  };
+
+  // =====================================================================
+  // ---------- FRANÇAIS : ORTHOGRAPHE ----------
+  // =====================================================================
+  function qHomo(key) {
+    var list = HOMOPHONES[key], i = rnd(0, list.length - 1), H = list[i], ans = H[1], pair = HOMO_PAIRES[key].slice(), atStart = H[0].charAt(0) === "_";
+    var other = pair.filter(function (x) { return x !== ans; })[0], show = function (w) { return atStart ? capFirst(w) : w; };
+    var full = H[0].replace("_", show(ans)), test = H[0].replace("_", "<b>" + show(HOMO_ASTUCE[ans][0]) + "</b>");
+    var expl = HOMO_ASTUCE[ans][1] + '<div class="frex">Test&nbsp;: ' + test + " " + (/^(a|est|sont|ont)$/.test(ans) ? "✔️" : "❌") + "</div>";
+    if (Math.random() < 0.7) return qChoice("h-" + key + i, '<div class="gp">Complète avec <b>' + pair.map(show).join("</b> ou <b>") + "</b>&nbsp;:</div>" + sent(blank(H[0])),
+      pair.map(show), show(ans), full, expl, { optClass: "two" });
+    var wrongS = H[0].replace("_", show(other));
+    return qChoice("hp-" + key + i, '<div class="gp">Quelle phrase est <b>bien écrite</b>&nbsp;?</div>', shuffle([full, wrongS]), full, full, expl);
+  }
+  var DETS = { ms: "un", fs: "une", mp: "les", fp: "les" };
+  function qOrth(kind) {
+    var i, j;
+    if (kind === "a" || kind === "et" || kind === "son" || kind === "on") return qHomo(kind);
+    if (kind === "homo") return qHomo(rand(["a", "et", "son", "on"]));
+    if (kind === "accgn") {
+      var sub = rand(["pluriel", "feminin", "adj", "adj"]);
+      if (sub === "pluriel") {
+        i = rnd(0, NOMS_ACCORD.length - 1); var Nm = NOMS_ACCORD[i], naive = [Nm[0] + "s", Nm[0] + "x", Nm[0]].filter(function (x) { return x !== Nm[1]; });
+        return qChoice("np-" + i, '<div class="gp">Écris au <b>pluriel</b>&nbsp;:</div>' + sent((Nm[2] === "f" ? "une " : "un ") + Nm[0] + ' → des <span class="gblank">…</span>'),
+          opts3(Nm[1], naive), Nm[1], "des " + Nm[1], /x$/.test(Nm[1]) ? "Les mots en -eau, -eu, -al (et 7 mots en -ou : bijou, caillou, chou, genou, hibou, joujou, pou) prennent un <b>x</b> au pluriel." :
+            Nm[1] === Nm[0] ? "Ce mot finit déjà par s, x ou z : il ne change pas au pluriel." : "En général, on ajoute un <b>s</b> au pluriel.");
+      }
+      if (sub === "feminin") {
+        i = rnd(0, FEMININS.length - 1); var F = FEMININS[i];
+        return qChoice("nf-" + i, '<div class="gp">Écris au <b>féminin</b>&nbsp;:</div>' + sent(F[0] + ' → <span class="gblank">…</span>'), opts3(F[1], [F[2], "une " + F[0].slice(3)]), F[1],
+          F[0] + " → " + F[1], "Au féminin, on ajoute souvent un <b>e</b>. Certains mots changent davantage : -eur → -euse, -ier → -ière, -on → -onne.");
+      }
+      i = rnd(0, NOMS_ACCORD.length - 1); j = rnd(0, ADJ_ACCORD.length - 1);
+      var N2 = NOMS_ACCORD[i], A = ADJ_ACCORD[j], pl = Math.random() < 0.5, g = N2[2];
+      if (A[4] && /^[aeiouyéèêh]/i.test(N2[0])) return qOrth("accgn");
+      var key = g + (pl ? "p" : "s"), form = { ms: A[0], fs: A[1], mp: A[2], fp: A[3] }[key], noun = pl ? N2[1] : N2[0], det = DETS[key];
+      var forms = [A[0], A[1], A[2], A[3]].filter(function (x, k, arr) { return arr.indexOf(x) === k && x !== form; });
+      var gnB = A[4] ? det + ' <span class="gblank">(' + A[0] + ")</span> " + noun : det + " " + noun + ' <span class="gblank">(' + A[0] + ")</span>";
+      var gnF = A[4] ? det + " " + form + " " + noun : det + " " + noun + " " + form;
+      return qChoice("ag-" + i + "-" + j + key, '<div class="gp">Accorde l\'<b>adjectif</b> avec le nom&nbsp;:</div>' + sent(gnB), opts3(form, forms), form, gnF,
+        "« " + noun + " » est " + (g === "f" ? "<b>féminin</b>" : "<b>masculin</b>") + " et " + (pl ? "<b>pluriel</b>" : "<b>singulier</b>") + " : l'adjectif s'accorde → <b class=\"tc\">" + form + "</b>.");
+    }
+    if (kind === "sv") {
+      i = rnd(0, SUJETS_ACCORD.length - 1); var SA = SUJETS_ACCORD[i], p = SA[1], v = rand(VERBES_CONJ), t = rand(["present", "present", "futur", "imparfait"]), fs = conjForms(v, t), f = fs[p];
+      if (Math.random() < 0.7) {
+        var wr = fs.filter(function (x) { return x !== f; });
+        return qChoice("sv-" + i + v + t, '<div class="gp">Choisis le verbe qui s\'accorde avec le <b>sujet</b> (' + TEMPS_NOM[t] + ")&nbsp;:</div>" + sent("<b class=\"tu\">" + SA[0] + '</b> <span class="gblank">(' + v + ")</span> " + COMPLEMENTS[v] + "."),
+          opts3(f, shuffle(wr)), f, SA[0] + " " + f + " " + COMPLEMENTS[v] + ".", "« " + SA[0] + " » → on peut dire « <b>" + PERS2[p] + "</b> ». Le verbe s'accorde&nbsp;: <b class=\"tc\">" + SA[0] + " " + f + "</b>.");
+      }
+      var oth = SUJETS_ACCORD.filter(function (x) { return fs[x[1]] !== f; }).map(function (x) { return x[0]; });
+      return qChoice("sw-" + i + v + t, '<div class="gp">Quel <b>sujet</b> va avec ce verbe&nbsp;?</div>' + sent('<span class="gblank">…</span> <b class="tr">' + f + "</b> " + COMPLEMENTS[v] + "."),
+        opts3(SA[0], shuffle(oth)), SA[0], SA[0] + " " + f + " " + COMPLEMENTS[v] + ".", "« " + f + " » va avec « " + PERS2[p] + " » : <b>" + SA[0] + "</b> = " + PERS2[p] + ".");
+    }
+    if (kind === "sons") {
+      i = rnd(0, SONS_LETTRES.length - 1); var SL = SONS_LETTRES[i], ch = SONS_CHOIX[SL[2]], word = SL[0].replace("_", SL[1]);
+      return qChoice("so-" + i, '<div class="gp">Quelle(s) lettre(s) manque(nt)&nbsp;?</div><div class="gbigword">' + SL[0].replace("_", '<span class="gblank">?</span>') + "</div>",
+        ch.slice(), SL[1], word, SONS_REGLE[SL[2]] + '<div class="frex">On écrit&nbsp;: <b class="tc">' + word + "</b></div>", { optClass: ch.length === 2 ? "two" : "units3" });
+    }
+    // mots invariables
+    i = rnd(0, INVARIABLES.length - 1); var IV = INVARIABLES[i], atS = IV[3].charAt(0) === "_", sh = function (w) { return atS ? capFirst(w) : w; };
+    if (Math.random() < 0.7 || /\s/.test(IV[0])) return qChoice("iv-" + i, '<div class="gp">Choisis le mot <b>bien écrit</b>&nbsp;:</div>' + sent(blank(IV[3])),
+      [IV[0], IV[1], IV[2]].map(sh), sh(IV[0]), IV[3].replace("_", sh(IV[0])), "« " + IV[0] + " » est un mot <b>invariable</b> : il s'écrit toujours pareil. Il faut l'apprendre par cœur&nbsp;! ✍️");
+    var toks = simpleTokens(IV[3].replace("_", sh(IV[0]))), idx = [];
+    toks.forEach(function (tk, k) { if (tk.t.toLowerCase() === IV[0].toLowerCase()) idx.push(k); });
+    if (idx.length !== 1) return qOrth("invar");
+    return wordsQ("it-" + i, '<div class="gp">Touche le mot <b>invariable</b> de la phrase&nbsp;:</div>', toks, idx, "Le mot invariable : « " + IV[0] + " »",
+      "« " + IV[0] + " » ne change jamais : ni féminin, ni pluriel.");
+  }
+  var ORTH_MODES = ["a", "et", "son", "on", "accgn", "sv", "sons", "invar"];
+  COURS["orth.homo"] = COURS["orth.a"] + COURS["orth.et"] + COURS["orth.son"] + COURS["orth.on"];
+  MODULES.orth = {
+    id: "orth", fr: true, title: "🔤 L'orthographe", short: "Orthographe", champ: "d'orthographe",
+    levels: [
+      { id: "a", label: "a ou à", ex: "Lucy a un vélo / à la piscine", color: "#2f8cff" },
+      { id: "et", label: "et ou est", ex: "Il est grand et fort", color: "#22b455" },
+      { id: "son", label: "son ou sont", ex: "son chat / ils sont", color: "#ff7a1a" },
+      { id: "on", label: "on ou ont", ex: "on joue / ils ont", color: "#c23ee0" },
+      { id: "homo", label: "Mélange des homophones", ex: "a, à, et, est, son, sont…", color: "#ef4444" },
+      { id: "accgn", label: "Accords dans le groupe nominal", ex: "des chevaux blancs", color: "#10b3a3" },
+      { id: "sv", label: "Accord sujet-verbe", ex: "les enfants jouent", color: "#f5b400" },
+      { id: "sons", label: "c/ç, g/ge/gu, s/ss, m/n", ex: "garçon, pigeon, poisson, jambe", color: "#ff4fa3" },
+      { id: "invar", label: "Les mots invariables", ex: "toujours, beaucoup, avec…", color: "#2fb0d0" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: function (mode) { return mode === "homo" ? '<div class="panel">' + COURS["orth.homo"] + "</div>" : frLesson("orth", ORTH_MODES, mode); },
+    question: function (mode) { return qOrth(mode === "melange" ? rand(ORTH_MODES) : mode); },
+    problem: function (mode) { return qOrth(mode === "melange" ? rand(ORTH_MODES) : mode); }
+  };
+
+  // =====================================================================
+  // ---------- FRANÇAIS : VOCABULAIRE ----------
+  // =====================================================================
+  function sansAccent(s) { return s.normalize ? s.normalize("NFD").replace(/[̀-ͯ]/g, "") : s; }
+  function alphaCmp(a, b) { var x = sansAccent(a), y = sansAccent(b); return x < y ? -1 : x > y ? 1 : 0; }
+  function qVoc(kind) {
+    var i, w;
+    if (kind === "dico") {
+      var sub = rand(["premier", "ranger", "ranger"]), n = sub === "premier" ? 3 : 4, pool = shuffle(MOTS_DICO.slice()), pick = [], same = Math.random() < 0.4;
+      if (same) {   // même première lettre : il faut regarder la 2e lettre
+        var l = rand(pool).charAt(0);
+        pick = pool.filter(function (x) { return sansAccent(x.charAt(0)) === sansAccent(l); }).slice(0, n);
+      }
+      if (pick.length < n) {
+        var seenL = {};
+        pick = [];
+        pool.forEach(function (x) { var c = sansAccent(x.charAt(0)); if (!seenL[c] && pick.length < n) { seenL[c] = 1; pick.push(x); } });
+      }
+      var sorted = pick.slice().sort(alphaCmp);
+      var tip = same && sansAccent(sorted[0].charAt(0)) === sansAccent(sorted[1].charAt(0)) ? "Les mots commencent par la même lettre : on regarde la <b>2e lettre</b> (puis la 3e…)." : "On regarde la <b>première lettre</b> de chaque mot et on suit l'alphabet : a b c d e f g h i j k l m n o p q r s t u v w x y z.";
+      if (sub === "premier") return qChoice("dp-" + sorted.join(), '<div class="gp">Quel mot vient en <b>premier</b> dans le dictionnaire&nbsp;?</div>', shuffle(pick.slice()), sorted[0],
+        "Ordre alphabétique : " + sorted.join(", "), tip, { optClass: "units3" });
+      return { key: "do-" + sorted.join(), type: "order", items: shuffle(pick.slice()), sorted: sorted, asc: true, orderLbl: "🔤 Range dans l'ordre alphabétique (a → z)",
+        prompt: '<div class="gp">Range ces mots dans l\'<b>ordre alphabétique</b>, comme dans le dictionnaire.</div>', eq: "Ordre alphabétique : " + sorted.join(", "),
+        explain: '<div class="expl">' + tip + "</div>", hint: "Touche les mots dans l'ordre 👆" };
+    }
+    if (kind === "famille") {
+      i = rnd(0, FAMILLES.length - 1); var F = FAMILLES[i], other = rand(FAMILLES.filter(function (x) { return x !== F; })), base = F.mots[0];
+      if (Math.random() < 0.5) {
+        var opts = shuffle(F.mots.slice(0, 3).concat([F.piege]));
+        return qChoice("fi-" + i, '<div class="gp">Touche l\'<b>intrus</b>&nbsp;: le mot qui n\'est <b>pas</b> de la même famille.</div>', opts, F.piege,
+          "Intrus : « " + F.piege + " »", "Les mots d'une même famille se ressemblent <b>et</b> ont un sens proche : " + F.mots.join(", ") + ". « " + F.piege + " » se ressemble, mais n'a rien à voir&nbsp;!", { optClass: "two" });
+      }
+      w = rand(F.mots.slice(1));
+      return qChoice("ff-" + i + w, '<div class="gp">Quel mot est de la même famille que <b class="tc">' + base + "</b>&nbsp;?</div>", opts3(w, [F.piege, rand(other.mots)]), w,
+        base + " → " + w, "Famille de « " + base + " » : " + F.mots.join(", ") + ". Ils ont le même radical et un sens proche.");
+    }
+    if (kind === "affixes") {
+      var isPre = Math.random() < 0.5, L = isPre ? PREFIXES : SUFFIXES, A, sub2 = rand(["sens", "morceau", "base"]);
+      i = rnd(0, L.length - 1); A = L[i];
+      var nomA = isPre ? "préfixe" : "suffixe", deco = isPre ? '<b class="tc">' + A[2] + "</b>" + A[0].slice(A[2].length) : A[0].slice(0, A[0].length - A[2].length) + '<b class="tc">' + A[2] + "</b>";
+      var ex = "<b>" + A[0] + "</b> = " + deco + " → " + A[3] + ".";
+      if (sub2 === "sens") return qChoice("xs-" + A[0], '<div class="gp">Que veut dire le mot <b class="tc">' + A[0] + "</b>&nbsp;?</div>",
+        opts3(A[3], shuffle(L.filter(function (x) { return x[3] !== A[3]; }).map(function (x) { return x[3]; }))), A[3], ex, "Le " + nomA + " « " + A[2] + " » change le sens du mot. " + ex);
+      if (sub2 === "morceau") {
+        var all = L.map(function (x) { return x[2]; }).filter(function (x, k, arr) { return arr.indexOf(x) === k && x !== A[2]; });
+        return qChoice("xm-" + A[0], '<div class="gp">Quel est le <b>' + nomA + "</b> du mot <b>" + A[0] + "</b>&nbsp;?</div>", opts3(A[2], all), A[2], ex,
+          isPre ? "Le préfixe est placé <b>avant</b> le mot de base." : "Le suffixe est placé <b>après</b> le radical.", { optClass: "units3" });
+      }
+      return qChoice("xb-" + A[0], '<div class="gp">Quel est le <b>mot de base</b> de <b class="tc">' + A[0] + "</b>&nbsp;?</div>", opts3(A[1], shuffle(L.filter(function (x) { return x[1] !== A[1]; }).map(function (x) { return x[1]; }))), A[1],
+        ex, "On enlève le " + nomA + " « " + A[2] + " » et on retrouve le mot de base.", { optClass: "units3" });
+    }
+    if (kind === "synant") {
+      var syn = Math.random() < 0.5, LL = syn ? SYNONYMES : CONTRAIRES, rev = Math.random() < 0.5;
+      i = rnd(0, LL.length - 1); var P = LL[i], q = rev ? P[1] : P[0], a = rev ? P[0] : P[1];
+      var others = (syn ? CONTRAIRES : SYNONYMES).filter(function (x) { return x[0] === q || x[1] === q; }).map(function (x) { return x[0] === q ? x[1] : x[0]; });
+      var pool2 = LL.filter(function (x) { return x !== P; }).map(function (x) { return rand(x); });
+      return qChoice((syn ? "sy-" : "co-") + i + rev, '<div class="gp">Quel est le <b>' + (syn ? "synonyme" : "contraire") + "</b> de <b class=\"tc\">" + q + "</b>&nbsp;?</div>",
+        opts3(a, others.concat(shuffle(pool2))), a, q + " → " + a, syn ? "Un <b>synonyme</b> veut dire presque la même chose : « " + q + " » ≈ « " + a + " »." : "Un <b>contraire</b> veut dire l'inverse : « " + q + " » ≠ « " + a + " ».", { optClass: "units3" });
+    }
+    // sens propre / figuré
+    i = rnd(0, SENS.length - 1); var Sx = SENS[i], expr = Sx[0].match(/\*(.+?)\*/)[1], phr = Sx[0].replace(/\*(.+?)\*/, '<b class="tc">$1</b>'), plain = Sx[0].replace(/\*/g, "");
+    var figs = SENS.filter(function (x) { return x[1] === "figuré" && x !== Sx; });
+    if (Sx[1] === "figuré" && Math.random() < 0.5) return qChoice("sm-" + i, '<div class="gp">Que veut dire l\'expression en couleur&nbsp;?</div>' + sent(phr), opts3(Sx[2], shuffle(figs).map(function (x) { return x[2]; })), Sx[2],
+      "« " + expr + " » → " + Sx[2], "C'est le <b>sens figuré</b> : on ne le prend pas au pied de la lettre&nbsp;! 😉");
+    return qChoice("sp-" + i, '<div class="gp">Les mots en couleur sont-ils au <b>sens propre</b> ou au <b>sens figuré</b>&nbsp;?</div>' + sent(phr), ["sens propre", "sens figuré"], "sens " + Sx[1],
+      plain + " → sens " + Sx[1], Sx[1] === "propre" ? "Sens <b>propre</b> : les mots veulent dire exactement ce qu'ils disent." : "Sens <b>figuré</b> : c'est une image. Ici, ça veut dire « " + Sx[2] + " ».", { optClass: "two" });
+  }
+  var VOC_MODES = ["dico", "famille", "affixes", "synant", "sens"];
+  MODULES.voc = {
+    id: "voc", fr: true, title: "📗 Le vocabulaire", short: "Vocabulaire", champ: "de vocabulaire",
+    levels: [
+      { id: "dico", label: "Ordre alphabétique", ex: "Chercher dans le dictionnaire", color: "#2f8cff" },
+      { id: "famille", label: "Familles de mots", ex: "dent, dentiste, dentifrice", color: "#22b455" },
+      { id: "affixes", label: "Préfixes et suffixes", ex: "relire, pommier", color: "#ff7a1a" },
+      { id: "synant", label: "Synonymes et contraires", ex: "content = joyeux ≠ triste", color: "#c23ee0" },
+      { id: "sens", label: "Sens propre, sens figuré", ex: "Il pleut des cordes !", color: "#10b3a3" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: function (mode) { return frLesson("voc", VOC_MODES, mode); },
+    question: function (mode) { return qVoc(mode === "melange" ? rand(VOC_MODES) : mode); },
+    problem: function (mode) { return qVoc(mode === "melange" ? rand(VOC_MODES) : mode); }
+  };
+
+  // =====================================================================
+  // ---------- FRANÇAIS : LECTURE FLUENCE ----------
+  // Lecture chronométrée d'1 minute → mots correctement lus par minute (MCLM).
+  // Repère : environ 90 mots par minute en fin de CE2.
+  // =====================================================================
+  var FL_OBJECTIF = 90, FL_DUREE = 60;
+  var FL = { niveau: 1, txt: null, phase: "ready", t0: 0, elapsed: 0, timer: null, last: -1, errs: {}, tool: "last", nWords: 0, entry: null, qi: 0, qok: 0, qs: [], wake: null };
+  function flHistory() { var h = load("fluence", []); return Array.isArray(h) ? h : []; }
+  function flWords(txt) {   // découpe le texte en mots (la ponctuation reste collée au mot ; les tirets seuls ne comptent pas)
+    var out = [], n = 0;
+    txt.texte.split("\n").forEach(function (par, pi) {
+      par.split(/\s+/).forEach(function (w) {
+        if (!w) return;
+        var counts = /[A-Za-zÀ-ÿ0-9]/.test(w);
+        out.push({ t: w, par: pi, n: counts ? n++ : -1 });
+      });
+    });
+    FL.nWords = n;
+    return out;
+  }
+  function flMenu() {
+    $("#fl-levels").querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", +b.dataset.lv === FL.niveau); });
+    var h = flHistory();
+    $("#fl-list").innerHTML = FLUENCE_TEXTES.filter(function (t) { return t.niveau === FL.niveau; }).map(function (t) {
+      var n = flWords(t).filter(function (w) { return w.n >= 0; }).length, best = 0;
+      h.forEach(function (e) { if (e.id === t.id && e.score > best) best = e.score; });
+      return '<button class="fl-card" data-id="' + t.id + '"><span class="fl-genre">' + t.genre + '</span><span class="fl-title">' + t.titre + '</span><span class="fl-meta">' + n + " mots" +
+        (best ? " · record&nbsp;: " + best + " mots/min ⭐" : "") + "</span></button>";
+    }).join("");
+    showScreen("flmenu");
+  }
+  function flOpen(id) {
+    FL.txt = FLUENCE_TEXTES.filter(function (t) { return t.id === id; })[0];
+    FL.words = flWords(FL.txt);
+    FL.phase = "ready"; FL.last = -1; FL.errs = {}; FL.tool = "last"; FL.elapsed = 0;
+    clearInterval(FL.timer);
+    $("#fl-title").textContent = FL.txt.titre;
+    $("#fl-time").textContent = "1:00";
+    $("#fl-ring").style.setProperty("--p", 1);
+    flRenderText();
+    flUpdate();
+    showScreen("flread");
+  }
+  function flRenderText() {
+    var html = "", par = -1;
+    FL.words.forEach(function (w, k) {
+      if (w.par !== par) { html += (par >= 0 ? "</p>" : "") + "<p>"; par = w.par; }
+      var cls = "flw";
+      if (w.n >= 0 && FL.phase === "mark") {
+        if (w.n === FL.last) cls += " last";
+        else if (FL.last >= 0 && w.n > FL.last) cls += " after";
+        if (FL.errs[w.n]) cls += " err";
+      }
+      html += (w.n >= 0 ? '<span class="' + cls + '" data-n="' + w.n + '">' + w.t + "</span>" : '<span class="flw dash">' + w.t + "</span>") + " ";
+    });
+    $("#fl-text").innerHTML = html + "</p>";
+  }
+  function flUpdate() {   // affiche ce qu'il faut selon l'étape
+    var ph = FL.phase;
+    $("#fl-text").classList.toggle("hidden", ph === "ready");
+    $("#fl-ready").classList.toggle("hidden", ph !== "ready");
+    $("#fl-stop").classList.toggle("hidden", ph !== "reading");
+    $("#fl-mark").classList.toggle("hidden", ph !== "mark");
+    $("#fl-text").classList.toggle("marking", ph === "mark");
+    if (ph === "mark") {
+      $("#fl-tool-last").classList.toggle("on", FL.tool === "last");
+      $("#fl-tool-err").classList.toggle("on", FL.tool === "err");
+      var ne = Object.keys(FL.errs).length;
+      $("#fl-mark-info").innerHTML = FL.last < 0 ? "👆 Adulte&nbsp;: touche le <b class=\"td\">DERNIER mot lu</b>." :
+        "Mots lus&nbsp;: <b>" + (FL.last + 1) + "</b> · Erreurs&nbsp;: <b class=\"tr\">" + ne + "</b> · Temps&nbsp;: <b>" + Math.round(FL.elapsed) + " s</b>";
+      $("#fl-validate").classList.toggle("dim", FL.last < 0);
+    }
+  }
+  function flBeep() {   // signal de fin : toujours joué, même si le son des jeux est coupé
+    try {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      [0, 0.35, 0.7].forEach(function (d) {
+        var t0 = actx.currentTime + d, o = actx.createOscillator(), g = actx.createGain();
+        o.type = "square"; o.frequency.value = 880;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.28);
+        o.connect(g); g.connect(actx.destination); o.start(t0); o.stop(t0 + 0.32);
+      });
+    } catch (e) {}
+    try { if (navigator.vibrate) navigator.vibrate([250, 120, 250]); } catch (e) {}
+  }
+  function flWake(on) {   // garde l'écran allumé pendant la lecture
+    try {
+      if (on && navigator.wakeLock) navigator.wakeLock.request("screen").then(function (w) { FL.wake = w; }).catch(function () {});
+      else if (!on && FL.wake) { FL.wake.release(); FL.wake = null; }
+    } catch (e) {}
+  }
+  function flTick() {
+    var el = (Date.now() - FL.t0) / 1000, left = Math.max(0, FL_DUREE - el), s = Math.ceil(left);
+    $("#fl-time").textContent = Math.floor(s / 60) + ":" + (s % 60 < 10 ? "0" : "") + (s % 60);
+    $("#fl-ring").style.setProperty("--p", left / FL_DUREE);
+    $("#fl-timer").classList.toggle("soon", left <= 10);
+    if (left <= 0) flStop(true);
+  }
+  function flGo() {
+    if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }   // prépare le son (il faut un geste)
+    FL.phase = "reading"; FL.t0 = Date.now();
+    flRenderText(); flUpdate();
+    clearInterval(FL.timer);
+    FL.timer = setInterval(flTick, 200);
+    flTick();
+    flWake(true);
+    window.scrollTo(0, 0);
+  }
+  function flStop(timeUp) {
+    if (FL.phase !== "reading") return;
+    clearInterval(FL.timer);
+    FL.elapsed = timeUp ? FL_DUREE : Math.max(1, Math.min(FL_DUREE, (Date.now() - FL.t0) / 1000));
+    if (timeUp) { $("#fl-time").textContent = "0:00"; $("#fl-ring").style.setProperty("--p", 0); flBeep(); }
+    FL.phase = "mark"; FL.tool = "last";
+    flWake(false);
+    flRenderText(); flUpdate();
+  }
+  function flScore() { return Math.max(0, Math.round((FL.last + 1 - Object.keys(FL.errs).length) * 60 / FL.elapsed)); }
+  function flValidate() {
+    if (FL.last < 0) { var mi = $("#fl-mark-info"); mi.classList.remove("shake"); void mi.offsetWidth; mi.classList.add("shake"); return; }
+    var sc = flScore(), ne = Object.keys(FL.errs).length, d = new Date();
+    FL.entry = { date: d.toISOString(), id: FL.txt.id, titre: FL.txt.titre, niveau: FL.txt.niveau, score: sc, lus: FL.last + 1, erreurs: ne, temps: Math.round(FL.elapsed), comp: null };
+    var h = flHistory(); h.push(FL.entry); store("fluence", h);
+    var msg, emoji;
+    if (sc >= FL_OBJECTIF) { emoji = "🏆"; msg = "Objectif de fin de CE2 atteint (" + FL_OBJECTIF + " mots/min)" + NB + "! Tu lis comme une championne" + NB + "! 🎉"; }
+    else if (sc >= 70) { emoji = "🌟"; msg = "Très bien" + NB + "! Tu te rapproches des " + FL_OBJECTIF + " mots par minute. Continue" + NB + "! 💪"; }
+    else if (sc >= 50) { emoji = "😃"; msg = "Bien" + NB + "! En lisant un peu chaque jour, tu vas aller de plus en plus vite. 🚀"; }
+    else { emoji = "🤗"; msg = "Bravo pour ta lecture" + NB + "! Chaque lecture te fait progresser. ❤️"; }
+    var prev = h.slice(0, -1).filter(function (e) { return e.id === FL.txt.id; });
+    if (prev.length && sc > Math.max.apply(null, prev.map(function (e) { return e.score; }))) msg += " Nouveau record sur ce texte" + NB + "! ⭐";
+    $("#fr-emoji").textContent = emoji;
+    $("#fr-score").textContent = sc;
+    $("#fr-msg").textContent = msg;
+    $("#fr-detail").innerHTML = "📖 " + (FL.last + 1) + " mots lus · ❌ " + ne + " erreur" + (ne > 1 ? "s" : "") + " · ⏱️ " + Math.round(FL.elapsed) + " s";
+    $("#fr-goal").style.width = Math.min(100, sc / 120 * 100) + "%";
+    // 3 questions de compréhension (réponses mélangées)
+    FL.qs = FL.txt.questions.map(function (Q) {
+      var o = Q.choix.map(function (c, k) { return { c: c, ok: k === Q.bonne }; });
+      return { q: Q.q, o: shuffle(o) };
+    });
+    FL.qi = 0; FL.qok = 0;
+    flShowQ();
+    showScreen("flres");
+    soundEnd();
+    if (sc >= FL_OBJECTIF) rain(220);
+  }
+  function flShowQ() {
+    var box = $("#fr-quiz");
+    if (FL.qi >= FL.qs.length) {
+      FL.entry.comp = FL.qok;
+      var h = flHistory();
+      h.forEach(function (e) { if (e.date === FL.entry.date) e.comp = FL.qok; });
+      store("fluence", h);
+      box.innerHTML = '<div class="fr-qdone">🧠 Compréhension&nbsp;: <b>' + FL.qok + " / 3</b> " + (FL.qok === 3 ? "— parfait&nbsp;! 🎉" : FL.qok === 2 ? "— très bien&nbsp;! 🌟" : "— relis le texte tranquillement, tu vas trouver&nbsp;! 💪") + "</div>";
+      $("#fr-actions").classList.remove("hidden");
+      return;
+    }
+    $("#fr-actions").classList.add("hidden");
+    var Q = FL.qs[FL.qi];
+    box.innerHTML = '<div class="fr-qnum">Question ' + (FL.qi + 1) + " / 3</div><div class=\"gp\">" + Q.q + '</div><div class="gopts">' +
+      Q.o.map(function (o, k) { return '<button type="button" class="gopt" data-k="' + k + '">' + o.c + "</button>"; }).join("") + '</div><div class="fr-qfb"></div>';
+  }
+  $("#fr-quiz").addEventListener("click", function (e) {
+    var b = e.target.closest(".gopt");
+    if (b && !FL.qlock) {
+      var Q = FL.qs[FL.qi], k = +b.dataset.k, ok = Q.o[k].ok;
+      FL.qlock = true;
+      $("#fr-quiz").querySelectorAll(".gopt").forEach(function (x, j) { if (Q.o[j].ok) x.classList.add("right"); else if (j === k) x.classList.add("wrong"); });
+      if (ok) { FL.qok++; soundGood(); var r = b.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 60); }
+      else soundOops();
+      $("#fr-quiz .fr-qfb").innerHTML = (ok ? '<div class="fb-good">' + rand(BRAVO) + "</div>" : '<div class="fb-oops"><div class="l1">' + rand(OOPS) + '</div><div class="l2">La bonne réponse&nbsp;: <b>' +
+        Q.o.filter(function (o) { return o.ok; })[0].c + "</b></div></div>") + '<button class="go-btn purple fr-next">' + (FL.qi < 2 ? "Question suivante ➜" : "Voir mon résultat ➜") + "</button>";
+      return;
+    }
+    if (e.target.closest(".fr-next")) { FL.qlock = false; FL.qi++; flShowQ(); }
+  });
+  function flHist() {
+    var h = flHistory(), last = h.slice(-20), W = 640, H = 300, pl = 44, pr = 16, pt = 18, pb = 34;
+    var maxY = Math.max(120, Math.ceil(Math.max.apply(null, [0].concat(last.map(function (e) { return e.score; }))) / 20) * 20);
+    var X = function (i) { return last.length < 2 ? pl + (W - pl - pr) / 2 : pl + i * (W - pl - pr) / (last.length - 1); }, Y = function (v) { return pt + (1 - v / maxY) * (H - pt - pb); };
+    var g = "";
+    for (var v = 0; v <= maxY; v += 20) g += '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="#efe8ff" stroke-width="2"/><text x="' + (pl - 8) + '" y="' + (Y(v) + 6) + '" text-anchor="end" font-size="16" fill="#6b5b8a">' + v + "</text>";
+    g += '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + Y(FL_OBJECTIF) + '" y2="' + Y(FL_OBJECTIF) + '" stroke="#22c55e" stroke-width="3" stroke-dasharray="10 7"/>' +
+      '<text x="' + (pl + 10) + '" y="' + (Y(FL_OBJECTIF) + 24) + '" text-anchor="start" font-size="17" font-weight="700" fill="#15803d">🎯 Objectif fin de CE2 : ' + FL_OBJECTIF + "</text>";
+    if (last.length) {
+      g += '<polyline fill="none" stroke="#7c4dff" stroke-width="4" stroke-linejoin="round" points="' + last.map(function (e, i) { return X(i) + "," + Y(e.score); }).join(" ") + '"/>';
+      g += last.map(function (e, i) { return '<circle cx="' + X(i) + '" cy="' + Y(e.score) + '" r="8" fill="' + (e.score >= FL_OBJECTIF ? "#22c55e" : "#ff4fa3") + '" stroke="#fff" stroke-width="3"/>' +
+        (last.length <= 12 ? '<text x="' + X(i) + '" y="' + (Y(e.score) - 14) + '" text-anchor="middle" font-size="15" font-weight="700" fill="#3b2a5a">' + e.score + "</text>" : ""); }).join("");
+    }
+    $("#fh-chart").innerHTML = h.length ? '<svg viewBox="0 0 ' + W + " " + H + '" class="fh-svg" role="img" aria-label="Courbe des mots lus par minute">' + g + "</svg>" +
+      '<div class="fh-cap">Mots correctement lus par minute — ' + (h.length > 20 ? "20 dernières lectures" : h.length + " lecture" + (h.length > 1 ? "s" : "")) + "</div>" :
+      '<div class="perfect">📖 Pas encore de lecture. Choisis un texte et appuie sur «&nbsp;GO&nbsp;»&nbsp;!</div>';
+    $("#fh-list").innerHTML = h.slice().reverse().map(function (e) {
+      var d = new Date(e.date), ds = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();
+      return '<div class="fh-row"><span class="fh-date">' + ds + '</span><span class="fh-t">' + e.titre + '</span><span class="fh-s' + (e.score >= FL_OBJECTIF ? " ok" : "") + '">' + e.score + " <small>mots/min</small></span>" +
+        (e.comp !== null && e.comp !== undefined ? '<span class="fh-c">🧠 ' + e.comp + "/3</span>" : '<span class="fh-c"></span>') + "</div>";
+    }).join("");
+    $("#fh-clear").classList.toggle("hidden", !h.length);
+    showScreen("flhist");
+  }
+  // Navigation et boutons de la lecture
+  $("#fl-levels").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) { FL.niveau = +b.dataset.lv; soundTap(); flMenu(); } });
+  $("#fl-list").addEventListener("click", function (e) { var b = e.target.closest(".fl-card"); if (b) flOpen(b.dataset.id); });
+  $("#fl-back").addEventListener("click", function () { showScreen("frhome"); });
+  $("#fl-histbtn").addEventListener("click", flHist);
+  $("#fl-go").addEventListener("click", flGo);
+  $("#fl-stop").addEventListener("click", function () { flStop(false); });
+  $("#fl-quit").addEventListener("click", function () {
+    if (FL.phase === "reading" && !window.confirm("Arrêter la lecture et revenir aux textes" + NB + "?")) return;
+    clearInterval(FL.timer); flWake(false); FL.phase = "ready"; flMenu();
+  });
+  $("#fl-tool-last").addEventListener("click", function () { FL.tool = "last"; flUpdate(); });
+  $("#fl-tool-err").addEventListener("click", function () { if (FL.last >= 0) { FL.tool = "err"; flUpdate(); } });
+  $("#fl-text").addEventListener("click", function (e) {
+    if (FL.phase !== "mark") return;
+    var w = e.target.closest("[data-n]");
+    if (!w) return;
+    var n = +w.dataset.n;
+    if (FL.tool === "last") {
+      FL.last = n;
+      Object.keys(FL.errs).forEach(function (k) { if (+k > n) delete FL.errs[k]; });
+      FL.tool = "err";
+    } else {
+      if (n > FL.last) return;
+      if (FL.errs[n]) delete FL.errs[n]; else FL.errs[n] = true;
+    }
+    soundTap();
+    flRenderText(); flUpdate();
+  });
+  $("#fl-validate").addEventListener("click", flValidate);
+  $("#fr-again").addEventListener("click", function () { flOpen(FL.txt.id); });
+  $("#fr-other").addEventListener("click", flMenu);
+  $("#fr-hist").addEventListener("click", flHist);
+  $("#fh-back").addEventListener("click", flMenu);
+  $("#fh-clear").addEventListener("click", function () {
+    if (window.confirm("Effacer tout l'historique de lecture" + NB + "? Cette action est définitive.")) { store("fluence", []); flHist(); }
+  });
+
+  // =====================================================================
+  // ---------- ÉCRAN DE DÉPART (MATHS / FRANÇAIS) ET BOUTON ACCUEIL ----------
+  // =====================================================================
+  function updateStartSound() { $("#start-sound").textContent = soundOn ? "🔊" : "🔇"; }
+  function goStart() { updateStartSound(); showScreen("start"); }
+  $("#start-sound").addEventListener("click", function () {
+    soundOn = !soundOn; store("sound", soundOn); updateStartSound(); updateHomeSound(); updateSoundBtn(); soundTap();
+  });
+  updateStartSound();
+  $("#go-maths").addEventListener("click", goHome);
+  $("#go-francais").addEventListener("click", function () { showScreen("frhome"); });
+  $("#home-back").addEventListener("click", goStart);
+  $("#frhome-back").addEventListener("click", goStart);
+  ["gram", "conj", "orth", "voc"].forEach(function (id) { $("#go-" + id).addEventListener("click", function () { gOpen(id); }); });
+  $("#go-fluence").addEventListener("click", flMenu);
+  // Bouton "Accueil" présent sur tous les écrans : retour au choix Maths / Français
+  $("#accueil-btn").addEventListener("click", function () {
+    var cur = document.body.getAttribute("data-screen") || "";
+    var busy = { quiz: 1, squiz: 1, gquiz: 1 }[cur] || (cur === "flread" && FL.phase === "reading");
+    if (busy && !window.confirm("Tu veux arrêter et revenir à l'accueil" + NB + "?")) return;
+    clearTimeout(autoTimer); clearTimeout(sTimer); clearTimeout(G.timer);
+    clearInterval(FL.timer); flWake(false); FL.phase = "ready";
+    goStart();
   });
 })();
 </script>

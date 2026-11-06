@@ -37,6 +37,23 @@
      - Unités sous unités, dizaines sous dizaines, centaines sous centaines,
        milliers sous milliers, pour des nombres de 2, 3 et 4 chiffres,
        sur tablette (portrait et paysage) et sur ordinateur.
+  4. Nouvelles parties (Nombres, Additions, Multiplication posée, Division)
+     - Même déroulé pour chaque partie : sous-choix par niveau + "Mélange",
+       petit rappel de leçon coloré avec un exemple résolu étape par étape
+       et des dessins, 20 questions tirées au hasard sans doublon, difficulté
+       qui augmente (questions 1-7, 8-14, 15-20), quelques problèmes de la
+       vie courante, confettis, explication douce, étoiles, erreurs à revoir.
+     - Additions et multiplications posées : la retenue s'écrit dans une
+       petite case AU-DESSUS de la colonne suivante, comme sur un cahier.
+       Addition : on touche la case pour écrire "1". Multiplication : on
+       touche la case puis on tape le chiffre de la retenue.
+     - Mêmes couleurs de colonnes (M, C, D, U) et même alignement que les
+       soustractions posées.
+     - Nombres en lettres : orthographe rectifiée (traits d'union entre tous
+       les mots), réglable avec WORDS_HYPHENS dans le code.
+     - Division : on écrit "24 : 6" (deux-points), comme à l'école.
+     - Le menu d'accueil garde de la place pour de futures parties (carte
+       "Bientôt…" en dernier).
   ==========================================================================
 -->
 <!doctype html>
@@ -356,9 +373,9 @@
   .back-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #d9cbff; }
 
   .home-wrap { width: 100%; max-width: 900px; }
-  .home-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; margin-top: 10px; }
+  .home-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 10px 0 24px; }
   .home-card {
-    border-radius: 32px; padding: 28px 18px 26px; color: #fff;
+    border-radius: 32px; padding: 20px 14px 18px; color: #fff;
     display: flex; flex-direction: column; align-items: center; gap: 8px;
     text-shadow: 0 2px 0 rgba(0,0,0,.18);
     box-shadow: 0 9px 0 rgba(0,0,0,.2);
@@ -369,13 +386,13 @@
   .home-card.mult { background: linear-gradient(150deg, #ff6fb5, #7c4dff); }
   .home-card.sub { background: linear-gradient(150deg, #ffb020, #ff5a5a); }
   .hc-emoji {
-    font-size: clamp(3rem, 9vw, 4.4rem); line-height: 1;
+    font-size: clamp(2.4rem, 6.5vw, 3.4rem); line-height: 1;
     width: 1.7em; height: 1.7em; border-radius: 50%;
     background: rgba(255,255,255,.92);
     display: flex; align-items: center; justify-content: center;
     text-shadow: none;
   }
-  .hc-title { font-size: clamp(1.7rem, 4.5vw, 2.3rem); font-weight: 700; line-height: 1.15; }
+  .hc-title { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; line-height: 1.15; }
   .hc-sub { font-size: clamp(1.1rem, 3vw, 1.35rem); font-weight: 500; }
 
   .sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
@@ -538,6 +555,172 @@
   .pose-toggle:active { transform: translateY(3px); box-shadow: 0 1px 0 #d9cbff; }
   #screen-squiz.cahier-on .key { height: clamp(52px, 7.4vh, 84px); }
   #screen-squiz.cahier-on #s-feedback { min-height: 64px; }
+
+  /* =========================================================
+     NOUVELLES PARTIES : nombres, additions, multiplication posée, division
+     ========================================================= */
+  .home-card.num { background: linear-gradient(150deg, #3ec7ff, #2f6bff); }
+  .home-card.add { background: linear-gradient(150deg, #2fd27a, #12a07c); }
+  .home-card.mulp { background: linear-gradient(150deg, #ff7ad9, #b03ee0); }
+  .home-card.div { background: linear-gradient(150deg, #ffcf3d, #ff8a1f); }
+  .home-card.soon {
+    background: rgba(255, 255, 255, .55); color: var(--ink-soft);
+    border: 4px dashed #d9cbff; box-shadow: none; text-shadow: none;
+    justify-content: center; cursor: default;
+  }
+  .home-card.soon:hover, .home-card.soon:active { transform: none; box-shadow: none; }
+  .home-card.soon .hc-emoji { background: #f3eeff; }
+  .tm { color: #6a3fd6; }
+
+  /* Questions */
+  .gq { font-size: clamp(1.9rem, 6vw, 3.6rem); font-weight: 700; line-height: 1.35; margin: 4px 0; }
+  .gq.gsmall { font-size: clamp(1.6rem, 4.6vw, 2.6rem); }
+  .gp { font-size: clamp(1.2rem, 3.2vw, 1.6rem); font-weight: 500; margin: 6px 0; line-height: 1.4; }
+  .gp.gsmall { font-size: clamp(1.05rem, 2.6vw, 1.25rem); color: var(--ink-soft); }
+  .gstory { text-align: left; background: #f6f1ff; border-radius: 18px; padding: 10px 14px; }
+  .gwords { font-size: clamp(1.35rem, 3.8vw, 2.1rem); font-weight: 700; color: var(--purple); margin: 6px 0; overflow-wrap: anywhere; }
+  .gsign { color: #b9a6ff; }
+  .gfield {
+    display: inline-flex; align-items: center; justify-content: center; vertical-align: middle;
+    min-width: 2.2em; min-height: 52px; height: 1.35em; padding: 0 .25em; margin: 3px;
+    border: 4px dashed #b9a6ff; border-radius: 14px; background: #fff;
+    font: inherit; font-weight: 700; color: var(--purple); line-height: 1;
+  }
+  .gfield.active { border-style: solid; border-color: #ffb800; box-shadow: 0 0 0 4px #fff3c4; }
+  .gfield.filled { border-style: solid; border-color: #c9b8ff; }
+  .qcard.good .gfield { border-style: solid; border-color: var(--green); color: var(--green-dark); }
+  .gfield.fix { border-style: solid; border-color: var(--orange); color: var(--orange-dark); }
+  .gfield.shake, .colop.shake, #g-zone.shake { animation: shake .4s; }
+  .gdec { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+  .gdc { border-radius: 16px; padding: 6px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: clamp(1.8rem, 5vw, 2.6rem); }
+  .gdc .ph { width: 100%; font-size: 1rem; padding: 3px 0; }
+  .gdl { font-size: clamp(.8rem, 2.2vw, 1rem); font-weight: 600; }
+  .gdivr { font-size: clamp(1.5rem, 4.4vw, 2.2rem); font-weight: 700; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+  .gdivr .lbl2 { font-size: .65em; color: var(--ink-soft); }
+
+  /* Dessins : tableau M C D U, blocs, droite des nombres, objets, groupes */
+  .gplace { display: inline-grid; grid-template-columns: repeat(4, auto); gap: 6px; margin: 6px auto; }
+  .gpl { display: flex; flex-direction: column; gap: 4px; min-width: 56px; }
+  .gpl .ph { font-size: 1rem; padding: 3px 0; }
+  .gpd { font-size: 2.1rem; font-weight: 700; text-align: center; border-radius: 12px; padding: 4px 8px; }
+  .bk-wrap { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: flex-end; margin: 8px 0; }
+  .bk-grp { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bk-items { display: flex; flex-wrap: wrap; gap: 3px; max-width: 170px; justify-content: center; align-items: flex-end; }
+  .bk { display: inline-block; border-radius: 3px; }
+  .bk-m { width: 34px; height: 34px; background: #7c4dff; box-shadow: inset -6px -6px 0 rgba(0,0,0,.18), 3px 3px 0 #5b2fd6; }
+  .bk-c {
+    width: 30px; height: 30px; background-color: #ff4fa3;
+    background-image: linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+  .bk-d { width: 8px; height: 30px; background-color: #22b455; background-image: linear-gradient(rgba(255,255,255,.45) 1px, transparent 1px); background-size: 8px 3px; }
+  .bk-u { width: 8px; height: 8px; background: #3b82f6; }
+  .bk-lab { font-size: 1rem; font-weight: 600; border-radius: 10px; padding: 2px 8px; }
+  .gline { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+  .gl-n { background: #fff; border: 3px solid #d9cbff; border-radius: 14px; padding: 4px 12px; font-weight: 700; font-size: 1.5rem; }
+  .gl-n.hl { border-color: #ffb800; background: #fff3c4; }
+  .gl-arrow { color: var(--pink); font-size: 1.4rem; font-weight: 700; }
+  .gdraw { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; font-size: clamp(1.5rem, 4vw, 2rem); margin: 6px auto; line-height: 1.1; max-width: 24em; }
+  .gdraw.who { font-size: clamp(1.8rem, 5vw, 2.4rem); }
+  .gbags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 8px 0; }
+  .gbag { border: 3px dashed; border-radius: 18px; padding: 6px 8px; min-width: 70px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .gbag.c0 { border-color: #3b82f6; background: #e1efff; }
+  .gbag.c1 { border-color: #22b455; background: #dff6e6; }
+  .gbag.c2 { border-color: #ff4fa3; background: #ffe1ef; }
+  .gbag.c3 { border-color: #ff9f1c; background: #fff4e3; }
+  .gbag.c4 { border-color: #7c4dff; background: #efe6ff; }
+  .gbag.rest { border-color: #9a93a8; background: #f3f1f6; }
+  .gwho { font-size: 1.5rem; font-weight: 700; }
+  .gin { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; font-size: 1.4rem; max-width: 140px; }
+  .gtable { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 6px 0; }
+  .gtable span { background: #f6f1ff; border-radius: 10px; padding: 3px 8px; font-weight: 600; font-size: 1.1rem; }
+  .gtable span.hl { background: #fff3c4; outline: 3px solid #ffb800; }
+
+  /* Réponses à toucher : choix et rangement */
+  #g-zone { display: flex; flex-direction: column; gap: 12px; }
+  .gopts { display: grid; gap: 12px; grid-template-columns: 1fr; }
+  .gopts.signs, .gopts.two { grid-template-columns: 1fr 1fr; }
+  .gopt {
+    background: #fff; border: 4px solid #e1d6ff; border-radius: 20px;
+    min-height: 68px; padding: 10px 14px;
+    font-size: clamp(1.15rem, 3vw, 1.5rem); font-weight: 600; color: var(--ink);
+    box-shadow: 0 5px 0 #d9cbff; overflow-wrap: anywhere;
+  }
+  .gopts.signs .gopt {
+    font-size: clamp(3rem, 9vw, 4.2rem); font-weight: 700; color: var(--purple); min-height: 110px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;
+  }
+  .gopts.two .gopt { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 700; }
+  .gopt small { font-size: 1.05rem; font-weight: 600; color: var(--ink-soft); margin-top: 6px; }
+  .gopt:active { transform: translateY(3px); box-shadow: 0 2px 0 #d9cbff; }
+  .gopt.sel { border-color: #ffb800; background: #fff3c4; }
+  .gopt.right { border-color: var(--green); background: #e7fbe9; }
+  .gopt.wrong { border-color: var(--orange); background: #fff4e3; }
+  .gorder-lbl { text-align: center; font-weight: 600; color: var(--ink-soft); font-size: 1.15rem; }
+  .gslots, .gchips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .gslot {
+    min-width: 104px; min-height: 64px; padding: 0 8px;
+    border: 4px dashed #b9a6ff; border-radius: 16px; background: #fff;
+    font: inherit; font-size: 1.6rem; font-weight: 700; color: var(--purple);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gslot .sn { font-size: 1.1rem; color: #b9a6ff; }
+  .gslot.filled { border-style: solid; border-color: #c9b8ff; }
+  .gslot.right { border-style: solid; border-color: var(--green); color: var(--green-dark); }
+  .gslot.fix { border-style: solid; border-color: var(--orange); color: var(--orange-dark); }
+  .gchip {
+    min-width: 104px; min-height: 64px; padding: 0 10px;
+    background: var(--purple); color: #fff; border-radius: 16px;
+    font-size: 1.6rem; font-weight: 700; box-shadow: 0 5px 0 var(--purple-dark);
+  }
+  .gchip:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--purple-dark); }
+
+  /* Additions et multiplications posées : retenue AU-DESSUS de la colonne suivante */
+  .colop {
+    --cw: clamp(50px, 7.2vw, 62px); /* case d'un chiffre */
+    --rh: clamp(56px, 7.4vw, 72px); /* hauteur d'une ligne de chiffres */
+    --ub: clamp(42px, 5.6vw, 48px); /* case de retenue, au-dessus */
+    display: inline-grid;
+    column-gap: 10px; row-gap: 4px;
+    font-weight: 700; line-height: 1;
+    font-size: clamp(2.3rem, 6vw, 3.6rem);
+    align-items: stretch;
+  }
+  .colop.lg { --cw: clamp(46px, 6.4vw, 56px); --rh: clamp(50px, 6.6vw, 62px); --ub: clamp(40px, 5.2vw, 44px); font-size: clamp(2.1rem, 5.4vw, 3rem); }
+  .colop.md { --cw: 40px; --rh: 46px; --ub: 32px; font-size: 1.9rem; column-gap: 6px; row-gap: 3px; }
+  .colop.sm { --cw: 30px; --rh: 34px; --ub: 24px; font-size: 1.4rem; column-gap: 4px; row-gap: 2px; }
+  .colop .ph { align-self: center; }
+  .co-cell { display: flex; align-items: center; justify-content: center; border-radius: 12px; padding: 3px 4px; }
+  .co-cell.hl { outline: 4px solid #ffb800; outline-offset: -2px; }
+  .co-main { width: var(--cw); display: flex; align-items: center; justify-content: center; }
+  .co-crow { min-height: calc(var(--ub) + 6px); }
+  .co-drow { height: var(--rh); }
+  .co-rrow { min-height: calc(var(--rh) + 6px); }
+  .co-sign { color: var(--pink); display: flex; align-items: center; justify-content: flex-end; padding-right: 2px; }
+  .colop .pbar { height: 6px; margin: 2px 0; }
+  .ubox {
+    width: var(--ub); height: var(--ub); padding: 0;
+    border: 3px dashed rgba(239, 43, 79, .5); border-radius: 10px;
+    background: rgba(255, 255, 255, .85); color: #ef2b4f;
+    font-family: inherit; font-weight: 700; line-height: 1;
+    font-size: calc(var(--ub) * .6);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ubox.on { border-style: solid; border-color: #ef2b4f; background: #ffe3e8; }
+  .ubox.active { border-style: solid; border-color: #ffb800; background: #fff3c4; box-shadow: 0 0 0 4px rgba(255, 184, 0, .35); }
+  .ubox.ghost { visibility: hidden; }
+  .colop-expl { text-align: left; margin: 0; padding-left: 1.2em; font-size: clamp(1.05rem, 2.8vw, 1.25rem); font-weight: 500; }
+  .colop-expl li { margin: 4px 0; }
+  .g-missed-item {
+    background: #fff4e3; border: 3px solid #ffd8a3; border-radius: 18px;
+    padding: 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    font-size: clamp(1.1rem, 3vw, 1.4rem); font-weight: 700; max-width: 100%;
+  }
+  #g-feedback { min-height: 80px; }
+  #screen-gquiz.colop-on .key { height: clamp(48px, 6.4vh, 80px); }
+  #screen-gquiz.colop-on #g-feedback { min-height: 52px; }
+  .gdraw.many { font-size: clamp(1.15rem, 3vw, 1.55rem); gap: 3px; }
+  .gm-sub { text-align: center; }
 </style>
 </head>
 <body>
@@ -553,16 +736,42 @@
       <button class="sound-btn" id="home-sound" aria-label="Son activé ou coupé">🔊</button>
     </header>
     <div class="home-choices">
-      <button class="home-card mult" id="go-mult">
-        <span class="hc-emoji">✖️</span>
-        <span class="hc-title">Tables de multiplication</span>
-        <span class="hc-sub">De la table de 2 à la table de 10</span>
+      <button class="home-card num" id="go-num">
+        <span class="hc-emoji">🔢</span>
+        <span class="hc-title">Les nombres jusqu'à 10&nbsp;000</span>
+        <span class="hc-sub">Lire, écrire, comparer, ranger</span>
+      </button>
+      <button class="home-card add" id="go-add">
+        <span class="hc-emoji">➕</span>
+        <span class="hc-title">Additions</span>
+        <span class="hc-sub">Sans retenue, avec retenue, posées</span>
       </button>
       <button class="home-card sub" id="go-sub">
         <span class="hc-emoji">➖</span>
         <span class="hc-title">Soustractions</span>
         <span class="hc-sub">Sans retenue, avec retenue, posées</span>
       </button>
+      <button class="home-card mult" id="go-mult">
+        <span class="hc-emoji">✖️</span>
+        <span class="hc-title">Tables de multiplication</span>
+        <span class="hc-sub">De la table de 2 à la table de 10</span>
+      </button>
+      <button class="home-card mulp" id="go-mulp">
+        <span class="hc-emoji">📝</span>
+        <span class="hc-title">Multiplication posée</span>
+        <span class="hc-sub">124 × 3, avec les retenues</span>
+      </button>
+      <button class="home-card div" id="go-div">
+        <span class="hc-emoji">🍕</span>
+        <span class="hc-title">Division</span>
+        <span class="hc-sub">Partager, faire des groupes</span>
+      </button>
+      <!-- Place pour les prochaines parties : ajouter ici un nouveau bouton "home-card" avant la carte "Bientôt" -->
+      <div class="home-card soon" aria-hidden="true">
+        <span class="hc-emoji">🎁</span>
+        <span class="hc-title">Bientôt…</span>
+        <span class="hc-sub">D'autres jeux arrivent&nbsp;!</span>
+      </div>
     </div>
   </div>
 </section>
@@ -758,6 +967,96 @@
     <div class="end-actions">
       <button class="go-btn" id="s-restart">🔁 Recommencer</button>
       <button class="go-btn purple" id="s-menu">🏠 Retour au menu</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NOUVELLES PARTIES : MENU D'UNE PARTIE ================= -->
+<section class="screen" id="screen-gmenu">
+  <div class="menu-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="gm-home" aria-label="Retour à l'accueil">⬅️</button>
+      <h1 id="gm-title">Partie</h1>
+      <p class="subtitle">Choisis ton entraînement&nbsp;!</p>
+    </header>
+    <div class="panel">
+      <div class="sub-grid" id="gm-grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NOUVELLES PARTIES : RAPPEL ================= -->
+<section class="screen" id="screen-glesson">
+  <div class="lesson-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="gl-back" aria-label="Retour">⬅️</button>
+      <h1>📚 Petit rappel</h1>
+      <p class="subtitle" id="gl-sub"></p>
+    </header>
+    <div id="gl-body"></div>
+    <div class="lesson-actions">
+      <button class="go-btn" id="gl-go">J'ai compris, on y va&nbsp;! 🚀</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NOUVELLES PARTIES : QUIZ ================= -->
+<section class="screen" id="screen-gquiz">
+  <div class="quiz-wrap">
+    <div class="topbar">
+      <button class="home-btn" id="g-quit" aria-label="Retour au menu">🏠 <span class="lbl">Menu</span></button>
+      <div class="progress">
+        <div class="ptext">Question <span id="g-qnum">1</span> / 20</div>
+        <div class="bar"><div class="bar-fill" id="g-bar"></div></div>
+      </div>
+      <div class="score-pill">⭐ <span id="g-live">0</span></div>
+    </div>
+
+    <div class="quiz-body">
+      <div class="left">
+        <div class="tag" id="g-tag">Partie</div>
+        <div class="qcard" id="g-card" aria-live="polite"></div>
+        <div class="feedback" id="g-feedback" aria-live="polite"></div>
+      </div>
+
+      <div class="right">
+        <div class="keypad" id="g-keypad">
+          <button class="key" data-d="1">1</button>
+          <button class="key" data-d="2">2</button>
+          <button class="key" data-d="3">3</button>
+          <button class="key" data-d="4">4</button>
+          <button class="key" data-d="5">5</button>
+          <button class="key" data-d="6">6</button>
+          <button class="key" data-d="7">7</button>
+          <button class="key" data-d="8">8</button>
+          <button class="key" data-d="9">9</button>
+          <button class="key erase" data-erase="1" aria-label="Effacer">⌫ Effacer</button>
+          <button class="key zero" data-d="0">0</button>
+        </div>
+        <div id="g-zone" class="hidden"></div>
+        <div class="correction hidden" id="g-correction"></div>
+        <button class="validate dim" id="g-validate">Valider ✔</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NOUVELLES PARTIES : FIN ================= -->
+<section class="screen" id="screen-gend">
+  <div class="end-wrap">
+    <div class="end-emoji" id="g-end-emoji">🏆</div>
+    <h1 class="end-title" id="g-end-title">Bravo&nbsp;!</h1>
+    <div class="score-big"><span id="g-end-score">18</span> <small>/ 20</small></div>
+    <div class="stars" id="g-stars"></div>
+    <p class="end-msg" id="g-end-msg"></p>
+
+    <div class="panel missed">
+      <div id="g-missed-box"></div>
+    </div>
+
+    <div class="end-actions">
+      <button class="go-btn" id="g-restart">🔁 Recommencer</button>
+      <button class="go-btn purple" id="g-menu">🏠 Retour au menu</button>
     </div>
   </div>
 </section>
@@ -1648,6 +1947,1128 @@
 
   $("#s-restart").addEventListener("click", function () { startSub(sMode); });
   $("#s-menu").addEventListener("click", function () { showScreen("sub-menu"); });
+
+  // =========================================================
+  // ---------- NOUVELLES PARTIES : outils communs ----------
+  // Nombres jusqu'à 10 000, Additions, Multiplication posée, Division.
+  // Chaque partie est un "module" : { id, title, short, champ, levels, lesson(mode), question(mode, L, i), problem(mode, L) }
+  // =========================================================
+  var MODULES = {};
+  var PROBLEM_SLOTS = [5, 12, 18];   // 3 petits problèmes de la vie courante par série
+  function fmt(n) { var s = String(n); return s.length > 3 ? s.slice(0, -3) + NB + s.slice(-3) : s; }
+  function dig(n, i) { var s = String(n); return i < s.length ? +s.charAt(s.length - 1 - i) : null; }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function rep(html, n) { var s = ""; for (var i = 0; i < n; i++) s += html; return s; }
+  function plural(k, one, many) { return k + " " + (k > 1 ? many : one); }
+
+  // ---------- Nombres en lettres ----------
+  // Orthographe rectifiée (recommandée à l'école) : traits d'union entre tous les mots.
+  // Mettre false pour l'orthographe traditionnelle ("trois mille quatre cent cinquante-deux").
+  var WORDS_HYPHENS = true;
+  var W_UNITS = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix",
+    "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"];
+  var W_TENS = ["", "", "vingt", "trente", "quarante", "cinquante", "soixante"];
+  function wUnder100(n, sp) {
+    if (n < 20) return W_UNITS[n];
+    var t = Math.floor(n / 10), u = n % 10;
+    if (t <= 6) return u === 0 ? W_TENS[t] : (u === 1 ? W_TENS[t] + sp + "et" + sp + "un" : W_TENS[t] + "-" + W_UNITS[u]);
+    if (t === 7) return u === 1 ? "soixante" + sp + "et" + sp + "onze" : "soixante-" + W_UNITS[10 + u];
+    if (t === 8) return u === 0 ? "quatre-vingts" : "quatre-vingt-" + W_UNITS[u];
+    return "quatre-vingt-" + W_UNITS[10 + u];
+  }
+  function numberWords(n) {
+    var sp = WORDS_HYPHENS ? "-" : " ";
+    if (n === 0) return "zéro";
+    var th = Math.floor(n / 1000), r = n % 1000, parts = [];
+    if (th === 1) parts.push("mille");
+    else if (th > 1) parts.push(wUnder100(th, sp) + sp + "mille");
+    if (r) {
+      var h = Math.floor(r / 100), rest = r % 100, p = [];
+      if (h === 1) p.push("cent");
+      else if (h > 1) p.push(W_UNITS[h] + sp + (rest ? "cent" : "cents"));
+      if (rest) p.push(wUnder100(rest, sp));
+      parts.push(p.join(sp));
+    }
+    return parts.join(sp);
+  }
+
+  // ---------- Dessins ----------
+  // Tableau des milliers, centaines, dizaines, unités
+  function placeHTML(n) {
+    var h = '<div class="gplace">';
+    for (var i = 3; i >= 0; i--) {
+      h += '<div class="gpl"><div class="ph ' + COLCLASS[i] + '">' + COLLETTERS[i] + '</div><div class="gpd ' + COLCLASS[i] + '">' + (dig(n, i) || 0) + "</div></div>";
+    }
+    return h + "</div>";
+  }
+  // Blocs : cubes (milliers), plaques (centaines), barres (dizaines), petits cubes (unités)
+  var BK = [
+    { c: "bk-u", one: "unité", many: "unités" }, { c: "bk-d", one: "dizaine", many: "dizaines" },
+    { c: "bk-c", one: "centaine", many: "centaines" }, { c: "bk-m", one: "millier", many: "milliers" }
+  ];
+  function blocksHTML(n, noLabels) {
+    var h = '<div class="bk-wrap">';
+    for (var i = 3; i >= 0; i--) {
+      var k = dig(n, i) || 0;
+      if (!k) continue;
+      h += '<div class="bk-grp"><div class="bk-items">' + rep('<span class="bk ' + BK[i].c + '"></span>', k) + "</div>" +
+        (noLabels ? "" : '<div class="bk-lab ' + COLCLASS[i] + '">' + plural(k, BK[i].one, BK[i].many) + "</div>") + "</div>";
+    }
+    return h + "</div>";
+  }
+  // Droite des nombres
+  function lineHTML(nums, hl) {
+    return '<div class="gline">' + nums.map(function (v, k) {
+      return (k ? '<span class="gl-arrow">➜</span>' : "") + '<span class="gl-n' + (k === hl ? " hl" : "") + '">' + fmt(v) + "</span>";
+    }).join("") + "</div>";
+  }
+  function itemsHTML(e, n) { return '<div class="gdraw' + (n > 24 ? " many" : "") + '">' + rep("<span>" + e + "</span>", n) + "</div>"; }
+  // Partage : un sac par personne, et le reste à part
+  function shareHTML(e, who, d, q, r) {
+    var h = '<div class="gbags">';
+    for (var k = 0; k < d; k++) h += '<div class="gbag c' + (k % 5) + '"><div class="gwho">' + who + '</div><div class="gin">' + rep("<span>" + e + "</span>", q) + "</div></div>";
+    if (r) h += '<div class="gbag rest"><div class="gwho">Reste</div><div class="gin">' + rep("<span>" + e + "</span>", r) + "</div></div>";
+    return h + "</div>";
+  }
+  // Groupement : des groupes de s objets, et le reste à part
+  function groupHTML(e, s, g, r) {
+    var h = '<div class="gbags">';
+    for (var k = 0; k < g; k++) h += '<div class="gbag c' + (k % 5) + '"><div class="gwho">' + (k + 1) + '</div><div class="gin">' + rep("<span>" + e + "</span>", s) + "</div></div>";
+    if (r) h += '<div class="gbag rest"><div class="gwho">Reste</div><div class="gin">' + rep("<span>" + e + "</span>", r) + "</div></div>";
+    return h + "</div>";
+  }
+  // Une ligne de table de multiplication, la bonne case en surbrillance
+  function tableLineHTML(d, q) {
+    var h = '<div class="gtable">';
+    for (var k = 1; k <= Math.max(q, 1); k++) h += '<span' + (k === q ? ' class="hl"' : "") + ">" + d + " × " + k + " = " + (d * k) + "</span>";
+    return h + "</div>";
+  }
+
+  // ---------- Opérations posées avec retenue au-dessus (additions, multiplications) ----------
+  function colInfo(op, a, b) {
+    var sa = String(a), r = op === "add" ? a + b : a * b, sr = String(r);
+    var n = op === "add" ? Math.min(4, Math.max(sa.length, String(b).length) + 1) : sa.length + 1;
+    n = Math.max(n, sr.length);
+    var cols = [], carry = [], c = 0, i;
+    for (i = 0; i < n; i++) {
+      var da = dig(a, i), db = op === "add" ? dig(b, i) : (i === 0 ? b : null);
+      carry.push(c);
+      if (op === "add") {
+        var s = (da || 0) + (db || 0) + c;
+        cols.push({ da: da, db: db, cin: c, s: s });
+        c = s >= 10 ? 1 : 0;
+      } else if (da === null) {
+        cols.push({ da: null, db: db, cin: c, p: c });
+        c = 0;
+      } else {
+        var p = da * b + c;
+        cols.push({ da: da, db: db, cin: c, p: p });
+        c = Math.floor(p / 10);
+      }
+    }
+    // Cases de retenue : addition -> toutes les colonnes sauf les unités ;
+    // multiplication -> seulement au-dessus des chiffres du grand nombre (la dernière retenue s'écrit dans le résultat)
+    var boxes = [];
+    for (i = 1; i < n; i++) if (op === "add" || i < sa.length) boxes.push(i);
+    return { n: n, r: r, sr: sr, sa: sa, cols: cols, carry: carry, boxes: boxes };
+  }
+  // o : { interactive, res, car, active:{kind:"r"|"c", i}, correction, hl, size }
+  function colHTML(op, a, b, o) {
+    o = o || {};
+    var info = colInfo(op, a, b), n = info.n, i, h = "", tag = o.interactive ? "button" : "span";
+    var res = o.res || [], car = o.car || [];
+    if (o.correction) {
+      res = []; car = [];
+      for (i = 0; i < n; i++) {
+        res.push(info.sr.charAt(info.sr.length - 1 - i));
+        car.push(info.boxes.indexOf(i) >= 0 && info.carry[i] ? String(info.carry[i]) : "");
+      }
+    }
+    function cell(i, row, content) {
+      return '<div class="co-cell ' + COLCLASS[i] + " " + row + (o.hl === i ? " hl" : "") + '"><div class="co-main">' + content + "</div></div>";
+    }
+    // En-têtes M C D U
+    h += "<div></div>";
+    for (i = n - 1; i >= 0; i--) h += '<div class="ph ' + COLCLASS[i] + '">' + COLLETTERS[i] + "</div>";
+    // Cases de retenue, au-dessus de chaque colonne
+    h += "<div></div>";
+    for (i = n - 1; i >= 0; i--) {
+      var bx = "";
+      if (info.boxes.indexOf(i) >= 0) {
+        var v = car[i] || "", act = !!o.interactive && !!o.active && o.active.kind === "c" && o.active.i === i;
+        var cls = "ubox" + (v ? " on" : "") + (act ? " active" : "") + (o.correction && !v ? " ghost" : "");
+        var attr = o.interactive ? ' type="button" data-cc="' + i + '" aria-label="Retenue au-dessus des ' + COLNAMES[i] + '"' : "";
+        bx = "<" + tag + ' class="' + cls + '"' + attr + ">" + v + "</" + tag + ">";
+      }
+      h += cell(i, "co-crow", bx);
+    }
+    // Nombre du haut
+    h += "<div></div>";
+    for (i = n - 1; i >= 0; i--) h += cell(i, "co-drow", info.cols[i].da === null ? "" : String(info.cols[i].da));
+    // Nombre du bas, avec le signe
+    h += '<div class="co-sign">' + (op === "add" ? "+" : "×") + "</div>";
+    for (i = n - 1; i >= 0; i--) h += cell(i, "co-drow", info.cols[i].db === null ? "" : String(info.cols[i].db));
+    // Trait puis résultat, une case par colonne
+    h += '<div class="pbar"></div><div></div>';
+    for (i = n - 1; i >= 0; i--) {
+      var rv = res[i] || "", ra = !!o.interactive && !!o.active && o.active.kind === "r" && o.active.i === i;
+      var rc = "rbox" + (ra ? " active" : "") + (rv ? " filled" : "") + (o.correction ? " fix" : "");
+      var rat = o.interactive ? ' type="button" data-cr="' + i + '" aria-label="Résultat des ' + COLNAMES[i] + '"' : "";
+      h += cell(i, "co-rrow", "<" + tag + ' class="' + rc + '"' + rat + ">" + (rv || (ra ? '<span class="qmark">?</span>' : "")) + "</" + tag + ">");
+    }
+    return '<div class="colop ' + (o.size || "xl") + '" style="grid-template-columns:auto repeat(' + n + ',auto)">' + h + "</div>";
+  }
+  // Explication colonne par colonne
+  function explainCol(op, a, b) {
+    var info = colInfo(op, a, b), li = [];
+    for (var i = 0; i < info.n; i++) {
+      var c = info.cols[i], name = cap(COLNAMES[i]), next = COLNAMES[i + 1];
+      if (op === "add") {
+        if (c.da === null && c.db === null && !c.cin) continue;
+        var terms = [];
+        if (c.cin) terms.push('<b class="tr">' + c.cin + "</b>");
+        if (c.da !== null) terms.push(c.da);
+        if (c.db !== null) terms.push(c.db);
+        var t = name + NB + ": " + (terms.length > 1 ? terms.join(" + ") + " = " + c.s : "la retenue " + c.s);
+        t += c.s >= 10 ? " → j'écris " + (c.s % 10) + ' et je retiens <b class="tr">1</b> au-dessus des ' + next + "." : " → j'écris " + c.s + ".";
+        li.push(t);
+      } else {
+        if (c.da === null) continue;
+        var last = i === info.sa.length - 1;
+        var m = name + NB + ": " + b + " × " + c.da + " = " + (b * c.da);
+        if (c.cin) m += ', plus la retenue <b class="tr">' + c.cin + "</b> = " + c.p;
+        if (last) m += " → j'écris " + c.p + ".";
+        else if (c.p >= 10) m += " → j'écris " + (c.p % 10) + ' et je retiens <b class="tr">' + Math.floor(c.p / 10) + "</b> au-dessus des " + next + ".";
+        else m += " → j'écris " + c.p + ".";
+        li.push(m);
+      }
+    }
+    return '<ul class="colop-expl">' + li.map(function (x) { return "<li>" + x + "</li>"; }).join("") + "</ul>";
+  }
+
+  // =========================================================
+  // ---------- PARTIE : LES NOMBRES JUSQU'À 10 000 ----------
+  // =========================================================
+  // Difficulté : questions 1-7 de 1 000 à 4 999 ; 8-14 jusqu'à 9 999 ; 15-20 avec des zéros et des passages (3 999 -> 4 000)
+  function numL(L) {
+    if (L === 0) return rnd(1000, 4999);
+    if (L === 1) return rnd(1000, 9999);
+    var d = [rnd(1, 9), rnd(1, 9), rnd(1, 9), rnd(1, 9)];   // M C D U
+    rand([[1], [2], [3], [1, 2], [2, 3], [1, 3]]).forEach(function (k) { d[k] = 0; });
+    return +d.join("");
+  }
+  // Un nombre qui ressemble (pour les mauvaises réponses à choisir)
+  function lookAlike(n) {
+    var d = String(n).split(""), i = rnd(0, d.length - 2);
+    if (Math.random() < 0.5 && d[i] !== d[i + 1] && !(i === 0 && d[1] === "0")) { var t = d[i]; d[i] = d[i + 1]; d[i + 1] = t; }
+    else { var j = rnd(1, d.length - 1); d[j] = String((+d[j] + rand([1, 9])) % 10); }
+    return +d.join("");
+  }
+  function wordsExplain(n) {
+    if (n === 10000) return "« " + numberWords(10000) + " », c'est 10 milliers&nbsp;: 10" + NB + "000 ✔️";
+    var th = Math.floor(n / 1000), r = n % 1000;
+    return "On lit d'abord les milliers&nbsp;: « " + numberWords(th * 1000) + " » → " + plural(th, "millier", "milliers") +
+      (r ? ". Puis le reste&nbsp;: « " + numberWords(r) + " » → " + r : ", et rien après") + ". Donc " + fmt(n) + " ✔️";
+  }
+  function cmpExplain(a, b) {
+    var sa = String(a), sb = String(b);
+    if (sa.length !== sb.length) {
+      return fmt(a) + " a " + sa.length + " chiffres et " + fmt(b) + " en a " + sb.length + "&nbsp;: le nombre qui a le plus de chiffres est le plus grand. Donc " +
+        fmt(a) + (a < b ? " &lt; " : " &gt; ") + fmt(b) + " ✔️";
+    }
+    var t = "On compare de gauche à droite. ";
+    for (var i = sa.length - 1; i >= 0; i--) {
+      var x = dig(a, i), y = dig(b, i);
+      if (x === y) { t += cap(COLNAMES[i]) + "&nbsp;: pareil (" + x + "). "; continue; }
+      t += cap(COLNAMES[i]) + "&nbsp;: <b>" + x + (x < y ? " &lt; " : " &gt; ") + y + "</b>. ";
+      break;
+    }
+    return t + "Donc " + fmt(a) + (a < b ? " &lt; " : " &gt; ") + fmt(b) + " ✔️";
+  }
+  function cmpPair(L) {
+    var a, b;
+    do {
+      if (L === 0) { a = rnd(1000, 9999); b = rnd(1000, 9999); if (dig(a, 3) === dig(b, 3)) continue; }
+      else if (L === 1) { var th = rnd(1, 9) * 1000; a = th + rnd(0, 999); b = th + rnd(0, 999); }
+      else if (Math.random() < 0.7) { var base = rnd(10, 99) * 100; a = base + rnd(0, 99); b = base + rnd(0, 99); }
+      else { a = rnd(800, 999); b = rnd(1000, 1300); if (Math.random() < 0.5) { var t = a; a = b; b = t; } }
+    } while (a === b);
+    return [a, b];
+  }
+  function numPartsText(n, shuffleIt) {
+    var names = [["millier", "milliers"], ["centaine", "centaines"], ["dizaine", "dizaines"], ["unité", "unités"]];
+    var parts = [];
+    for (var i = 3; i >= 0; i--) { var k = dig(n, i) || 0; if (k) parts.push(plural(k, names[3 - i][0], names[3 - i][1])); }
+    if (shuffleIt) shuffle(parts);
+    return parts.join(" + ");
+  }
+
+  function qNum(kind, L) {
+    var n, a, b;
+    if (kind === "w2d") {   // lettres -> chiffres
+      n = (L === 2 && Math.random() < 0.15) ? 10000 : numL(L);
+      return {
+        key: "w2d-" + n, type: "fields", fields: [n],
+        prompt: '<div class="gp">Écris ce nombre en chiffres&nbsp;:</div><div class="gwords">« ' + numberWords(n) + ' »</div><div class="gq">{0}</div>',
+        eq: "« " + numberWords(n) + " » = " + fmt(n),
+        explain: (n < 10000 ? '<div class="pose-center">' + placeHTML(n) + "</div>" : "") + '<div class="expl">' + wordsExplain(n) + "</div>"
+      };
+    }
+    if (kind === "d2w") {   // chiffres -> lettres (au choix)
+      n = numL(L);
+      var opts = [n], tries = 0;
+      while (opts.length < 3 && tries++ < 80) { var m = lookAlike(n); if (m >= 1000 && m <= 9999 && opts.indexOf(m) < 0) opts.push(m); }
+      shuffle(opts);
+      return {
+        key: "d2w-" + n, type: "choice", optClass: "words",
+        options: opts.map(function (x) { return numberWords(x); }), answer: opts.indexOf(n),
+        prompt: '<div class="gq">' + fmt(n) + '</div><div class="gp">Comment s\'écrit ce nombre en lettres&nbsp;?</div>',
+        eq: fmt(n) + " = « " + numberWords(n) + " »",
+        explain: '<div class="pose-center">' + placeHTML(n) + '</div><div class="expl">' + wordsExplain(n) + "</div>"
+      };
+    }
+    if (kind === "dec") {   // décomposer en M C D U
+      n = numL(L);
+      var labels = ["milliers", "centaines", "dizaines", "unités"], cells = "";
+      for (var k = 0; k < 4; k++) cells += '<div class="gdc ' + COLCLASS[3 - k] + '"><div class="ph ' + COLCLASS[3 - k] + '">' + COLLETTERS[3 - k] + "</div>{" + k + '}<div class="gdl">' + labels[k] + "</div></div>";
+      return {
+        key: "dec-" + n, type: "fields", one: true,
+        fields: [dig(n, 3), dig(n, 2), dig(n, 1), dig(n, 0)],
+        prompt: '<div class="gp">Décompose ce nombre&nbsp;:</div><div class="gq">' + fmt(n) + '</div><div class="gdec">' + cells + "</div>",
+        hint: "Touche une case, puis tape le chiffre ✏️",
+        eq: fmt(n) + " = " + plural(dig(n, 3), "millier", "milliers") + ", " + plural(dig(n, 2), "centaine", "centaines") + ", " + plural(dig(n, 1), "dizaine", "dizaines") + ", " + plural(dig(n, 0), "unité", "unités"),
+        explain: '<div class="pose-center">' + placeHTML(n) + "</div>" + (L < 2 ? blocksHTML(n) : "") +
+          '<div class="expl">Chaque chiffre a sa place&nbsp;: le 1<sup>er</sup> chiffre donne les milliers, puis les centaines, les dizaines et les unités.</div>'
+      };
+    }
+    if (kind === "rec") {   // recomposer
+      n = numL(L);
+      var txt = numPartsText(n, L === 2);
+      return {
+        key: "rec-" + n, type: "fields", fields: [n],
+        prompt: '<div class="gp">Quel est ce nombre&nbsp;?</div><div class="gq gsmall">' + txt + " =<br>{0}</div>",
+        eq: txt + " = " + fmt(n),
+        explain: '<div class="pose-center">' + placeHTML(n) + '</div><div class="expl">On range chaque chiffre dans sa colonne.' +
+          (String(n).indexOf("0") >= 0 ? " Quand il n'y a rien dans une colonne, on écrit un <b>0</b>." : "") + "</div>"
+      };
+    }
+    if (kind === "blk") {   // nombre dessiné avec des blocs
+      n = rnd(1, 4) * 1000 + rnd(0, 5) * 100 + rnd(0, 5) * 10 + rnd(0, 6);
+      return {
+        key: "blk-" + n, type: "fields", fields: [n],
+        prompt: '<div class="gp">Quel nombre est dessiné&nbsp;?</div>' + blocksHTML(n, true) +
+          '<div class="gp gsmall">🟪 1 000 &nbsp; 🟥 100 &nbsp; 🟩 10 &nbsp; 🟦 1</div><div class="gq">{0}</div>',
+        eq: "Le dessin montre " + fmt(n),
+        explain: blocksHTML(n) + '<div class="pose-center">' + placeHTML(n) + "</div>"
+      };
+    }
+    if (kind === "cmp") {   // comparer avec < ou >
+      var pr = cmpPair(L); a = pr[0]; b = pr[1];
+      return {
+        key: "cmp-" + Math.min(a, b) + "-" + Math.max(a, b), type: "choice", optClass: "signs",
+        options: ["&lt;<small>plus petit</small>", "&gt;<small>plus grand</small>"], answer: a < b ? 0 : 1,
+        prompt: '<div class="gq">' + fmt(a) + ' <span class="gsign">?</span> ' + fmt(b) + '</div><div class="gp">Choisis le bon signe.</div>',
+        hint: "🐊 La bouche du crocodile s'ouvre vers le plus grand nombre&nbsp;!",
+        eq: fmt(a) + (a < b ? " &lt; " : " &gt; ") + fmt(b),
+        explain: '<div class="expl">' + cmpExplain(a, b) + "</div>"
+      };
+    }
+    if (kind === "ord") {   // ranger dans l'ordre
+      var nums = [], asc = !(L === 2 && Math.random() < 0.5), base2;
+      if (L === 0) { shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4).forEach(function (t) { nums.push(t * 1000 + rnd(0, 999)); }); }
+      else if (L === 1) { base2 = rnd(1, 9) * 1000; shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4).forEach(function (c) { nums.push(base2 + c * 100 + rnd(0, 99)); }); }
+      else { base2 = rnd(10, 99) * 100; while (nums.length < 4) { var x = base2 + rnd(0, 99); if (nums.indexOf(x) < 0) nums.push(x); } }
+      var sorted = nums.slice().sort(function (p, q2) { return asc ? p - q2 : q2 - p; });
+      return {
+        key: "ord-" + sorted.join("-"), type: "order", items: shuffle(nums.slice()), sorted: sorted, asc: asc,
+        prompt: '<div class="gp">Range ces nombres du <b>' + (asc ? "plus petit au plus grand" : "plus grand au plus petit") + "</b>&nbsp;" + (asc ? "⬆️" : "⬇️") + "</div>" +
+          '<div class="gq gsmall">' + nums.map(fmt).join(" &nbsp; ") + "</div>",
+        hint: "Touche les nombres dans l'ordre 👆",
+        eq: sorted.map(fmt).join(asc ? " &lt; " : " &gt; "),
+        explain: '<div class="expl">On compare d\'abord les milliers, puis les centaines, puis les dizaines, puis les unités.</div>'
+      };
+    }
+    // Avant / après / entre
+    var cross = L === 2 || (L === 1 && Math.random() < 0.5);
+    if (kind === "apr") {
+      n = cross ? (L === 2 ? rand([rnd(1, 8) * 1000 + 999, rnd(10, 98) * 100 + 99]) : rnd(100, 998) * 10 + 9) : rnd(1001, 9897);
+      return {
+        key: "apr-" + n, type: "fields", fields: [n + 1],
+        prompt: '<div class="gp">Quel nombre vient juste <b>après</b>&nbsp;?</div><div class="gq">' + fmt(n) + " ➜ {0}</div>",
+        eq: "Après " + fmt(n) + ", il y a " + fmt(n + 1),
+        explain: lineHTML([n - 1, n, n + 1], 2) + '<div class="expl">Juste après, c\'est 1 de plus&nbsp;: ' + fmt(n) + " + 1 = " + fmt(n + 1) + "." +
+          (n % 10 === 9 ? " Comme un compteur&nbsp;: les 9 deviennent des 0 et le chiffre de gauche avance de 1&nbsp;!" : "") + "</div>"
+      };
+    }
+    if (kind === "avt") {
+      n = cross ? (L === 2 ? rand([rnd(2, 10) * 1000, rnd(11, 99) * 100]) : rnd(101, 999) * 10) : rnd(1002, 9898);
+      return {
+        key: "avt-" + n, type: "fields", fields: [n - 1],
+        prompt: '<div class="gp">Quel nombre vient juste <b>avant</b>&nbsp;?</div><div class="gq">{0} ➜ ' + fmt(n) + "</div>",
+        eq: "Avant " + fmt(n) + ", il y a " + fmt(n - 1),
+        explain: lineHTML([n - 1, n, n + 1], 0) + '<div class="expl">Juste avant, c\'est 1 de moins&nbsp;: ' + fmt(n) + " − 1 = " + fmt(n - 1) + ".</div>"
+      };
+    }
+    n = cross ? rand([rnd(1, 9) * 1000, rnd(11, 99) * 100]) : rnd(1001, 9898);   // "btw" : entre deux nombres
+    return {
+      key: "btw-" + n, type: "fields", fields: [n],
+      prompt: '<div class="gp">Quel nombre manque&nbsp;?</div><div class="gq gsmall">' + fmt(n - 1) + " ➜ {0} ➜ " + fmt(n + 1) + "</div>",
+      eq: fmt(n - 1) + " ➜ " + fmt(n) + " ➜ " + fmt(n + 1),
+      explain: lineHTML([n - 1, n, n + 1], 1) + '<div class="expl">Le nombre du milieu est 1 de plus que ' + fmt(n - 1) + ".</div>"
+    };
+  }
+  var NUM_KINDS = { lire: ["w2d", "d2w"], decomp: ["dec", "rec", "blk"], comp: ["cmp", "ord"], suite: ["apr", "avt", "btw"] };
+  function qNumMode(mode, L) {
+    var kinds = mode === "melange" ? ["w2d", "d2w", "dec", "rec", "cmp", "ord", "apr", "avt", "btw"] : NUM_KINDS[mode].slice();
+    if (L === 2) kinds = kinds.filter(function (k) { return k !== "blk"; });
+    if (L === 0) kinds = kinds.filter(function (k) { return k !== "btw" || mode === "suite"; });
+    return qNum(rand(kinds), L);
+  }
+  function pbNum(mode, L) {
+    var kinds = { lire: ["affiche"], decomp: ["perles", "feuilles"], comp: ["zoo"], suite: ["compteur"] }[mode] ||
+      ["affiche", "perles", "feuilles", "zoo", "compteur"];
+    var k = rand(kinds), n;
+    if (k === "affiche") {
+      n = numL(L);
+      return { key: "w2d-" + n, type: "fields", fields: [n],
+        prompt: '<div class="gp gstory">🎪 Sur l\'affiche du cirque, c\'est écrit&nbsp;: « ' + numberWords(n) + ' places ». Combien de places, en chiffres&nbsp;?</div><div class="gq">{0}</div>',
+        eq: "« " + numberWords(n) + " » = " + fmt(n), explain: '<div class="expl">' + wordsExplain(n) + "</div>" };
+    }
+    if (k === "perles") {
+      var th = rnd(1, 9), c = rnd(1, 9), u = rnd(1, 9);
+      if (L === 2) c = 0;
+      n = th * 1000 + c * 100 + u;
+      return { key: "rec-" + n, type: "fields", fields: [n],
+        prompt: '<div class="gp gstory">🎨 Lucy a <b>' + th + "</b> " + (th > 1 ? "boîtes" : "boîte") + " de 1" + NB + "000 perles" + (c ? ", <b>" + c + "</b> " + (c > 1 ? "boîtes" : "boîte") + " de 100 perles" : "") +
+          " et <b>" + u + "</b> " + (u > 1 ? "perles toutes seules" : "perle toute seule") + '. Combien de perles en tout&nbsp;?</div><div class="gq">{0} perles</div>',
+        eq: th + " milliers" + (c ? " + " + c + " centaines" : "") + " + " + u + " unités = " + fmt(n),
+        explain: '<div class="pose-center">' + placeHTML(n) + '</div><div class="expl">Les boîtes de 1' + NB + "000 donnent les milliers, les boîtes de 100 les centaines." + (c ? "" : " Pas de dizaines ni de centaines&nbsp;: on écrit des 0.") + "</div>" };
+    }
+    if (k === "feuilles") {
+      var t2 = rnd(1, 9), c2 = rnd(1, 9);
+      n = t2 * 1000 + c2 * 100;
+      return { key: "rec-" + n, type: "fields", fields: [n],
+        prompt: '<div class="gp gstory">📄 L\'école commande <b>' + t2 + "</b> " + (t2 > 1 ? "cartons" : "carton") + " de 1" + NB + "000 feuilles et <b>" + c2 + "</b> " + (c2 > 1 ? "paquets" : "paquet") + ' de 100 feuilles. Combien de feuilles en tout&nbsp;?</div><div class="gq">{0} feuilles</div>',
+        eq: t2 + " milliers + " + c2 + " centaines = " + fmt(n),
+        explain: '<div class="pose-center">' + placeHTML(n) + '</div><div class="expl">Pas de dizaines ni d\'unités&nbsp;: on écrit 0 et 0.</div>' };
+    }
+    if (k === "zoo") {
+      var pr = cmpPair(L), a = pr[0], b = pr[1];
+      return { key: "cmp-" + Math.min(a, b) + "-" + Math.max(a, b), type: "choice", optClass: "two", options: ["Samedi", "Dimanche"], answer: a > b ? 0 : 1,
+        prompt: '<div class="gp gstory">🦁 Samedi, <b>' + fmt(a) + "</b> personnes sont allées au zoo. Dimanche, <b>" + fmt(b) + "</b>. Quel jour y avait-il le plus de monde&nbsp;?</div>",
+        eq: fmt(a) + (a < b ? " &lt; " : " &gt; ") + fmt(b) + "&nbsp;: c'est " + (a > b ? "samedi" : "dimanche"),
+        explain: '<div class="expl">' + cmpExplain(a, b) + "</div>" };
+    }
+    n = L === 0 ? rnd(1001, 4998) : (L === 1 ? rnd(100, 998) * 10 + 9 : rand([rnd(1, 8) * 1000 + 999, rnd(10, 98) * 100 + 99]));
+    return { key: "apr-" + n, type: "fields", fields: [n + 1],
+      prompt: '<div class="gp gstory">🚗 Le compteur de la voiture montre <b>' + fmt(n) + '</b> km. Papa roule encore 1 km. Que montre le compteur&nbsp;?</div><div class="gq">{0} km</div>',
+      eq: "Après " + fmt(n) + ", il y a " + fmt(n + 1),
+      explain: lineHTML([n, n + 1], 1) + '<div class="expl">1 km de plus&nbsp;: ' + fmt(n) + " + 1 = " + fmt(n + 1) + ".</div>" };
+  }
+  function lessonNum(mode) {
+    var h = '<div class="panel"><h2>🏠 La maison des nombres</h2><div class="pose-center">' + placeHTML(3452) + "</div>" + blocksHTML(3452) +
+      '<ul class="rules"><li>🟪 1 <b class="tm">millier</b> = 10 centaines = 1' + NB + "000 unités</li>" +
+      '<li>🎨 Dans <b>3' + NB + '452</b>&nbsp;: <b class="tm">3 milliers</b>, <b class="tc">4 centaines</b>, <b class="td">5 dizaines</b>, <b class="tu">2 unités</b>.</li>' +
+      "<li>✏️ Après les milliers, on laisse un petit espace&nbsp;: 3" + NB + "452.</li></ul></div>";
+    if (mode === "lire" || mode === "melange") {
+      h += '<div class="panel"><h2>📖 Lire et écrire en lettres</h2><div class="steps">' +
+        stepHTML(1, 'On lit d\'abord les <b class="tm">milliers</b>&nbsp;: 3 → « ' + numberWords(3000) + " »", blocksHTML(3000, true)) +
+        stepHTML(2, "Puis le reste&nbsp;: 452 → « " + numberWords(452) + " »", blocksHTML(452, true)) +
+        (WORDS_HYPHENS ? stepHTML(3, "On met des <b>traits d'union</b> entre tous les mots ✏️", "") : "") +
+        '</div><div class="done">✅ 3' + NB + "452 = « " + numberWords(3452) + " »</div>" +
+        '<div class="tip">⚠️ Avec un zéro, on ne dit rien&nbsp;: 4' + NB + "050 = « " + numberWords(4050) + " »</div></div>";
+    }
+    if (mode === "decomp" || mode === "melange") {
+      h += '<div class="panel"><h2>🧩 Décomposer</h2><div class="steps">' +
+        stepHTML(1, "Je range 4" + NB + "052 dans le tableau", placeHTML(4052)) +
+        stepHTML(2, "Je lis chaque colonne", blocksHTML(4052)) +
+        '</div><div class="done">✅ 4' + NB + "052 = 4 milliers + 5 dizaines + 2 unités</div>" +
+        '<div class="tip">Pas de centaines&nbsp;? On écrit un <b>0</b> à leur place.</div></div>';
+    }
+    if (mode === "comp" || mode === "melange") {
+      h += '<div class="panel"><h2>🐊 Comparer et ranger</h2><ul class="rules">' +
+        "<li>🐊 Le signe s'ouvre vers le plus grand&nbsp;: <b>5 &gt; 3</b> et <b>3 &lt; 5</b>.</li></ul><div class=\"steps\">" +
+        stepHTML(1, "Plus de chiffres = plus grand", '<div class="gq gsmall">987 &lt; 1' + NB + "023</div>") +
+        stepHTML(2, "Même nombre de chiffres&nbsp;: on compare de gauche à droite", '<div class="gq gsmall">4' + NB + "572 et 4" + NB + "527</div>") +
+        stepHTML(3, "Milliers pareils (4), centaines pareilles (5), dizaines&nbsp;: <b>7 &gt; 2</b>", '<div class="gq gsmall">4' + NB + "572 &gt; 4" + NB + "527</div>") +
+        '</div><div class="tip">⬆️ Ranger du plus petit au plus grand&nbsp;: 1' + NB + "250 &lt; 2" + NB + "340 &lt; 2" + NB + "400 &lt; 3" + NB + "100</div></div>";
+    }
+    if (mode === "suite" || mode === "melange") {
+      h += '<div class="panel"><h2>➡️ Avant, après</h2><ul class="rules"><li>➡️ Juste <b>après</b>&nbsp;: 1 de plus.</li><li>⬅️ Juste <b>avant</b>&nbsp;: 1 de moins.</li></ul><div class="steps">' +
+        stepHTML(1, "Après 3" + NB + "999 vient 4" + NB + "000&nbsp;: comme un compteur, les 9 deviennent des 0&nbsp;!", lineHTML([3998, 3999, 4000], 2)) +
+        stepHTML(2, "Avant 5" + NB + "000 vient 4" + NB + "999", lineHTML([4999, 5000, 5001], 0)) +
+        "</div></div>";
+    }
+    return h;
+  }
+  MODULES.num = {
+    id: "num", title: "🔢 Les nombres jusqu'à 10" + NB + "000", short: "Nombres", champ: "des nombres",
+    levels: [
+      { id: "lire", label: "Lire et écrire", ex: "3" + NB + "452 ↔ « trois-mille… »", color: "#2f8cff" },
+      { id: "decomp", label: "Décomposer", ex: "M · C · D · U", color: "#22b455" },
+      { id: "comp", label: "Comparer et ranger", ex: "4" + NB + "572 &gt; 4" + NB + "527", color: "#ef4444" },
+      { id: "suite", label: "Avant, après", ex: "3" + NB + "999 ➜ 4" + NB + "000", color: "#ff7a1a" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonNum, question: qNumMode, problem: pbNum
+  };
+
+  // =========================================================
+  // ---------- PARTIE : ADDITIONS ----------
+  // =========================================================
+  // Difficulté : questions 1-7 à 2 chiffres ; 8-14 à 3 chiffres ; 15-20 à 3 ou 4 chiffres (total jusqu'à 9 999), parfois plusieurs retenues
+  function addCarryCount(a, b) {
+    var c = 0, cnt = 0;
+    for (var i = 0; i < 5; i++) { var s = (dig(a, i) || 0) + (dig(b, i) || 0) + c; c = s >= 10 ? 1 : 0; cnt += c; }
+    return cnt;
+  }
+  function genAdd(type, L) {
+    var wantMany = type === "avec" && L === 2 && Math.random() < 0.5;
+    for (var k = 0; k < 3000; k++) {
+      var a, b;
+      if (L === 0) { a = rnd(10, 89); b = rnd(10, 89); }
+      else if (L === 1) { a = rnd(100, 899); b = rnd(100, 899); }
+      else { a = rnd(1000, 8999); b = Math.random() < 0.5 ? rnd(100, 999) : rnd(1000, 8999); }
+      if (a + b > 9999) continue;
+      var nc = addCarryCount(a, b);
+      if (type === "sans" && nc > 0) continue;
+      if (type === "avec" && nc === 0) continue;
+      if (wantMany && nc < 2) continue;
+      return { a: Math.max(a, b), b: Math.min(a, b) };
+    }
+    return type === "sans" ? { a: 352, b: 147 } : { a: 168, b: 257 };
+  }
+  function addExplain(a, b) {
+    return colHTML("add", a, b, { correction: true, size: "md" }) + explainCol("add", a, b) +
+      '<div class="verif">🔍 ' + fmt(a) + " + " + fmt(b) + " = " + fmt(a + b) + "</div>";
+  }
+  function addQuestion(a, b, posed, story, unit) {
+    var s = a + b, key = "add-" + a + "-" + b;
+    if (posed) {
+      return { key: key, type: "column", op: "add", a: a, b: b, story: story, eq: fmt(a) + " + " + fmt(b) + " = " + fmt(s),
+        explain: explainCol("add", a, b) + '<div class="verif">🔍 ' + fmt(a) + " + " + fmt(b) + " = " + fmt(s) + "</div>" };
+    }
+    return { key: key, type: "fields", fields: [s],
+      prompt: story ? '<div class="gp gstory">' + story + '</div><div class="gq gsmall">{0} ' + unit + "</div>"
+        : '<div class="gq">' + fmt(a) + " + " + fmt(b) + " = {0}</div>",
+      eq: fmt(a) + " + " + fmt(b) + " = " + fmt(s), explain: addExplain(a, b) };
+  }
+  function qAdd(mode, L) {
+    var type = mode === "sans" ? "sans" : mode === "avec" ? "avec" : (Math.random() < (mode === "posee" ? 0.35 : 0.5) ? "sans" : "avec");
+    var posed = mode === "posee" || (mode === "melange" && Math.random() < 0.5);
+    var p = genAdd(type, L);
+    return addQuestion(p.a, p.b, posed, null);
+  }
+  var ADD_PB = [
+    function (a, b) { return ["🖼️ Lucy a <b>" + fmt(a) + "</b> images. Sa cousine lui en donne <b>" + fmt(b) + "</b>. Combien d'images a-t-elle maintenant&nbsp;?", "images"]; },
+    function (a, b) { return ["📚 Un livre a <b>" + fmt(a) + "</b> pages, un autre en a <b>" + fmt(b) + "</b>. Combien de pages en tout&nbsp;?", "pages"]; },
+    function (a, b) { return ["🚗 Pendant les vacances, papa roule <b>" + fmt(a) + "</b> km, puis encore <b>" + fmt(b) + "</b> km. Combien de kilomètres en tout&nbsp;?", "km"]; },
+    function (a, b) { return ["🍎 Le marchand vend <b>" + fmt(a) + "</b> pommes le matin et <b>" + fmt(b) + "</b> l'après-midi. Combien de pommes dans la journée&nbsp;?", "pommes"]; },
+    function (a, b) { return ["🎪 Au spectacle, il y a <b>" + fmt(a) + "</b> enfants et <b>" + fmt(b) + "</b> adultes. Combien de personnes en tout&nbsp;?", "personnes"]; }
+  ];
+  function pbAdd(mode, L) {
+    var type = mode === "sans" ? "sans" : mode === "avec" ? "avec" : (Math.random() < 0.4 ? "sans" : "avec");
+    var posed = mode === "posee" || (mode === "melange" && Math.random() < 0.5);
+    var p = genAdd(type, L), st = rand(ADD_PB)(p.a, p.b);
+    return addQuestion(p.a, p.b, posed, st[0], st[1]);
+  }
+  function lessonAdd(mode) {
+    var h = '<div class="panel"><h2>📏 Comment poser une addition</h2><ul class="rules">' +
+      '<li>🎨 <b class="tu">Unités</b> sous unités, <b class="td">dizaines</b> sous dizaines, <b class="tc">centaines</b> sous centaines, <b class="tm">milliers</b> sous milliers.</li>' +
+      '<li>👉 On commence toujours par les <b class="tu">unités</b>, tout à droite.</li>' +
+      '<li>🔴 Si ça fait 10 ou plus, on écrit les unités et on <b>retient 1</b> dans la petite case <b>au-dessus</b> de la colonne suivante.</li></ul>' +
+      '<div class="pose-center">' + colHTML("add", 352, 147, { size: "md" }) + "</div></div>";
+    if (mode !== "avec") {
+      h += '<div class="panel"><h2>🟢 Sans retenue&nbsp;: 352 + 147</h2><div class="steps">' +
+        stepHTML(1, '🔵 <b class="tu">Unités</b>&nbsp;: 2 + 7 = 9', colHTML("add", 352, 147, { res: ["9"], hl: 0, size: "md" })) +
+        stepHTML(2, '🟢 <b class="td">Dizaines</b>&nbsp;: 5 + 4 = 9', colHTML("add", 352, 147, { res: ["9", "9"], hl: 1, size: "md" })) +
+        stepHTML(3, '🌸 <b class="tc">Centaines</b>&nbsp;: 3 + 1 = 4', colHTML("add", 352, 147, { res: ["9", "9", "4"], hl: 2, size: "md" })) +
+        '</div><div class="done">✅ 352 + 147 = 499</div></div>';
+    }
+    if (mode !== "sans") {
+      h += '<div class="panel"><h2>🔴 Avec retenue&nbsp;: 168 + 257</h2>' +
+        '<div class="bk-wrap"><div class="bk-items">' + rep('<span class="bk bk-u"></span>', 15) + '</div><span class="gl-arrow">➜</span>' +
+        '<div class="bk-items"><span class="bk bk-d"></span>' + rep('<span class="bk bk-u"></span>', 5) + "</div></div>" +
+        '<div class="tip">10 unités, c\'est 1 dizaine&nbsp;: 15 unités = <b class="td">1 dizaine</b> et <b class="tu">5 unités</b>.</div><div class="steps">' +
+        stepHTML(1, '🔵 <b class="tu">Unités</b>&nbsp;: 8 + 7 = 15 → j\'écris 5, je retiens <b class="tr">1</b> au-dessus des dizaines',
+          colHTML("add", 168, 257, { res: ["5"], car: ["", "1"], hl: 0, size: "md" })) +
+        stepHTML(2, '🟢 <b class="td">Dizaines</b>&nbsp;: <b class="tr">1</b> + 6 + 5 = 12 → j\'écris 2, je retiens <b class="tr">1</b> au-dessus des centaines',
+          colHTML("add", 168, 257, { res: ["5", "2"], car: ["", "1", "1"], hl: 1, size: "md" })) +
+        stepHTML(3, '🌸 <b class="tc">Centaines</b>&nbsp;: <b class="tr">1</b> + 1 + 2 = 4',
+          colHTML("add", 168, 257, { res: ["5", "2", "4"], car: ["", "1", "1"], hl: 2, size: "md" })) +
+        '</div><div class="done">✅ 168 + 257 = 425</div><div class="tip">🔍 On peut vérifier avec une soustraction&nbsp;: 425 − 257 = 168</div></div>';
+    }
+    return h;
+  }
+  MODULES.add = {
+    id: "add", title: "➕ Les additions", short: "Additions", champ: "des additions",
+    levels: [
+      { id: "sans", label: "Sans retenue", ex: "352 + 147", color: "#22b455" },
+      { id: "avec", label: "Avec retenue", ex: "168 + 257", color: "#ef4444" },
+      { id: "posee", label: "Addition posée", ex: "168<br><u>+ 257</u>", stack: true, color: "#2f8cff" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonAdd, question: qAdd, problem: pbAdd
+  };
+
+  // =========================================================
+  // ---------- PARTIE : MULTIPLICATION POSÉE ----------
+  // =========================================================
+  // Un nombre à 2 ou 3 chiffres × un nombre à 1 chiffre.
+  // Difficulté : sans retenue, puis une retenue, puis plusieurs retenues et des nombres plus grands.
+  function mulCarries(a, b) {
+    var s = String(a), c = 0, cnt = 0;
+    for (var i = 0; i < s.length; i++) { var p = dig(a, i) * b + c; c = Math.floor(p / 10); if (i < s.length - 1 && c > 0) cnt++; }
+    return { cnt: cnt, last: c };
+  }
+  function genMul(kind, L) {
+    for (var k = 0; k < 3000; k++) {
+      var a, b;
+      if (kind === "2c") { a = rnd(11, 99); b = L === 0 ? rnd(2, 4) : L === 1 ? rnd(2, 6) : rnd(4, 9); }
+      else { a = rnd(101, 999); b = L === 0 ? rnd(2, 3) : L === 1 ? rnd(2, 5) : rnd(4, 9); }
+      if (a % 10 === 0) continue;
+      var m = mulCarries(a, b);
+      if (L === 0 && (m.cnt > 0 || m.last > 0)) continue;
+      if (L === 1 && m.cnt !== 1) continue;
+      if (L === 2 && kind === "2c" && (m.cnt !== 1 || m.last === 0)) continue;
+      if (L === 2 && kind === "3c" && m.cnt < 2) continue;
+      return { a: a, b: b };
+    }
+    return kind === "2c" ? { a: 23, b: 3 } : { a: 124, b: 3 };
+  }
+  function mulQuestion(a, b, story) {
+    var r = a * b;
+    var sum = b <= 4 ? '<div class="verif">🔍 C\'est comme ' + rep(fmt(a) + " + ", b - 1) + fmt(a) + " = " + fmt(r) + "</div>" : "";
+    return { key: "mul-" + a + "-" + b, type: "column", op: "mul", a: a, b: b, story: story,
+      eq: fmt(a) + " × " + b + " = " + fmt(r), explain: explainCol("mul", a, b) + sum };
+  }
+  function qMul(mode, L, i) {
+    var kind, Lk = L;
+    if (mode === "2c" || mode === "3c") kind = mode;
+    else {   // Mélange : on commence par 2 chiffres et on finit par 3 chiffres
+      kind = i < 7 ? "2c" : i < 14 ? (Math.random() < 0.5 ? "2c" : "3c") : "3c";
+      Lk = i < 4 ? 0 : i < 7 ? 1 : i < 14 ? (kind === "2c" ? 2 : 1) : 2;
+    }
+    var p = genMul(kind, Lk);
+    return mulQuestion(p.a, p.b, null);
+  }
+  var MUL_PB = [
+    function (a, b) { return "📦 Une boîte contient <b>" + fmt(a) + "</b> crayons. Combien de crayons y a-t-il dans <b>" + b + "</b> boîtes&nbsp;?"; },
+    function (a, b) { return "🚌 Un car transporte <b>" + fmt(a) + "</b> passagers. Combien de passagers dans <b>" + b + "</b> cars&nbsp;?"; },
+    function (a, b) { return "🌼 Le jardinier plante <b>" + b + "</b> rangées de <b>" + fmt(a) + "</b> fleurs. Combien de fleurs en tout&nbsp;?"; },
+    function (a, b) { return "📖 Lucy lit <b>" + fmt(a) + "</b> pages par semaine. Combien de pages lit-elle en <b>" + b + "</b> semaines&nbsp;?"; },
+    function (a, b) { return "🧁 La boulangère fait <b>" + fmt(a) + "</b> gâteaux par jour. Combien en fait-elle en <b>" + b + "</b> jours&nbsp;?"; }
+  ];
+  function pbMul(mode, L) {
+    var kind = mode === "3c" ? "3c" : mode === "2c" ? "2c" : (L === 2 ? "3c" : "2c");
+    var p = genMul(kind, Math.min(L, 1));
+    return mulQuestion(p.a, p.b, rand(MUL_PB)(p.a, p.b));
+  }
+  function lessonMul(mode) {
+    var h = '<div class="panel"><h2>✖️ Multiplier, c\'est ajouter plusieurs fois</h2>' +
+      '<div class="gq gsmall" style="text-align:center">124 × 3 = 124 + 124 + 124</div>' +
+      '<div class="bk-wrap">' + rep('<div class="gbag c0">' + blocksHTML(124, true) + "</div>", 3) + "</div></div>";
+    h += '<div class="panel"><h2>📝 Poser 124 × 3</h2><ul class="rules">' +
+      "<li>⬆️ Le grand nombre en haut, le petit nombre en dessous, sous les <b class=\"tu\">unités</b>.</li>" +
+      '<li>👉 On multiplie chaque chiffre par 3, en commençant par les <b class="tu">unités</b>.</li>' +
+      '<li>🔴 La retenue s\'écrit dans la petite case <b>au-dessus</b> de la colonne suivante. On l\'ajoute <b>après</b> avoir multiplié.</li></ul><div class="steps">' +
+      stepHTML(1, '🔵 <b class="tu">Unités</b>&nbsp;: 3 × 4 = 12 → j\'écris 2, je retiens <b class="tr">1</b>',
+        colHTML("mul", 124, 3, { res: ["2"], car: ["", "1"], hl: 0, size: "md" })) +
+      stepHTML(2, '🟢 <b class="td">Dizaines</b>&nbsp;: 3 × 2 = 6, plus la retenue <b class="tr">1</b> = 7',
+        colHTML("mul", 124, 3, { res: ["2", "7"], car: ["", "1"], hl: 1, size: "md" })) +
+      stepHTML(3, '🌸 <b class="tc">Centaines</b>&nbsp;: 3 × 1 = 3',
+        colHTML("mul", 124, 3, { res: ["2", "7", "3"], car: ["", "1"], hl: 2, size: "md" })) +
+      '</div><div class="done">✅ 124 × 3 = 372</div><div class="tip">⚠️ D\'abord on multiplie, ensuite on ajoute la retenue.</div></div>';
+    if (mode !== "2c") {
+      h += '<div class="panel"><h2>🔴 Avec plusieurs retenues&nbsp;: 245 × 4</h2><div class="steps">' +
+        stepHTML(1, "4 × 5 = 20 → j'écris 0, je retiens <b class=\"tr\">2</b>", colHTML("mul", 245, 4, { res: ["0"], car: ["", "2"], hl: 0, size: "md" })) +
+        stepHTML(2, "4 × 4 = 16, + <b class=\"tr\">2</b> = 18 → j'écris 8, je retiens <b class=\"tr\">1</b>", colHTML("mul", 245, 4, { res: ["0", "8"], car: ["", "2", "1"], hl: 1, size: "md" })) +
+        stepHTML(3, "4 × 2 = 8, + <b class=\"tr\">1</b> = 9", colHTML("mul", 245, 4, { res: ["0", "8", "9"], car: ["", "2", "1"], hl: 2, size: "md" })) +
+        '</div><div class="done">✅ 245 × 4 = 980</div></div>';
+    }
+    return h;
+  }
+  MODULES.mulp = {
+    id: "mulp", title: "📝 La multiplication posée", short: "Multiplication posée", champ: "des multiplications",
+    levels: [
+      { id: "2c", label: "2 chiffres × 1 chiffre", ex: "23 × 4", color: "#22b455" },
+      { id: "3c", label: "3 chiffres × 1 chiffre", ex: "124 × 3", color: "#2f8cff" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonMul, question: qMul, problem: pbMul
+  };
+
+  // =========================================================
+  // ---------- PARTIE : DIVISION ----------
+  // =========================================================
+  // On écrit "24 : 6" comme à l'école. Les dessins restent petits (40 objets au plus).
+  var SHARE_THEMES = [
+    { e: "🍬", n: "bonbons", who: "🧒", whoN: "enfants" },
+    { e: "🍓", n: "fraises", who: "👧", whoN: "copines" },
+    { e: "🍪", n: "biscuits", who: "🐻", whoN: "oursons" },
+    { e: "🌸", n: "fleurs", who: "🏺", whoN: "vases" },
+    { e: "🔵", n: "billes", who: "🧒", whoN: "enfants" }
+  ];
+  var GROUP_THEMES = [
+    { e: "🥚", n: "œufs", box: "boîtes" },
+    { e: "🍩", n: "beignets", box: "sachets" },
+    { e: "⭐", n: "étoiles", box: "rangées" },
+    { e: "🍎", n: "pommes", box: "paniers" }
+  ];
+  function qDiv(kind, L) {
+    var d, q, r, N, th;
+    if (kind === "part") {   // partage
+      do {   // dessins : 20 objets au plus au début, puis 30, puis 40
+        d = L === 0 ? rnd(2, 5) : L === 1 ? rnd(2, 5) : rnd(3, 6);
+        q = L === 0 ? rnd(2, 5) : L === 1 ? rnd(2, 6) : rnd(4, 7);
+        N = d * q;
+      } while (N > [20, 30, 40][L]);
+      th = rand(SHARE_THEMES);
+      return { key: "div-" + N + "-" + d, type: "fields", fields: [q],
+        prompt: '<div class="gp">On partage <b>' + N + " " + th.n + "</b> entre <b>" + d + " " + th.whoN + "</b>. Combien chacun en a-t-il&nbsp;?</div>" +
+          itemsHTML(th.e, N) + '<div class="gdraw who">' + rep("<span>" + th.who + "</span>", d) + '</div><div class="gq gsmall">' + N + " : " + d + " = {0}</div>",
+        eq: N + " : " + d + " = " + q + ", car " + d + " × " + q + " = " + N,
+        explain: shareHTML(th.e, th.who, d, q, 0) + '<div class="expl">On distribue un par un, chacun son tour&nbsp;: chacun reçoit <b>' + q + "</b>. " + d + " × " + q + " = " + N + " ✔️</div>" };
+    }
+    if (kind === "grp") {   // groupement
+      var s, g;
+      do {
+        s = L === 0 ? rnd(2, 5) : L === 1 ? rnd(2, 5) : rnd(3, 6);
+        g = L === 0 ? rnd(2, 5) : L === 1 ? rnd(2, 6) : rnd(4, 7);
+        N = s * g;
+      } while (N > [20, 30, 40][L]);
+      th = rand(GROUP_THEMES);
+      return { key: "div-" + N + "-" + s, type: "fields", fields: [g],
+        prompt: '<div class="gp">On range <b>' + N + " " + th.n + "</b> par <b>" + s + "</b>. Combien de " + th.box + "&nbsp;?</div>" +
+          itemsHTML(th.e, N) + '<div class="gq gsmall">' + N + " : " + s + " = {0}</div>",
+        eq: N + " : " + s + " = " + g + ", car " + s + " × " + g + " = " + N,
+        explain: groupHTML(th.e, s, g, 0) + '<div class="expl">On fait des groupes de ' + s + "&nbsp;: on obtient <b>" + g + "</b> " + th.box + ". " + s + " × " + g + " = " + N + " ✔️</div>" };
+    }
+    if (kind === "tab") {   // avec les tables
+      d = L === 0 ? rand([2, 3, 4, 5]) : L === 1 ? rnd(2, 7) : rnd(3, 9);
+      q = L === 0 ? rnd(2, 9) : rnd(2, 10);
+      N = d * q;
+      var words = L === 2 && Math.random() < 0.5;
+      return { key: "div-" + N + "-" + d, type: "fields", fields: [q],
+        prompt: words ? '<div class="gp">Dans <b>' + N + "</b>, combien de fois <b>" + d + '</b>&nbsp;?</div><div class="gq">{0}</div>'
+          : '<div class="gq">' + N + " : " + d + " = {0}</div>",
+        eq: N + " : " + d + " = " + q + ", car " + d + " × " + q + " = " + N,
+        explain: tableLineHTML(d, q) + '<div class="expl">Je cherche ' + N + " dans la table de " + d + "&nbsp;: <b>" + d + " × " + q + " = " + N + "</b>. Donc " + N + " : " + d + " = " + q + " ✔️</div>" };
+    }
+    // avec reste
+    d = L === 0 ? rnd(2, 3) : L === 1 ? rnd(2, 5) : rnd(3, 9);
+    q = L === 0 ? rnd(2, 5) : L === 1 ? rnd(2, 6) : rnd(2, 9);
+    r = rnd(1, d - 1); N = d * q + r; th = rand(GROUP_THEMES);
+    var draw = N <= 30;
+    return { key: "div-" + N + "-" + d, type: "fields", fields: [q, r],
+      prompt: '<div class="gq">' + N + " : " + d + "</div>" + (draw && L < 2 ? itemsHTML(th.e, N) : "") +
+        '<div class="gdivr"><span class="lbl2">Combien de fois ' + d + "&nbsp;?</span> {0} <span class=\"lbl2\">Il reste&nbsp;:</span> {1}</div>",
+      hint: "Touche une case, puis tape ta réponse ✏️",
+      eq: N + " : " + d + " = " + q + ", il reste " + r,
+      explain: (draw ? groupHTML(th.e, d, q, r) : "") + '<div class="expl">' + d + " × " + q + " = " + (d * q) + ", et " + N + " − " + (d * q) + " = " + r +
+        ". Le reste (" + r + ") est bien plus petit que " + d + " ✔️</div>" };
+  }
+  function qDivMode(mode, L) {
+    var kind = mode;
+    if (mode === "melange") kind = rand(L === 0 ? ["part", "grp", "tab"] : L === 1 ? ["part", "grp", "tab", "rest"] : ["tab", "rest", "grp"]);
+    return qDiv(kind, L);
+  }
+  function pbDiv(mode, L) {
+    var k = { part: "fraises", grp: "equipes", tab: "livres", rest: "fraises" }[mode] || rand(["fraises", "equipes", "livres"]);
+    var d, q, r, N;
+    if (k === "fraises" && (mode === "part" || L === 0)) {
+      d = rnd(2, L === 0 ? 3 : 5); q = rnd(2, L === 0 ? 4 : 6); N = d * q;
+      return { key: "div-" + N + "-" + d, type: "fields", fields: [q],
+        prompt: '<div class="gp gstory">🍓 Maman a <b>' + N + "</b> fraises. Elle les partage entre <b>" + d + '</b> enfants. Combien de fraises pour chacun&nbsp;?</div><div class="gq gsmall">{0} fraises</div>',
+        eq: N + " : " + d + " = " + q + ", car " + d + " × " + q + " = " + N,
+        explain: shareHTML("🍓", "🧒", d, q, 0) + '<div class="expl">' + d + " × " + q + " = " + N + "&nbsp;: chacun a " + q + " fraises ✔️</div>" };
+    }
+    if (k === "fraises") {
+      d = rnd(2, 5); q = rnd(2, 6); r = rnd(0, d - 1); N = d * q + r;
+      return { key: "div-" + N + "-" + d, type: "fields", fields: [q, r],
+        prompt: '<div class="gp gstory">🍓 Maman a <b>' + N + "</b> fraises pour <b>" + d + "</b> enfants. Elle les partage.</div>" +
+          '<div class="gdivr"><span class="lbl2">Chacun en a</span> {0} <span class="lbl2">et il en reste</span> {1}</div>',
+        hint: "Touche une case, puis tape ta réponse ✏️",
+        eq: N + " : " + d + " = " + q + (r ? ", il reste " + r : ", il ne reste rien (0)"),
+        explain: shareHTML("🍓", "🧒", d, q, r) + '<div class="expl">' + d + " × " + q + " = " + (d * q) + (r ? ", et il reste " + r + " fraise" + (r > 1 ? "s" : "") : ", il ne reste rien&nbsp;: on écrit 0") + " ✔️</div>" };
+    }
+    if (k === "equipes") {
+      var s = rnd(2, L === 0 ? 4 : 6), g = rnd(2, L === 0 ? 4 : 6); N = s * g;
+      return { key: "div-" + N + "-" + s, type: "fields", fields: [g],
+        prompt: '<div class="gp gstory">⚽ Il y a <b>' + N + "</b> élèves dans la cour. On fait des équipes de <b>" + s + '</b>. Combien d\'équipes&nbsp;?</div><div class="gq gsmall">{0} équipes</div>',
+        eq: N + " : " + s + " = " + g,
+        explain: (N <= 30 ? groupHTML("🧒", s, g, 0) : "") + '<div class="expl">' + s + " × " + g + " = " + N + "&nbsp;: il y a " + g + " équipes ✔️</div>" };
+    }
+    d = L === 0 ? rand([2, 5]) : rnd(2, 9); q = rnd(2, L === 0 ? 5 : 9); N = d * q;
+    return { key: "div-" + N + "-" + d, type: "fields", fields: [q],
+      prompt: '<div class="gp gstory">📚 Lucy a <b>' + N + "</b>" + NB + "€. Un livre coûte <b>" + d + "</b>" + NB + '€. Combien de livres peut-elle acheter&nbsp;?</div><div class="gq gsmall">{0} livres</div>',
+      eq: N + " : " + d + " = " + q,
+      explain: tableLineHTML(d, q) + '<div class="expl">' + d + " × " + q + " = " + N + "&nbsp;: elle peut acheter " + q + " livres ✔️</div>" };
+  }
+  function lessonDiv(mode) {
+    var h = "", all = mode === "melange";
+    if (mode === "part" || all) {
+      h += '<div class="panel"><h2>🍬 Partager</h2><div class="steps">' +
+        stepHTML(1, "On a 12 bonbons pour 3 enfants", itemsHTML("🍬", 12)) +
+        stepHTML(2, "On les distribue un par un, chacun son tour", shareHTML("🍬", "🧒", 3, 4, 0)) +
+        stepHTML(3, "On compte la part d'un enfant&nbsp;: 4", '<div class="gq gsmall">12 : 3 = 4</div>') +
+        '</div><div class="done">✅ 12 : 3 = 4, chacun a 4 bonbons</div><div class="tip">🔍 Car 3 × 4 = 12</div></div>';
+    }
+    if (mode === "grp" || all) {
+      h += '<div class="panel"><h2>🥚 Faire des groupes</h2><div class="steps">' +
+        stepHTML(1, "On a 15 œufs à ranger par boîtes de 5", itemsHTML("🥚", 15)) +
+        stepHTML(2, "On fait des groupes de 5", groupHTML("🥚", 5, 3, 0)) +
+        stepHTML(3, "On compte les groupes&nbsp;: 3", '<div class="gq gsmall">15 : 5 = 3</div>') +
+        '</div><div class="done">✅ 15 : 5 = 3, il faut 3 boîtes</div><div class="tip">🔍 Car 5 × 3 = 15</div></div>';
+    }
+    if (mode === "tab" || mode === "rest" || all) {
+      h += '<div class="panel"><h2>📋 Avec les tables</h2><ul class="rules"><li>Pour calculer <b>24 : 6</b>, je cherche 24 dans la table de 6.</li></ul>' +
+        tableLineHTML(6, 4) + '<div class="done">✅ 6 × 4 = 24, donc 24 : 6 = 4</div></div>';
+    }
+    if (mode === "rest" || all) {
+      h += '<div class="panel"><h2>🍪 Quand il en reste</h2><div class="steps">' +
+        stepHTML(1, "On range 14 biscuits par 4", itemsHTML("🍪", 14)) +
+        stepHTML(2, "3 groupes de 4, et il en reste 2", groupHTML("🍪", 4, 3, 2)) +
+        stepHTML(3, "4 × 3 = 12, et 14 − 12 = 2", '<div class="gq gsmall">14 : 4 = 3, reste 2</div>') +
+        '</div><div class="done">✅ 14 : 4 = 3, il reste 2</div><div class="tip">⚠️ Le reste est toujours plus petit que le nombre par lequel on divise (ici 4).</div></div>';
+    }
+    return h;
+  }
+  MODULES.div = {
+    id: "div", title: "🍕 La division", short: "Division", champ: "des divisions",
+    levels: [
+      { id: "part", label: "Partager", ex: "🍬 12 pour 3 🧒", color: "#ff7a1a" },
+      { id: "grp", label: "Faire des groupes", ex: "🥚 15 par boîtes de 5", color: "#22b455" },
+      { id: "tab", label: "Avec les tables", ex: "24 : 6", color: "#2f8cff" },
+      { id: "rest", label: "Avec un reste", ex: "17 : 5 = 3, reste 2", color: "#ef4444" },
+      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonDiv, question: qDivMode, problem: pbDiv
+  };
+
+  // =========================================================
+  // ---------- MOTEUR COMMUN DES NOUVELLES PARTIES ----------
+  // Types de questions :
+  //   "fields" : réponses tapées au pavé dans une ou plusieurs cases {0}, {1}...
+  //   "choice" : une réponse à toucher parmi plusieurs
+  //   "order"  : des nombres à toucher dans l'ordre
+  //   "column" : opération posée (addition / multiplication) avec retenues au-dessus
+  // =========================================================
+  var G = { mod: null, mode: null, qs: [], idx: 0, score: 0, missed: [], phase: "answer", timer: null, st: null };
+  var G_HINTS = {
+    fields: "Tape ta réponse avec les chiffres ✏️",
+    choice: "Touche la bonne réponse, puis Valider 👉",
+    order: "Touche les nombres dans l'ordre 👆",
+    add: "✏️ Commence par les unités, à droite. Touche les petites cases rouges en haut pour écrire les retenues.",
+    mul: "✏️ Commence par les unités. Pour une retenue, touche la petite case en haut, puis tape le chiffre."
+  };
+
+  function gBuild(mod, mode) {
+    var qs = [], seen = {}, prev = {}, last = load("g-last-" + mod.id, []);
+    if (Array.isArray(last)) last.forEach(function (k) { prev[k] = true; });
+    for (var i = 0; i < TOTAL; i++) {
+      var L = levelFor(i), isPb = PROBLEM_SLOTS.indexOf(i) >= 0, q, tries = 0;
+      do {
+        q = isPb ? mod.problem(mode, L) : mod.question(mode, L, i);
+        tries++;
+      } while ((seen[q.key] || (prev[q.key] && tries < 200)) && tries < 3000);
+      seen[q.key] = true;
+      qs.push(q);
+    }
+    store("g-last-" + mod.id, qs.map(function (q) { return q.key; }));
+    return qs;
+  }
+
+  function gOpen(id) {
+    G.mod = MODULES[id];
+    $("#gm-title").innerHTML = G.mod.title;
+    $("#gm-grid").innerHTML = G.mod.levels.map(function (lv, k) {
+      return '<button class="sbtn" data-mode="' + lv.id + '" style="--c:' + lv.color + '"><span class="s-num">' + (k + 1) +
+        '</span><span class="s-title">' + lv.label + '</span><span class="s-ex' + (lv.stack ? " stack" : "") + '">' + lv.ex + "</span></button>";
+    }).join("");
+    showScreen("gmenu");
+  }
+  $("#gm-grid").addEventListener("click", function (e) {
+    var b = e.target.closest(".sbtn");
+    if (b) gLesson(b.dataset.mode);
+  });
+  function gLevel(mode) { return G.mod.levels.filter(function (l) { return l.id === mode; })[0]; }
+  function gLesson(mode) {
+    G.mode = mode;
+    $("#gl-sub").innerHTML = "Avant de commencer" + NB + ": " + gLevel(mode).label;
+    $("#gl-body").innerHTML = G.mod.lesson(mode);
+    showScreen("glesson");
+  }
+  $("#gl-back").addEventListener("click", function () { showScreen("gmenu"); });
+  $("#gl-go").addEventListener("click", function () { gStart(G.mode); });
+  $("#gm-home").addEventListener("click", goHome);
+  ["num", "add", "mulp", "div"].forEach(function (id) {
+    $("#go-" + id).addEventListener("click", function () { gOpen(id); });
+  });
+
+  function gStart(mode) {
+    G.mode = mode;
+    G.qs = gBuild(G.mod, mode);
+    G.idx = 0; G.score = 0; G.missed = [];
+    var lv = gLevel(mode);
+    $("#g-tag").textContent = G.mod.short + " · " + lv.label;
+    $("#g-tag").style.background = lv.color;
+    $("#g-live").textContent = "0";
+    showScreen("gquiz");
+    gShow();
+  }
+
+  function gShow() {
+    clearTimeout(G.timer);
+    G.phase = "answer";
+    var q = G.qs[G.idx];
+    if (q.type === "fields") G.st = { vals: q.fields.map(function () { return ""; }), active: 0 };
+    else if (q.type === "choice") G.st = { sel: -1 };
+    else if (q.type === "order") G.st = { placed: [] };
+    else {
+      var n = colInfo(q.op, q.a, q.b).n;
+      G.st = { res: rep(" ", n).split("").map(function () { return ""; }), car: rep(" ", n).split("").map(function () { return ""; }), active: { kind: "r", i: 0 }, retR: 0 };
+    }
+    $("#g-qnum").textContent = G.idx + 1;
+    $("#g-bar").style.width = (G.idx / TOTAL * 100) + "%";
+    var card = $("#g-card");
+    card.classList.remove("good", "oops", "pop");
+    void card.offsetWidth;
+    card.classList.add("pop");
+    var keyed = q.type === "fields" || q.type === "column";
+    $("#g-keypad").classList.toggle("hidden", !keyed);
+    $("#g-keypad").classList.remove("locked");
+    $("#g-zone").classList.toggle("hidden", keyed);
+    if (keyed) $("#g-zone").innerHTML = "";
+    $("#g-correction").classList.add("hidden");
+    // Questions hautes (opération posée, histoire, dessin, décomposition) : touches un peu moins hautes pour tout voir sans défiler
+    $("#screen-gquiz").classList.toggle("colop-on", q.type === "column" || /gstory|gdraw|gdec|bk-wrap/.test(q.prompt || ""));
+    $("#g-feedback").innerHTML = q.hint || (q.type === "column" ? G_HINTS[q.op] : (q.type === "fields" && q.fields.length > 1 ? "Touche une case, puis tape ta réponse ✏️" : G_HINTS[q.type]));
+    var v = $("#g-validate");
+    v.textContent = "Valider ✔";
+    v.classList.remove("next");
+    gRender();
+  }
+
+  function gFieldBtn(k) {
+    var q = G.qs[G.idx], st = G.st, fix = !!st.fix;
+    var v = fix ? fmt(q.fields[k]) : st.vals[k];
+    var act = !fix && G.phase === "answer" && st.active === k;
+    var cls = "gfield" + (act ? " active" : "") + (v !== "" ? " filled" : "") + (fix ? " fix" : "");
+    return '<button type="button" class="' + cls + '" data-f="' + k + '" aria-label="Réponse ' + (k + 1) + '">' +
+      (v !== "" ? v : (act ? '<span class="qmark">?</span>' : "&nbsp;")) + "</button>";
+  }
+  function gIsEmpty() {
+    var q = G.qs[G.idx], st = G.st;
+    if (q.type === "fields") return st.vals.join("") === "";
+    if (q.type === "choice") return st.sel < 0;
+    if (q.type === "order") return st.placed.length === 0;
+    return st.res.join("") === "";
+  }
+  function gRender() {
+    var q = G.qs[G.idx], st = G.st, card = $("#g-card"), z = $("#g-zone");
+    if (q.type === "column") {
+      var o = st.fix ? { correction: true } : { interactive: G.phase === "answer", res: st.res, car: st.car, active: st.active };
+      if (q.story) o.size = "lg";
+      card.innerHTML = (q.story ? '<div class="gp gstory">' + q.story + "</div>" : "") + colHTML(q.op, q.a, q.b, o);
+    } else {
+      card.innerHTML = q.prompt.replace(/\{(\d)\}/g, function (m, k) { return gFieldBtn(+k); });
+    }
+    if (q.type === "choice") {
+      z.innerHTML = '<div class="gopts ' + (q.optClass || "") + '">' + q.options.map(function (op, k) {
+        var cls = "gopt";
+        if (G.phase === "feedback") { if (k === q.answer) cls += " right"; else if (k === st.sel) cls += " wrong"; }
+        else if (k === st.sel) cls += " sel";
+        return '<button type="button" class="' + cls + '" data-o="' + k + '">' + op + "</button>";
+      }).join("") + "</div>";
+    } else if (q.type === "order") {
+      var shown = st.fix ? q.sorted.map(function (x) { return q.items.indexOf(x); }) : st.placed, slots = "", chips = "";
+      for (var k = 0; k < q.items.length; k++) {
+        var has = k < shown.length;
+        var scls = "gslot" + (has ? " filled" : "") + (st.fix ? " fix" : (G.phase === "feedback" ? " right" : ""));
+        slots += '<button type="button" class="' + scls + '" data-slot="' + k + '">' + (has ? fmt(q.items[shown[k]]) : '<span class="sn">' + (k + 1) + "</span>") + "</button>";
+      }
+      if (!st.fix) q.items.forEach(function (x, k2) {
+        if (st.placed.indexOf(k2) < 0) chips += '<button type="button" class="gchip" data-chip="' + k2 + '">' + fmt(x) + "</button>";
+      });
+      z.innerHTML = '<div class="gorder-lbl">' + (q.asc ? "Du plus petit ⬆️ au plus grand" : "Du plus grand ⬇️ au plus petit") + "</div>" +
+        '<div class="gslots">' + slots + '</div><div class="gchips">' + chips + "</div>";
+    }
+    $("#g-validate").classList.toggle("dim", G.phase === "answer" && gIsEmpty());
+  }
+
+  // ---------- Saisie ----------
+  function gPress(d) {
+    if (G.phase !== "answer") return;
+    var q = G.qs[G.idx], st = G.st;
+    if (q.type === "fields") {
+      var k = st.active, v = st.vals[k];
+      if (q.one) { st.vals[k] = d; if (k < q.fields.length - 1) st.active = k + 1; }
+      else { if (v.length >= 5) return; st.vals[k] = v === "0" ? d : v + d; }
+    } else if (q.type === "column") {
+      var a = st.active;
+      if (a.kind === "r") { st.res[a.i] = d; if (a.i < st.res.length - 1) a.i++; st.retR = a.i; }
+      else { st.car[a.i] = d; st.active = { kind: "r", i: st.retR }; }
+    } else return;
+    soundTap();
+    gRender();
+  }
+  function gErase() {
+    if (G.phase !== "answer") return;
+    var q = G.qs[G.idx], st = G.st;
+    if (q.type === "fields") {
+      var k = st.active;
+      if (st.vals[k] === "" && k > 0) { st.active = k - 1; k = k - 1; }
+      st.vals[k] = q.one ? "" : st.vals[k].slice(0, -1);
+    } else if (q.type === "column") {
+      var a = st.active;
+      if (a.kind === "c") { st.car[a.i] = ""; st.active = { kind: "r", i: st.retR }; }
+      else { if (st.res[a.i] === "" && a.i > 0) a.i--; st.res[a.i] = ""; st.retR = a.i; }
+    } else return;
+    gRender();
+  }
+  $("#g-card").addEventListener("click", function (e) {
+    if (G.phase !== "answer") return;
+    var t = e.target.closest("button"), q = G.qs[G.idx], st = G.st;
+    if (!t) return;
+    if (t.hasAttribute("data-f")) { st.active = +t.dataset.f; }
+    else if (t.hasAttribute("data-cr")) { st.active = { kind: "r", i: +t.dataset.cr }; st.retR = +t.dataset.cr; }
+    else if (t.hasAttribute("data-cc")) {
+      var i = +t.dataset.cc;
+      if (q.op === "add") { st.car[i] = st.car[i] ? "" : "1"; soundTap(); }   // addition : on touche pour écrire "1"
+      else { if (st.active.kind === "r") st.retR = st.active.i; st.active = { kind: "c", i: i }; }   // multiplication : on choisit la case puis on tape
+    } else return;
+    gRender();
+  });
+  $("#g-zone").addEventListener("click", function (e) {
+    if (G.phase !== "answer") return;
+    var t = e.target.closest("button"), st = G.st;
+    if (!t) return;
+    if (t.hasAttribute("data-o")) st.sel = +t.dataset.o;
+    else if (t.hasAttribute("data-chip")) st.placed.push(+t.dataset.chip);
+    else if (t.hasAttribute("data-slot")) { var k = +t.dataset.slot; if (k < st.placed.length) st.placed.splice(k, 1); else return; }
+    else return;
+    soundTap();
+    gRender();
+  });
+  $("#g-keypad").addEventListener("click", function (e) {
+    var k = e.target.closest(".key");
+    if (!k) return;
+    if (k.hasAttribute("data-erase")) gErase(); else gPress(k.dataset.d);
+  });
+
+  // ---------- Correction ----------
+  function gCheck() {
+    var q = G.qs[G.idx], st = G.st, i;
+    if (q.type === "fields") {
+      for (i = 0; i < q.fields.length; i++) {
+        if (st.vals[i] === "") return { empty: q.fields.length > 1 ? "Il manque une réponse 😉" : "Tape d'abord ta réponse 😉", focus: i };
+      }
+      return { ok: q.fields.every(function (f, k) { return parseInt(st.vals[k], 10) === f; }) };
+    }
+    if (q.type === "choice") return st.sel < 0 ? { empty: "Choisis une réponse 😉" } : { ok: st.sel === q.answer };
+    if (q.type === "order") {
+      if (st.placed.length < q.items.length) return { empty: "Range tous les nombres 😉" };
+      return { ok: st.placed.every(function (k, j) { return q.items[k] === q.sorted[j]; }) };
+    }
+    var hi = -1;
+    for (i = 0; i < st.res.length; i++) if (st.res[i] !== "") hi = i;
+    if (hi < 0) return { empty: "Tape d'abord ta réponse 😉" };
+    for (i = 0; i <= hi; i++) if (st.res[i] === "") return { empty: "Il manque un chiffre aux " + COLNAMES[i] + " 😉", col: i };
+    var ans = "";
+    for (i = hi; i >= 0; i--) ans += st.res[i];
+    return { ok: parseInt(ans, 10) === colInfo(q.op, q.a, q.b).r };
+  }
+  function gValidate() {
+    if (G.phase === "feedback") { gNext(); return; }
+    var q = G.qs[G.idx], st = G.st, card = $("#g-card"), v = $("#g-validate"), c = gCheck();
+    if (c.empty) {
+      if (c.focus !== undefined) st.active = c.focus;
+      if (c.col !== undefined) { st.active = { kind: "r", i: c.col }; st.retR = c.col; }
+      gRender();
+      var el = (q.type === "choice" || q.type === "order") ? $("#g-zone") : (card.querySelector(".gfield.active") || card.querySelector(".colop") || card.firstElementChild);
+      el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake");
+      $("#g-feedback").innerHTML = c.empty;
+      return;
+    }
+    G.phase = "feedback";
+    $("#g-keypad").classList.add("locked");
+    card.classList.remove("pop");
+    if (c.ok) {
+      G.score++;
+      $("#g-live").textContent = G.score;
+      gRender();
+      card.classList.add("good");
+      $("#g-feedback").innerHTML = '<div class="fb-good">' + rand(BRAVO) + "</div>";
+      v.textContent = "Suivant ➜";
+      v.classList.add("next");
+      var r = card.getBoundingClientRect();
+      burst(r.left + r.width / 2, r.top + r.height / 2, 90);
+      soundGood();
+      G.timer = setTimeout(gNext, 1600);
+    } else {
+      G.missed.push(q);
+      st.fix = true;
+      gRender();
+      card.classList.add("oops");
+      $("#g-feedback").innerHTML = '<div class="fb-oops"><div class="l1">' + rand(OOPS) + '</div><div class="l2">' + q.eq + "</div></div>";
+      var corr = $("#g-correction");
+      corr.innerHTML = q.explain;
+      $("#g-keypad").classList.add("hidden");
+      corr.classList.remove("hidden");
+      v.textContent = "J'ai compris ➜";
+      v.classList.add("next");
+      soundOops();
+    }
+    $("#g-bar").style.width = ((G.idx + 1) / TOTAL * 100) + "%";
+  }
+  function gNext() {
+    clearTimeout(G.timer);
+    if (G.phase !== "feedback") return;
+    G.idx++;
+    if (G.idx >= TOTAL) gEnd(); else gShow();
+  }
+  $("#g-validate").addEventListener("click", gValidate);
+  $("#g-quit").addEventListener("click", function () {
+    if (window.confirm("Tu veux arrêter et revenir au menu" + NB + "?")) {
+      clearTimeout(G.timer);
+      showScreen("gmenu");
+    }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!$("#screen-gquiz").classList.contains("active")) return;
+    if (/^[0-9]$/.test(e.key)) { e.preventDefault(); gPress(e.key); }
+    else if (e.key === "Backspace" || e.key === "Delete") { e.preventDefault(); gErase(); }
+    else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); gValidate(); }
+  });
+
+  // ---------- Fin de partie ----------
+  function gEnd() {
+    var s = G.score, stars, emoji, title, msg;
+    if (s === 20) { stars = 5; emoji = "🏆"; title = "Parfait, Lucy" + NB + "!"; msg = "20 sur 20" + NB + "! Tu es une championne " + G.mod.champ + NB + "! 🎉"; }
+    else if (s >= 17) { stars = 4; emoji = "🌟"; title = "Super travail" + NB + "!"; msg = "Presque parfait" + NB + "! Encore un petit effort et c'est 20 sur 20" + NB + "! 💪"; }
+    else if (s >= 13) { stars = 3; emoji = "😃"; title = "Très bien" + NB + "!"; msg = "Tu progresses beaucoup. Continue comme ça" + NB + "! 🚀"; }
+    else if (s >= 8) { stars = 2; emoji = "🌈"; title = "Bien joué" + NB + "!"; msg = "Chaque essai te rend plus forte. On recommence" + NB + "? 💪"; }
+    else { stars = 1; emoji = "🤗"; title = "Bravo d'avoir essayé" + NB + "!"; msg = "Relis le petit rappel, et tu vas y arriver" + NB + "! ❤️"; }
+    $("#g-end-emoji").textContent = emoji;
+    $("#g-end-title").textContent = title;
+    $("#g-end-score").textContent = s;
+    $("#g-end-msg").textContent = msg;
+    var h = "";
+    for (var i = 0; i < 5; i++) h += '<span class="star' + (i < stars ? " on" : "") + '" style="animation-delay:' + (0.2 + i * 0.18) + 's">★</span>';
+    $("#g-stars").innerHTML = h;
+    var seen = {}, list = [];
+    G.missed.forEach(function (q) { if (!seen[q.key]) { seen[q.key] = true; list.push(q); } });
+    $("#g-missed-box").innerHTML = list.length === 0 ? '<div class="perfect">🎯 Aucune erreur, bravo&nbsp;!</div>' :
+      "<h2>👀 À revoir ensemble</h2>" + '<div class="missed-list">' + list.map(function (q) {
+        return '<div class="g-missed-item">' + (q.type === "column" ? colHTML(q.op, q.a, q.b, { correction: true, size: "sm" }) : "") + "<div>" + q.eq + "</div></div>";
+      }).join("") + "</div>";
+    showScreen("gend");
+    soundEnd();
+    if (s >= 13) rain(s === 20 ? 320 : 160);
+  }
+  $("#g-restart").addEventListener("click", function () { gStart(G.mode); });
+  $("#g-menu").addEventListener("click", function () { showScreen("gmenu"); });
 })();
 </script>
 </body>

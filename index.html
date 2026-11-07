@@ -995,6 +995,7 @@
   .fh-s small { font-size: .8rem; }
   @media (max-width: 560px) { .fh-row { grid-template-columns: auto 1fr auto; } .fh-c { display: none; } }
   .gblank.gsuf { min-width: 1.6em; padding: 0 2px; }
+  #g-lesson-btn { align-self: center; }
   .dm-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 8px; margin: 6px 0 12px; }
   .dm-list span { background: #f6f1ff; border-radius: 14px; padding: 8px 12px; font-size: clamp(1.15rem, 3vw, 1.4rem); font-weight: 600; text-align: center; }
   .dm-list b { font-size: 1.15em; }
@@ -1359,6 +1360,7 @@
     <div class="quiz-body">
       <div class="left">
         <div class="tag" id="g-tag">Partie</div>
+        <button class="small-btn hidden" id="g-lesson-btn">📖 Voir la leçon</button>
         <div class="qcard" id="g-card" aria-live="polite"></div>
         <div class="feedback" id="g-feedback" aria-live="polite"></div>
       </div>
@@ -3801,17 +3803,30 @@ var COURS = {
     var item = (G.partsOf ? [] : (G.mod.menu || G.mod.levels)).filter(function (l) { return l.id === b.dataset.mode; })[0];
     if (item && item.open) { gOpen(item.open); return; }
     if (item && item.parts) { gParts(item); return; }
+    if (G.mod.direct) { gStart(b.dataset.mode); return; }
     gLesson(b.dataset.mode);
   });
   function gLevel(mode) { return G.mod.levels.filter(function (l) { return l.id === mode; })[0]; }
   function gLesson(mode) {
     G.mode = mode;
+    G.lessonFromQuiz = false;
+    $("#gl-go").innerHTML = "J'ai compris, on y va" + NB + "! 🚀";
     $("#gl-sub").innerHTML = "Avant de commencer" + NB + ": " + gLevel(mode).label;
     $("#gl-body").innerHTML = G.mod.lesson(mode);
     showScreen("glesson");
   }
-  $("#gl-back").addEventListener("click", function () { showScreen("gmenu"); });
-  $("#gl-go").addEventListener("click", function () { gStart(G.mode); });
+  $("#gl-back").addEventListener("click", function () { if (G.lessonFromQuiz) gBackToQuiz(); else showScreen("gmenu"); });
+  $("#gl-go").addEventListener("click", function () { if (G.lessonFromQuiz) gBackToQuiz(); else gStart(G.mode); });
+  // « Voir la leçon » pendant les questions (parties « direct ») : on regarde la liste puis on revient à la même question
+  $("#g-lesson-btn").addEventListener("click", function () {
+    clearTimeout(G.timer);
+    G.lessonFromQuiz = true;
+    $("#gl-sub").innerHTML = "La leçon" + NB + ": " + gLevel(G.mode).label;
+    $("#gl-body").innerHTML = G.mod.lesson(G.mode);
+    $("#gl-go").innerHTML = "↩️ Revenir aux questions";
+    showScreen("glesson");
+  });
+  function gBackToQuiz() { G.lessonFromQuiz = false; showScreen("gquiz"); }
   $("#gm-home").addEventListener("click", function () {
     if (G.partsOf) gOpen(G.mod.id);
     else if (G.mod && G.mod.back) gOpen(G.mod.back);
@@ -3828,6 +3843,7 @@ var COURS = {
     var lv = gLevel(mode);
     $("#g-tag").textContent = G.mod.short + " · " + lv.label;
     $("#g-tag").style.background = lv.color;
+    $("#g-lesson-btn").classList.toggle("hidden", !G.mod.direct);
     $("#g-live").textContent = "0";
     showScreen("gquiz");
     gShow();
@@ -4306,11 +4322,10 @@ var COURS = {
   MODULES.calc = {
     id: "calc", title: "🧠 Le calcul mental", short: "Calcul mental", champ: "du calcul mental",
     levels: [
-      { id: "dbl", label: "Doubles et moitiés", ex: "35 ➜ 70", color: "#ff7a1a" },
+      { id: "dm", label: "Doubles et moitiés", ex: "35 ➜ 70", color: "#ff7a1a", open: "dm" },
       { id: "x10", label: "× 10 et × 100", ex: "34 × 10 = 340", color: "#2f8cff" },
       { id: "compl", label: "Compléments", ex: "64 + ? = 100", color: "#22b455" },
       { id: "pm", label: "+ ou − 9, 11, 19", ex: "47 + 9", color: "#ef4444" },
-      { id: "dmlecon", label: "Doubles et moitiés · la leçon", ex: "Parties 1, 2, 3", color: "#ff4fa3", open: "dm" },
       { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
     ],
     lesson: lessonCalc, question: qCalcMode, problem: pbCalc
@@ -4330,15 +4345,15 @@ var COURS = {
     2: [40, 50, 60, 70, 80, 90, 100, 120, 150],
     3: [200, 300, 400, 500, 600, 700, 1000, 1200]
   };
-  var DM_REVERSE = 4;   // nombre de questions « à l'envers » dans une série de 20
+  var DM_REVERSE = 0;   // questions « à l'envers » (« Le double de quel nombre fait 30 ? ») : 0 = aucune
   var DM_GROUPS = {
-    d: { label: "Les doubles", color: "#2f8cff" },
-    m: { label: "Les moitiés", color: "#ef4444" },
-    x: { label: "Mélange", color: "#7c4dff" }
+    d: { label: "Doubles", big: "DOUBLES", color: "#2f8cff" },
+    m: { label: "Moitiés", big: "MOITIÉS", color: "#ef4444" },
+    x: { label: "Mélange", big: "MÉLANGE", color: "#7c4dff" }
   };
   var DM_PARTS = [
     { p: [1], id: "1", label: "Partie 1" }, { p: [2], id: "2", label: "Partie 2" },
-    { p: [3], id: "3", label: "Partie 3" }, { p: [1, 2, 3], id: "a", label: "Toutes les parties" }
+    { p: [3], id: "3", label: "Partie 3" }
   ];
   function dmParse(mode) {   // "d1", "ma", "x2"…
     var g = mode.charAt(0), part = DM_PARTS.filter(function (x) { return x.id === mode.charAt(1); })[0];
@@ -4423,10 +4438,10 @@ var COURS = {
       DM_LEVELS.push({ id: id, label: DM_GROUPS[g].label + " · " + pt.label, plabel: pt.label, ex: ex, color: DM_GROUPS[g].color });
       parts.push(id);
     });
-    DM_MENU.push({ id: g, label: DM_GROUPS[g].label, ex: g === "d" ? "7 ➜ 14" : g === "m" ? "50 ➜ 25" : "🎲 doubles et moitiés", color: DM_GROUPS[g].color, parts: parts });
+    DM_MENU.push({ id: g, label: DM_GROUPS[g].big, ex: g === "d" ? "7 ➜ 14" : g === "m" ? "50 ➜ 25" : "🎲 les deux", color: DM_GROUPS[g].color, parts: parts });
   });
   MODULES.dm = {
-    id: "dm", title: "👯 Doubles et moitiés", short: "Doubles et moitiés", champ: "des doubles et des moitiés", back: "calc",
+    id: "dm", title: "👯 Doubles et moitiés", short: "Doubles et moitiés", champ: "des doubles et des moitiés", back: "calc", direct: true,   // direct : pas de rappel avant, bouton « Voir la leçon » dans les questions
     menu: DM_MENU, levels: DM_LEVELS,
     lesson: lessonDm, question: qDm, problem: function (mode, L) { return qDm(mode, L, -1); }
   };

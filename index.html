@@ -7204,12 +7204,13 @@ var COURS = {
   // =====================================================================
   var ANG_DOT = function (c) { return '<span class="ang-dot" style="background:' + c + '"></span>'; };
   var ANG_RUBBER = '<svg viewBox="0 0 60 40" class="ang-svg" role="img" aria-label="gomme"><rect x="4" y="8" width="52" height="24" rx="6" fill="#ff8fc7" stroke="#3b2a5a" stroke-width="2.5"/><rect x="30" y="8" width="26" height="24" rx="6" fill="#4f8df5" stroke="#3b2a5a" stroke-width="2.5"/></svg>';
+  var ANG_YOGHURT = '<svg viewBox="0 0 50 56" class="ang-svg" role="img" aria-label="pot de yaourt"><path d="M8 14 L42 14 L37 52 L13 52 Z" fill="#fff" stroke="#3b2a5a" stroke-width="2.5" stroke-linejoin="round"/><rect x="5" y="6" width="40" height="9" rx="3" fill="#ff8fc7" stroke="#3b2a5a" stroke-width="2.5"/><circle cx="25" cy="33" r="7" fill="#ffd1ea"/></svg>';
   var ANG_GLUE = '<svg viewBox="0 0 40 60" class="ang-svg" role="img" aria-label="bâton de colle"><rect x="10" y="4" width="20" height="12" rx="4" fill="#ffd60a" stroke="#3b2a5a" stroke-width="2.5"/><rect x="8" y="16" width="24" height="40" rx="5" fill="#7c4dff" stroke="#3b2a5a" stroke-width="2.5"/><text x="20" y="42" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">GLUE</text></svg>';
   var ANG_THEMES = {
     hello: { titre: "Se présenter et saluer", e: "👋", color: "#ff4fa3", pics: false, words: [
       ["Hello!", "Bonjour ! / Salut !", "🙋"], ["Goodbye!", "Au revoir !", "👋"], ["Good morning!", "Bonjour ! (le matin)", "🌅"],
       ["Please", "S'il te plaît", "🙏"], ["Thank you", "Merci", "💐"], ["Yes", "Oui", "✅"], ["No", "Non", "❌"],
-      ["What's your name?", "Comment t'appelles-tu ?", "❓"], ["My name is Lucy.", "Je m'appelle Lucy.", "📛"],
+      ["What's your name?", "Comment t'appelles-tu ?", "❓"], ["My name is {ME}.", "Je m'appelle {ME}.", "📛"], ["This is {FR}. {HE} is my friend.", "Voici {FR}. C'est {AMI}.", "🤝"],
       ["How are you?", "Comment vas-tu ?", "🤔"], ["I'm fine.", "Je vais bien.", "😊"], ["How old are you?", "Quel âge as-tu ?", "🎂"], ["I'm 8.", "J'ai 8 ans.", "8️⃣"]] },
     colours: { titre: "Les couleurs", e: "🎨", color: "#ff7a1a", pics: true, words: [
       ["red", "rouge", "#ef4444"], ["blue", "bleu", "#2f6bff"], ["green", "vert", "#22b455"], ["yellow", "jaune", "#ffd60a"], ["orange", "orange", "#ff8a1f"],
@@ -7233,10 +7234,25 @@ var COURS = {
       ["rubber", "la gomme", ANG_RUBBER], ["scissors", "les ciseaux", "✂️"], ["glue", "la colle", ANG_GLUE], ["teacher", "le maître / la maîtresse", "🧑‍🏫"]] },
     body: { titre: "Le corps", e: "🧍", color: "#ef4444", pics: true, words: [
       ["head", "la tête", "🧑"], ["eyes", "les yeux", "👀"], ["ears", "les oreilles", "👂"], ["nose", "le nez", "👃"], ["mouth", "la bouche", "👄"],
-      ["hands", "les mains", "🙌"], ["arms", "les bras", "💪"], ["legs", "les jambes", "🦵"], ["feet", "les pieds", "🦶"]] }
+      ["hands", "les mains", "🙌"], ["arms", "les bras", "💪"], ["legs", "les jambes", "🦵"], ["feet", "les pieds", "🦶"]] },
+    food: { titre: "La nourriture", e: "🍽️", color: "#ff7a1a", pics: true, words: [
+      ["bread", "le pain", "🍞"], ["butter", "le beurre", "🧈"], ["cheese", "le fromage", "🧀"], ["milk", "le lait", "🥛"], ["water", "l'eau", "💧"],
+      ["yoghurt", "le yaourt", ANG_YOGHURT], ["egg", "l'œuf", "🥚"], ["potato", "la pomme de terre", "🥔"], ["chips", "les frites", "🍟"], ["rice", "le riz", "🍚"],
+      ["pasta", "les pâtes", "🍝"], ["pizza", "la pizza", "🍕"], ["meat", "la viande", "🥩"], ["chicken", "le poulet", "🍗"], ["fish", "le poisson", "🐟"],
+      ["apple", "la pomme", "🍎"], ["banana", "la banane", "🍌"], ["orange", "l'orange", "🍊"], ["strawberry", "la fraise", "🍓"], ["carrot", "la carotte", "🥕"],
+      ["tomato", "la tomate", "🍅"], ["cake", "le gâteau", "🍰"], ["chocolate", "le chocolat", "🍫"], ["ice cream", "la glace", "🍦"], ["juice", "le jus de fruits", "🧃"]],
+      phrases: [["I like pizza.", "J'aime la pizza.", "😋"], ["I don't like carrots.", "Je n'aime pas les carottes.", "🙅"],
+        ["Can I have some water, please?", "Est-ce que je peux avoir de l'eau, s'il te plaît ?", "🙏"], ["I like chocolate.", "J'aime le chocolat.", "🍫"]] }
   };
-  var ANG_ORDER = ["hello", "colours", "numbers", "animals", "family", "days", "school", "body"];
+  var ANG_ORDER = ["hello", "colours", "numbers", "animals", "family", "days", "school", "body", "food"];
   var ANG_TOTAL = 12;
+  // Le prénom de l'enfant qui joue (Lucy par défaut) et celui d'un copain (toujours différent)
+  function angMe() { return PLAYER || KIDS[0]; }
+  function angFriend(not) { return rand(KIDS.filter(function (k) { return k !== angMe() && k !== not; })); }
+  function angRes(s, fr) {
+    return s.replace(/\{ME\}/g, angMe().n).replace(/\{FR\}/g, fr.n).replace(/\{HE\}/g, fr.f ? "She" : "He").replace(/\{AMI\}/g, fr.f ? "mon amie" : "mon ami");
+  }
+  function angWords(list) { var fr = angFriend(); return list.map(function (w) { return [angRes(w[0], fr), angRes(w[1], fr), w[2]]; }); }
   function angPic(w) { return w[2].charAt(0) === "#" ? ANG_DOT(w[2]) : (w[2].charAt(0) === "<" ? w[2] : '<span class="ang-emo">' + w[2] + "</span>"); }
   function angSpeakText(en) { return en.replace(" / ", ", ").replace(/Lucy/, "Lucy"); }
   // ---------- La voix anglaise (synthèse vocale du navigateur, en-GB, voix féminine si possible) ----------
@@ -7274,18 +7290,21 @@ var COURS = {
     var T = ANG_THEMES[t], warn = angVoiceProblem();
     return '<div class="panel"><h2>' + T.e + " " + T.titre + '</h2><p class="ang-help">👆 Touche un mot pour l\'écouter en anglais&nbsp;!</p>' +
       (warn ? '<div class="ang-warn">' + warn + "</div>" : "") +
-      '<div class="ang-cards' + (t === "hello" ? " wide" : "") + '">' + T.words.map(function (w) {
-        return '<button type="button" class="ang-card" data-say="' + angSpeakText(w[0]).replace(/"/g, "&quot;") + '">' + angPic(w) + '<b class="ang-en">' + w[0] + '</b><span class="ang-fr">' + w[1] + '</span><span class="ang-ear">🔊</span></button>';
-      }).join("") + "</div>" +
-      (t === "hello" ? '<div class="tip">💬 <b>What\'s your name?</b> → <b>My name is Léo.</b> &nbsp;·&nbsp; <b>How are you?</b> → <b>I\'m fine, thank you.</b> &nbsp;·&nbsp; <b>How old are you?</b> → <b>I\'m 8.</b></div>' : "") +
+      '<div class="ang-cards' + (t === "hello" ? " wide" : "") + '">' + angWords(T.words).map(angCard).join("") + "</div>" +
+      (T.phrases ? '<h2>💬 Petites phrases utiles</h2><div class="ang-cards wide">' + angWords(T.phrases).map(angCard).join("") + "</div>" : "") +
+      (t === "food" ? '<div class="tip">💡 <b>I like…</b> = j\'aime… &nbsp;·&nbsp; <b>I don\'t like…</b> = je n\'aime pas… &nbsp;·&nbsp; <b>Can I have…, please?</b> = est-ce que je peux avoir…, s\'il te plaît&nbsp;? &nbsp;·&nbsp; En anglais britannique, <b>chips</b> = les frites&nbsp;!</div>' : "") +
+      (t === "hello" ? '<div class="tip">💬 <b>What\'s your name?</b> → <b>My name is ' + angMe().n + '.</b> &nbsp;·&nbsp; <b>How are you?</b> → <b>I\'m fine, thank you.</b> &nbsp;·&nbsp; <b>How old are you?</b> → <b>I\'m 8.</b></div>' : "") +
       (t === "days" ? '<div class="tip">💡 En anglais, les jours et les mois commencent par une <b>majuscule</b>&nbsp;: Monday, January.</div>' : "") +
       "</div>";
   }
+  function angCard(w) {
+    return '<button type="button" class="ang-card" data-say="' + angSpeakText(w[0]).replace(/"/g, "&quot;") + '">' + angPic(w) + '<b class="ang-en">' + w[0] + '</b><span class="ang-fr">' + w[1] + '</span><span class="ang-ear">🔊</span></button>';
+  }
   function lessonAng(mode) { return (mode === "melange" ? ANG_ORDER : [mode]).map(angFiche).join(""); }
   // ---------- Questions ----------
-  function angOthers(T, w, n) {   // mauvaises réponses (jamais deux « Bonjour » ensemble)
+  function angOthers(words, w, n) {   // mauvaises réponses (jamais deux « Bonjour » ensemble)
     var bj = function (x) { return /^Bonjour/.test(x[1]); }, out = [], hasBj = bj(w);
-    shuffle(T.words.filter(function (x) { return x !== w; })).forEach(function (x) {
+    shuffle(words.filter(function (x) { return x !== w; })).forEach(function (x) {
       if (out.length >= n || (bj(x) && hasBj)) return;
       if (bj(x)) hasBj = true;
       out.push(x);
@@ -7295,29 +7314,55 @@ var COURS = {
   function angExplain(w) {
     return '<div class="expl ang-ex">' + angPic(w) + ' <b>' + w[0] + "</b> = " + w[1] + ' <button type="button" class="ang-say-mini" data-say="' + angSpeakText(w[0]).replace(/"/g, "&quot;") + '">🔊</button></div>';
   }
+  // Mini-dialogues : un copain (a) parle à l'enfant qui joue (me) ; b = un autre copain.
+  // [phrase du copain, bonne réponse, [mauvaises réponses], explication, texte à faire dire par la voix, (contexte)]
   var ANG_DIALOGUES = [
-    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: What's your name?", "My name is " + b.n + ".", ["I'm 8.", "I'm fine.", "Goodbye!"], "« What's your name? » = « Comment t'appelles-tu&nbsp;? ». On répond&nbsp;: <b>My name is " + b.n + ".</b>", "What's your name?"]; },
-    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: How are you?", "I'm fine, thank you.", ["My name is " + b.n + ".", "I'm 8.", "Yellow."], "« How are you? » = « Comment vas-tu&nbsp;? ». On répond&nbsp;: <b>I'm fine, thank you.</b> (Je vais bien, merci.)", "How are you?"]; },
-    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: How old are you?", "I'm 8.", ["I'm fine.", "My name is " + b.n + ".", "Thank you."], "« How old are you? » = « Quel âge as-tu&nbsp;? ». On répond&nbsp;: <b>I'm 8.</b> (J'ai 8 ans.)", "How old are you?"]; },
-    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: Hello, " + b.n + "!", "Hello, " + a.n + "!", ["Goodbye, " + a.n + "!", "I'm 8.", "No."], "On répond à « Hello&nbsp;! » par <b>Hello&nbsp;!</b>", "Hello, " + b.n + "!"]; },
-    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: Here is your pencil.", "Thank you!", ["Hello!", "I'm 8.", "Monday."], "Quand on nous donne quelque chose, on dit <b>Thank you&nbsp;!</b> (Merci&nbsp;!)", "Here is your pencil."]; },
-    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: Goodbye, " + b.n + "!", "Goodbye, " + a.n + "!", ["Good morning!", "I'm fine.", "Yes, please."], "On répond à « Goodbye&nbsp;! » par <b>Goodbye&nbsp;!</b> (Au revoir&nbsp;!)", "Goodbye, " + b.n + "!"]; },
-    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: Do you want an apple?", "Yes, please!", ["Goodbye!", "My name is " + b.n + ".", "Red."], "Pour accepter poliment, on dit <b>Yes, please&nbsp;!</b> (Oui, s'il te plaît&nbsp;!)", "Do you want an apple?"]; }
+    function (a, me, b) { return ["What's your name?", "My name is " + me.n + ".", ["I'm 8.", "I'm fine.", "My name is " + a.n + "."], "« What's your name? » = « Comment t'appelles-tu&nbsp;? ». Tu réponds avec ton prénom&nbsp;: <b>My name is " + me.n + ".</b>"]; },
+    function (a, me, b) { return ["How are you?", "I'm fine, thank you.", ["My name is " + me.n + ".", "I'm 8.", "Yellow."], "« How are you? » = « Comment vas-tu&nbsp;? ». On répond&nbsp;: <b>I'm fine, thank you.</b> (Je vais bien, merci.)"]; },
+    function (a, me, b) { return ["How old are you?", "I'm 8.", ["I'm fine.", "My name is " + me.n + ".", "Thank you."], "« How old are you? » = « Quel âge as-tu&nbsp;? ». On répond&nbsp;: <b>I'm 8.</b> (J'ai 8 ans.)"]; },
+    function (a, me, b) { return ["Hello, " + me.n + "!", "Hello, " + a.n + "!", ["Hello, " + me.n + "!", "Goodbye, " + a.n + "!", "No."], "On répond à « Hello&nbsp;! » par <b>Hello&nbsp;!</b> avec le prénom de son copain&nbsp;: <b>Hello, " + a.n + "&nbsp;!</b>"]; },
+    function (a, me, b) { return ["Here is your pencil.", "Thank you!", ["Hello!", "I'm 8.", "Monday."], "Quand on nous donne quelque chose, on dit <b>Thank you&nbsp;!</b> (Merci&nbsp;!)"]; },
+    function (a, me, b) { return ["Goodbye, " + me.n + "!", "Goodbye, " + a.n + "!", ["Good morning!", "I'm fine.", "Yes, please."], "On répond à « Goodbye&nbsp;! » par <b>Goodbye, " + a.n + "&nbsp;!</b> (Au revoir&nbsp;!)"]; },
+    function (a, me, b) { return ["Do you want an apple?", "Yes, please!", ["Goodbye!", "My name is " + me.n + ".", "Red."], "Pour accepter poliment, on dit <b>Yes, please&nbsp;!</b> (Oui, s'il te plaît&nbsp;!)"]; },
+    function (a, me, b) { var he = b.f ? "She" : "He", no = b.f ? "He" : "She";
+      return ["Who is this?", "This is " + b.n + ". " + he + " is my friend.", ["This is " + b.n + ". " + no + " is my friend.", "My name is " + b.n + ".", "Goodbye, " + b.n + "!"],
+        b.n + " est " + (b.f ? "une fille&nbsp;: on dit <b>she</b>" : "un garçon&nbsp;: on dit <b>he</b>") + ". <b>This is " + b.n + ". " + he + " is my friend.</b> (Voici " + b.n + ", c'est " + (b.f ? "mon amie" : "mon ami") + ".)", "", "👉 " + a.n + " montre " + b.n + " du doigt."]; }
   ];
-  function angDialogue() {
-    var k = rnd(0, ANG_DIALOGUES.length - 1), a = kid(), b = kidOther(a), D = ANG_DIALOGUES[k](a, b), opts = shuffle([D[1]].concat(D[2]));
-    return { key: "ang-dia-" + k + a.n + b.n, type: "choice", options: opts, answer: opts.indexOf(D[1]),
-      prompt: '<div class="gp">💬 Quelle est la bonne réponse de <b>' + b.n + "</b>&nbsp;?</div>" +
-        '<div class="ang-bubble">' + D[0] + ' <button type="button" class="ang-say-mini" data-say="' + D[4].replace(/"/g, "&quot;") + '">🔊</button></div>',
-      eq: "✔️ " + D[1], explain: '<div class="expl">' + D[3] + "</div>" };
+  var ANG_FOOD_LIKE = [["pizza", "la pizza", "🍕"], ["chocolate", "le chocolat", "🍫"], ["ice cream", "la glace", "🍦"], ["cake", "le gâteau", "🍰"], ["pasta", "les pâtes", "🍝"], ["strawberries", "les fraises", "🍓"], ["bananas", "les bananes", "🍌"]];
+  var ANG_FOOD_NOT = [["carrots", "les carottes", "🥕"], ["tomatoes", "les tomates", "🍅"], ["cheese", "le fromage", "🧀"], ["fish", "le poisson", "🐟"], ["eggs", "les œufs", "🥚"], ["rice", "le riz", "🍚"]];
+  var ANG_FOOD_ASK = [["some water", "de l'eau", "💧"], ["some juice", "du jus de fruits", "🧃"], ["some milk", "du lait", "🥛"], ["some bread", "du pain", "🍞"], ["an apple", "une pomme", "🍎"], ["a banana", "une banane", "🍌"], ["an orange", "une orange", "🍊"]];
+  var ANG_FOOD_DIALOGUES = [
+    function (a, me) { var f = rand(ANG_FOOD_LIKE); return ["Do you like " + f[0] + "?", "Yes, I like " + f[0] + "!", ["No, I don't like " + f[0] + ".", "Hello, " + f[0] + "!", "I'm fine."],
+      "Tu aimes " + f[1] + "&nbsp;: tu réponds <b>Yes, I like " + f[0] + "&nbsp;!</b> (Oui, j'aime " + f[1] + ".)", f[0], "😋 Tu adores " + f[1] + " " + f[2]]; },
+    function (a, me) { var f = rand(ANG_FOOD_NOT); return ["Do you like " + f[0] + "?", "No, I don't like " + f[0] + ".", ["Yes, I like " + f[0] + "!", "Thank you!", "Good morning!"],
+      "Tu n'aimes pas " + f[1] + "&nbsp;: tu réponds <b>No, I don't like " + f[0] + ".</b> (Non, je n'aime pas " + f[1] + ".)", f[0], "🙅 Tu n'aimes pas " + f[1] + " " + f[2]]; },
+    function (a, me) { var f = rand(ANG_FOOD_ASK); return ["What would you like?", "Can I have " + f[0] + ", please?", ["I don't like " + f[0].replace(/^(some|an|a) /, "") + ".", "Goodbye!", "My name is " + me.n + "."],
+      "Pour demander poliment, on dit <b>Can I have " + f[0] + ", please?</b> (Est-ce que je peux avoir " + f[1] + ", s'il te plaît&nbsp;?)", f[0], "🍽️ À la cantine, tu veux " + f[1] + " " + f[2]]; },
+    function (a, me) { var f = rand(ANG_FOOD_LIKE); return ["What do you like?", "I like " + f[0] + ".", ["I don't like " + f[0] + ".", "I'm 8.", "Monday."],
+      "Tu aimes " + f[1] + "&nbsp;: <b>I like " + f[0] + ".</b> (J'aime " + f[1] + ".)", f[0], "😋 Tu adores " + f[1] + " " + f[2]]; }
+  ];
+  function angDialogue(food) {
+    var me = angMe(), a = angFriend(), b = angFriend(a), list = food ? ANG_FOOD_DIALOGUES : ANG_DIALOGUES, k = rnd(0, list.length - 1), D = list[k](a, me, b), opts = shuffle([D[1]].concat(D[2]));
+    var ctx = food ? D[5] : D[5] || "";
+    return { key: "ang-" + (food ? "fd" : "dia") + "-" + k + "-" + (food ? D[4] : b.n), type: "choice", options: opts, answer: opts.indexOf(D[1]),
+      prompt: '<div class="gp">💬 Que réponds-tu à <b>' + a.n + "</b>&nbsp;?</div>" + (ctx ? '<div class="gp gsmall">' + ctx + "</div>" : "") +
+        '<div class="ang-bubble"><b>' + a.n + "</b>&nbsp;: " + D[0] + ' <button type="button" class="ang-say-mini" data-say="' + D[0].replace(/"/g, "&quot;") + '">🔊</button></div>',
+      eq: "✔️ " + D[1], explain: '<div class="expl">' + D[3] + ' <button type="button" class="ang-say-mini" data-say="' + D[1].replace(/"/g, "&quot;") + '">🔊</button></div>' };
   }
   function qAng(mode) {
-    var t = mode === "melange" ? rand(ANG_ORDER) : mode, T = ANG_THEMES[t], w = rand(T.words), i = T.words.indexOf(w), kinds = ["read", "reverse"];
+    var t = mode === "melange" ? rand(ANG_ORDER) : mode, T = ANG_THEMES[t], words = angWords(T.words), w = rand(words), i = words.indexOf(w), kinds = ["read", "reverse"];
     if (T.pics) kinds.push("image", "image");
     if (angCanSpeak()) kinds.push("listen", "listen");
     if (t === "hello") kinds.push("dialog", "dialog", "dialog");
-    var kind = rand(kinds), others = angOthers(T, w, 3), opts, correct, q;
-    if (kind === "dialog") return angDialogue();
+    if (t === "food") kinds.push("dialog", "dialog", "phrase");
+    var kind = rand(kinds), others = angOthers(words, w, 3), opts, correct, q;
+    if (kind === "dialog") return angDialogue(t === "food");
+    if (kind === "phrase") {   // petites phrases utiles (nourriture)
+      var ph = angWords(T.phrases), pw = rand(ph), l5 = shuffle(ph.slice());
+      return { key: "ang-p-" + ph.indexOf(pw), type: "choice", options: l5.map(function (x) { return x[1]; }), answer: l5.indexOf(pw),
+        prompt: '<div class="gp">🇫🇷 Que veut dire <b class="tu">« ' + pw[0] + ' »</b>&nbsp;? <button type="button" class="ang-say-mini" data-say="' + pw[0].replace(/"/g, "&quot;") + '">🔊</button></div>',
+        eq: "<b>" + pw[0] + "</b> = " + pw[1], explain: angExplain(pw) };
+    }
     if (kind === "listen") {
       var list = shuffle([w].concat(others));
       opts = list.map(function (x) { return T.pics ? angPic(x) : x[1]; });

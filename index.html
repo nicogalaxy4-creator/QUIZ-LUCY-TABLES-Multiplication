@@ -111,6 +111,9 @@
        Les messages (Bravo…, Parfait…, champion/championne, prêt/prête…)
        s'adressent à l'enfant choisi, avec le bon accord. Chaque enfant a son
        propre historique de lecture fluence (Lucy garde les anciennes données).
+  8. EMC (troisième grand bouton de l'écran de départ) : 4 thèmes + Mélange.
+     Fiche de révision (relisible pendant le quiz : « Revoir la fiche »),
+     puis 12 questions en QCM. Situations bienveillantes, avec les prénoms.
   ==========================================================================
 -->
 <!doctype html>
@@ -872,7 +875,7 @@
   .who-btn.g.on { background: linear-gradient(150deg, #ff6fb5, #ff4f7b); box-shadow: 0 6px 0 #c2185b; }
   .who-btn.b.on { background: linear-gradient(150deg, #3ec7ff, #2f6bff); box-shadow: 0 6px 0 #1d4ed8; }
   @media (max-width: 560px) { .who { grid-template-columns: 1fr 1fr; } }
-  .start-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 18px 0 24px; }
+  .start-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; margin: 18px 0 24px; }
   .start-card {
     border-radius: 40px; padding: 34px 18px 30px; color: #fff; min-height: clamp(300px, 38vh, 440px);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
@@ -886,7 +889,7 @@
     font-size: clamp(3.4rem, 9vw, 4.6rem); line-height: 1; width: 1.7em; height: 1.7em; border-radius: 50%;
     background: rgba(255,255,255,.92); display: flex; align-items: center; justify-content: center; text-shadow: none;
   }
-  .sc-title { font-size: clamp(2.6rem, 8vw, 3.8rem); font-weight: 700; letter-spacing: 2px; line-height: 1; }
+  .sc-title { font-size: clamp(2.2rem, 5.6vw, 3.4rem); font-weight: 700; letter-spacing: 2px; line-height: 1; }
   .sc-sub { font-size: clamp(1.15rem, 3vw, 1.4rem); font-weight: 500; }
   .accueil-btn {
     position: fixed; left: 10px; bottom: 10px; z-index: 50;
@@ -1071,6 +1074,20 @@
   .dc-title { font-size: clamp(1.4rem, 3.6vw, 1.8rem); font-weight: 700; color: var(--purple); text-align: center; margin-bottom: 6px; }
   .dmk { font: inherit; font-weight: 700; color: #cc1f74; background: #ffe3f1; border-radius: 10px; padding: 0 6px; border-bottom: 3px solid #ff8fc7; cursor: pointer; }
   .dmk.on { background: #fff3c4; color: #8a5a00; border-bottom-color: #ffb800; }
+  /* EMC */
+  .start-card.emc { background: linear-gradient(150deg, #22c55e, #0e9f8e); }
+  .emc-q { font-size: clamp(1.3rem, 3.6vw, 1.75rem); }
+  .emc-fiche h2 + .emc-cards, .emc-fiche h2 + .rules { margin-top: 8px; }
+  .emc-fiche h2:not(:first-child) { margin-top: 14px; }
+  .emc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 6px 0 12px; }
+  .emc-cards.emo, .emc-cards.nums { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .emc-card { background: #f6f1ff; border-radius: 18px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; font-size: clamp(1.1rem, 2.8vw, 1.3rem); }
+  .emc-card b { font-size: 1.15em; color: var(--purple); }
+  .emc-card span { line-height: 1.25; }
+  .emc-big { font-size: 2.6rem; line-height: 1.1; }
+  .emc-num { font-size: 2.8rem; font-weight: 700; color: #ef4444; line-height: 1; }
+  .emc-flag, .emc-svg { width: 72px; height: 48px; }
+  .emc-svg { height: 60px; width: 60px; }
 </style>
 </head>
 <body>
@@ -1105,6 +1122,11 @@
         <span class="sc-emoji">📚</span>
         <span class="sc-title">FRANÇAIS</span>
         <span class="sc-sub">Lecture, grammaire, conjugaison…</span>
+      </button>
+      <button class="start-card emc" id="go-emc">
+        <span class="sc-emoji">🇫🇷</span>
+        <span class="sc-title">EMC</span>
+        <span class="sc-sub">Vivre ensemble, sécurité, droits…</span>
       </button>
     </div>
   </div>
@@ -1410,7 +1432,7 @@
   <div class="lesson-wrap">
     <header class="menu-header">
       <button class="back-btn" id="gl-back" aria-label="Retour">⬅️</button>
-      <h1>📚 Petit rappel</h1>
+      <h1 id="gl-title">📚 Petit rappel</h1>
       <p class="subtitle" id="gl-sub"></p>
     </header>
     <div id="gl-body"></div>
@@ -1426,7 +1448,7 @@
     <div class="topbar">
       <button class="home-btn" id="g-quit" aria-label="Retour au menu">🏠 <span class="lbl">Menu</span></button>
       <div class="progress">
-        <div class="ptext">Question <span id="g-qnum">1</span> / 20</div>
+        <div class="ptext">Question <span id="g-qnum">1</span> / <span id="g-total">20</span></div>
         <div class="bar"><div class="bar-fill" id="g-bar"></div></div>
       </div>
       <div class="score-pill">⭐ <span id="g-live">0</span></div>
@@ -1467,7 +1489,7 @@
   <div class="end-wrap">
     <div class="end-emoji" id="g-end-emoji">🏆</div>
     <h1 class="end-title" id="g-end-title">Bravo&nbsp;!</h1>
-    <div class="score-big"><span id="g-end-score">18</span> <small>/ 20</small></div>
+    <div class="score-big"><span id="g-end-score">18</span> <small>/ <span id="g-end-total">20</span></small></div>
     <div class="stars" id="g-stars"></div>
     <p class="end-msg" id="g-end-msg"></p>
 
@@ -4188,10 +4210,11 @@ var COURS = {
     mul: "✏️ Commence par les unités. Pour une retenue, touche la petite case en haut, puis tape le chiffre."
   };
 
+  function gN() { return (G.mod && G.mod.total) || TOTAL; }   // nombre de questions de la série (20, ou moins pour l'EMC)
   function gBuild(mod, mode) {
     var qs = [], seen = {}, prev = {}, last = load("g-last-" + mod.id, []);
     if (Array.isArray(last)) last.forEach(function (k) { prev[k] = true; });
-    for (var i = 0; i < TOTAL; i++) {
+    for (var i = 0; i < (mod.total || TOTAL); i++) {
       var L = levelFor(i), isPb = PROBLEM_SLOTS.indexOf(i) >= 0, q, tries = 0;
       do {
         q = isPb ? mod.problem(mode, L) : mod.question(mode, L, i);
@@ -4237,6 +4260,7 @@ var COURS = {
   function gLevel(mode) { return G.mod.levels.filter(function (l) { return l.id === mode; })[0]; }
   function gLesson(mode) {
     G.mode = mode;
+    $("#gl-title").textContent = G.mod.ficheTitle || "📚 Petit rappel";
     G.lessonFromQuiz = false;
     $("#gl-go").innerHTML = "J'ai compris, on y va" + NB + "! 🚀";
     $("#gl-sub").innerHTML = "Avant de commencer" + NB + ": " + gLevel(mode).label;
@@ -4249,7 +4273,8 @@ var COURS = {
   $("#g-lesson-btn").addEventListener("click", function () {
     clearTimeout(G.timer);
     G.lessonFromQuiz = true;
-    $("#gl-sub").innerHTML = "La leçon" + NB + ": " + gLevel(G.mode).label;
+    $("#gl-title").textContent = G.mod.ficheTitle || "📚 Petit rappel";
+    $("#gl-sub").innerHTML = (G.mod.lessonWord || "La leçon") + NB + ": " + gLevel(G.mode).label;
     $("#gl-body").innerHTML = G.mod.lesson(G.mode);
     $("#gl-go").innerHTML = "↩️ Revenir aux questions";
     showScreen("glesson");
@@ -4258,6 +4283,7 @@ var COURS = {
   $("#gm-home").addEventListener("click", function () {
     if (G.partsOf) gOpen(G.mod.id);
     else if (G.mod && G.mod.back) gOpen(G.mod.back);
+    else if (G.mod && G.mod.home === "start") goStart();
     else if (G.mod && G.mod.fr) showScreen("frhome"); else goHome();
   });
   ["num", "add", "mulp", "div"].forEach(function (id) {
@@ -4271,7 +4297,9 @@ var COURS = {
     var lv = gLevel(mode);
     $("#g-tag").textContent = G.mod.short + " · " + lv.label;
     $("#g-tag").style.background = lv.color;
-    $("#g-lesson-btn").classList.toggle("hidden", !G.mod.direct);
+    $("#g-lesson-btn").classList.toggle("hidden", !(G.mod.direct || G.mod.lessonBtn));
+    $("#g-lesson-btn").textContent = G.mod.lessonBtn || "📖 Voir la leçon";
+    $("#g-total").textContent = gN();
     $("#g-live").textContent = "0";
     showScreen("gquiz");
     gShow();
@@ -4291,7 +4319,7 @@ var COURS = {
       G.st = { res: rep(" ", n).split("").map(function () { return ""; }), car: rep(" ", n).split("").map(function () { return ""; }), active: { kind: "r", i: 0 }, retR: 0 };
     }
     $("#g-qnum").textContent = G.idx + 1;
-    $("#g-bar").style.width = (G.idx / TOTAL * 100) + "%";
+    $("#g-bar").style.width = (G.idx / gN() * 100) + "%";
     var card = $("#g-card");
     card.classList.remove("good", "oops", "pop");
     void card.offsetWidth;
@@ -4549,13 +4577,13 @@ var COURS = {
       v.classList.add("next");
       soundOops();
     }
-    $("#g-bar").style.width = ((G.idx + 1) / TOTAL * 100) + "%";
+    $("#g-bar").style.width = ((G.idx + 1) / gN() * 100) + "%";
   }
   function gNext() {
     clearTimeout(G.timer);
     if (G.phase !== "feedback") return;
     G.idx++;
-    if (G.idx >= TOTAL) gEnd(); else gShow();
+    if (G.idx >= gN()) gEnd(); else gShow();
   }
   $("#g-validate").addEventListener("click", gValidate);
   $("#g-quit").addEventListener("click", function () {
@@ -4573,15 +4601,16 @@ var COURS = {
 
   // ---------- Fin de partie ----------
   function gEnd() {
-    var s = G.score, stars, emoji, title, msg;
-    if (s === 20) { stars = 5; emoji = "🏆"; title = "Parfait, " + pn() + NB + "!"; msg = "20 sur 20" + NB + "! Tu es " + pf("un champion ", "une championne ") + G.mod.champ + NB + "! 🎉"; }
-    else if (s >= 17) { stars = 4; emoji = "🌟"; title = "Super travail" + NB + "!"; msg = "Presque parfait" + NB + "! Encore un petit effort et c'est 20 sur 20" + NB + "! 💪"; }
-    else if (s >= 13) { stars = 3; emoji = "😃"; title = "Très bien" + NB + "!"; msg = "Tu progresses beaucoup. Continue comme ça" + NB + "! 🚀"; }
-    else if (s >= 8) { stars = 2; emoji = "🌈"; title = "Bien joué" + NB + "!"; msg = "Chaque essai te rend plus " + pf("fort", "forte") + ". On recommence" + NB + "? 💪"; }
-    else { stars = 1; emoji = "🤗"; title = "Bravo d'avoir essayé" + NB + "!"; msg = "Relis le petit rappel, et tu vas y arriver" + NB + "! ❤️"; }
+    var s = G.score, n = gN(), r = s * 20 / n, stars, emoji, title, msg;   // r : la note ramenée sur 20 (pour les séries plus courtes)
+    if (s === n) { stars = 5; emoji = "🏆"; title = "Parfait, " + pn() + NB + "!"; msg = n + " sur " + n + NB + "! Tu es " + pf("un champion ", "une championne ") + G.mod.champ + NB + "! 🎉"; }
+    else if (r >= 17) { stars = 4; emoji = "🌟"; title = "Super travail" + NB + "!"; msg = "Presque parfait" + NB + "! Encore un petit effort et c'est " + n + " sur " + n + NB + "! 💪"; }
+    else if (r >= 13) { stars = 3; emoji = "😃"; title = "Très bien" + NB + "!"; msg = "Tu progresses beaucoup. Continue comme ça" + NB + "! 🚀"; }
+    else if (r >= 8) { stars = 2; emoji = "🌈"; title = "Bien joué" + NB + "!"; msg = "Chaque essai te rend plus " + pf("fort", "forte") + ". On recommence" + NB + "? 💪"; }
+    else { stars = 1; emoji = "🤗"; title = "Bravo d'avoir essayé" + NB + "!"; msg = (G.mod.lessonBtn ? "Relis la fiche" : "Relis le petit rappel") + ", et tu vas y arriver" + NB + "! ❤️"; }
     $("#g-end-emoji").textContent = emoji;
     $("#g-end-title").textContent = title;
     $("#g-end-score").textContent = s;
+    $("#g-end-total").textContent = n;
     $("#g-end-msg").textContent = msg;
     var h = "";
     for (var i = 0; i < 5; i++) h += '<span class="star' + (i < stars ? " on" : "") + '" style="animation-delay:' + (0.2 + i * 0.18) + 's">★</span>';
@@ -4594,7 +4623,7 @@ var COURS = {
       }).join("") + "</div>";
     showScreen("gend");
     soundEnd();
-    if (s >= 13) rain(s === 20 ? 320 : 160);
+    if (r >= 13) rain(s === n ? 320 : 160);
   }
   $("#g-restart").addEventListener("click", function () { gStart(G.mode); });
   $("#g-menu").addEventListener("click", function () { showScreen("gmenu"); });
@@ -6958,6 +6987,175 @@ var COURS = {
   $("#dc-again").addEventListener("click", function () { dicOpen(DIC.d.id); });
   $("#dc-other").addEventListener("click", dicMenu);
   $("#go-dictee").addEventListener("click", dicMenu);
+
+
+  // =====================================================================
+  // ---------- EMC (enseignement moral et civique) — CE2 ----------
+  // 4 thèmes + Mélange. Chaque thème : une fiche de révision, puis un petit quiz de 12 questions (QCM).
+  // Pour ajouter une question : [question, bonne réponse, [mauvaises réponses], explication, (option : "units3" pour 3 réponses courtes côte à côte)]
+  // =====================================================================
+  var EMC_QUESTIONS = {
+    sym: [
+      ["Quelles sont les couleurs du drapeau français&nbsp;?", "Bleu, blanc, rouge", ["Bleu, jaune, rouge", "Vert, blanc, rouge"], "Le drapeau français a trois bandes&nbsp;: <b class=\"tu\">bleu</b>, <b>blanc</b>, <b class=\"tr\">rouge</b>."],
+      ["Quelle est la devise de la France&nbsp;?", "Liberté, Égalité, Fraternité", ["Amitié, Joie, Partage", "Courage, Force, Honneur"], "La devise de la République, ce sont trois mots&nbsp;: Liberté, Égalité, Fraternité."],
+      ["Comment s'appelle l'hymne national, la chanson de la France&nbsp;?", "La Marseillaise", ["Frère Jacques", "Au clair de la lune"], "L'hymne national s'appelle <b>la Marseillaise</b>. On la chante lors des grandes cérémonies."],
+      ["Quel jour fête-t-on la fête nationale&nbsp;?", "Le 14 juillet", ["Le 25 décembre", "Le 1<sup>er</sup> janvier"], "La fête nationale, c'est <b>le 14 juillet</b>&nbsp;: il y a des défilés et des feux d'artifice."],
+      ["Qui est Marianne&nbsp;?", "Une femme qui représente la République", ["Une reine de France", "Une chanteuse célèbre"], "Marianne n'a jamais existé&nbsp;: c'est un <b>symbole</b> de la République. On voit son visage sur les timbres et dans les mairies."],
+      ["Quel animal est un symbole de la France&nbsp;?", "Le coq", ["Le lion", "L'aigle"], "Le <b>coq</b> 🐓 est un symbole de la France. On le voit souvent sur les maillots des équipes de France."],
+      ["Où peut-on voir le visage de Marianne&nbsp;?", "Sur les timbres et dans les mairies", ["Sur les paquets de céréales", "Sur les panneaux de la route"], "Le visage de Marianne est sur les <b>timbres</b>, certaines <b>pièces</b> et en statue dans les <b>mairies</b>."],
+      ["Que porte Marianne sur la tête&nbsp;?", "Un bonnet rouge (bonnet phrygien)", ["Une couronne", "Un casque"], "Marianne porte un <b>bonnet phrygien</b> rouge, le symbole de la liberté."],
+      ["Léa choisit le livre qu'elle préfère à la bibliothèque. C'est un exemple de…", "Liberté", ["Égalité", "Fraternité"], "Pouvoir choisir, penser et donner son avis, c'est la <b>liberté</b> (en respectant les autres).", "units3"],
+      ["Lucy et Léo ont les mêmes droits et les mêmes règles en classe. C'est un exemple de…", "Égalité", ["Liberté", "Fraternité"], "Avoir les mêmes droits, filles et garçons, c'est l'<b>égalité</b>.", "units3"],
+      ["Lyes aide Léo qui est tombé dans la cour. C'est un exemple de…", "Fraternité", ["Égalité", "Liberté"], "S'entraider, être solidaires comme des frères et sœurs, c'est la <b>fraternité</b>.", "units3"],
+      ["Que veut dire « Liberté »&nbsp;?", "Pouvoir penser, parler et choisir, en respectant les autres", ["Faire tout ce qu'on veut, même embêter les autres", "Ne jamais obéir à aucune règle"], "La liberté s'arrête là où commence celle des autres&nbsp;: on est libre, mais on respecte les autres."],
+      ["Que veut dire « Égalité »&nbsp;?", "Tout le monde a les mêmes droits", ["Tout le monde doit être pareil", "Les plus grands ont plus de droits"], "On peut être tous différents, mais on a tous les <b>mêmes droits</b>."],
+      ["Que veut dire « Fraternité »&nbsp;?", "S'entraider et être solidaires", ["Avoir beaucoup de frères", "Gagner tous les jeux"], "La fraternité, c'est aider les autres, comme dans une grande famille."],
+      ["Que fait-on souvent le 14 juillet&nbsp;?", "Un défilé et un feu d'artifice", ["On décore un sapin", "On cherche des œufs en chocolat"], "Le 14 juillet, il y a un grand <b>défilé</b> à Paris et des <b>feux d'artifice</b> dans beaucoup de villes."],
+      ["Pendant la Marseillaise, lors d'une cérémonie, on…", "Se tient debout, calmement", ["Continue à jouer", "Parle fort avec ses copains"], "On écoute l'hymne national debout et calmement&nbsp;: c'est une marque de <b>respect</b>."],
+      ["Où voit-on souvent la devise écrite&nbsp;?", "Sur les écoles et les mairies", ["Sur les arbres", "Sur les voitures"], "La devise « Liberté, Égalité, Fraternité » est écrite sur la façade des <b>écoles</b> et des <b>mairies</b>."],
+      ["Quand on regarde le drapeau, quelle couleur est près du mât&nbsp;?", "Le bleu", ["Le rouge", "Le blanc"], "Depuis le mât&nbsp;: <b class=\"tu\">bleu</b>, puis <b>blanc</b>, puis <b class=\"tr\">rouge</b>.", "units3"]
+    ],
+    vivre: [
+      ["À quoi servent les règles de la classe&nbsp;?", "À bien vivre ensemble et à apprendre dans le calme", ["À punir les élèves", "À rien du tout"], "Les règles protègent tout le monde et permettent d'apprendre dans le calme."],
+      ["Pourquoi lève-t-on le doigt pour parler en classe&nbsp;?", "Pour que chacun puisse parler à son tour", ["Pour faire du sport", "Pour montrer qu'on a fini"], "Lever le doigt, c'est attendre son tour pour que <b>tout le monde</b> puisse être écouté."],
+      ["Un camarade se moque de Léo. Que fais-tu&nbsp;?", "Je dis que ce n'est pas gentil et je reste avec Léo", ["Je rigole aussi", "Je ne dis rien et je pars"], "On ne laisse pas un copain seul&nbsp;: on dit calmement « stop, ce n'est pas gentil » et on reste avec lui."],
+      ["Lucy a un peu peur avant de réciter sa poésie. Que peut-elle faire&nbsp;?", "Le dire&nbsp;: « J'ai un peu peur, tu peux m'aider&nbsp;? »", ["Cacher sa peur et ne rien dire", "Partir de la classe"], "Dire ce qu'on ressent avec des mots, ça aide. Tout le monde a parfois un peu peur, c'est normal."],
+      ["Lyes est en colère car il a perdu au jeu. Quelle est la bonne idée&nbsp;?", "Respirer calmement et dire « je suis en colère »", ["Taper sur la table", "Crier sur les autres"], "La colère, c'est normal. On respire doucement et on la dit avec des <b>mots</b>, sans faire mal."],
+      ["Léa a les larmes aux yeux car son chat est malade. Que ressent-elle&nbsp;?", "De la tristesse", ["De la joie", "De la colère"], "Quand on a envie de pleurer, c'est souvent de la <b>tristesse</b>. Un câlin ou des mots gentils peuvent aider.", "units3"],
+      ["Léo a gagné le concours de dessin, il sourit très fort. Que ressent-il&nbsp;?", "De la joie", ["De la peur", "De la tristesse"], "Sourire, rire, avoir envie de sauter&nbsp;: c'est la <b>joie</b>&nbsp;! 😄", "units3"],
+      ["Qu'est-ce que le harcèlement&nbsp;?", "Quand un élève est embêté ou moqué souvent, encore et encore", ["Une petite dispute une seule fois", "Un jeu où tout le monde rit"], "Le harcèlement, c'est quand on embête <b>souvent</b> le même élève. Ce n'est jamais un jeu."],
+      ["Si un élève est souvent embêté à l'école, que faut-il faire&nbsp;?", "En parler à un adulte&nbsp;: maîtresse, parents…", ["Garder le secret", "Attendre que ça passe tout seul"], "Il faut en <b>parler à un adulte</b> de confiance. Les adultes sont là pour aider."],
+      ["Raconter à un adulte qu'un élève est embêté, c'est…", "L'aider&nbsp;: ce n'est pas « rapporter »", ["Être méchant", "Interdit"], "Prévenir un adulte, c'est <b>protéger</b> son camarade. C'est courageux&nbsp;!"],
+      ["Les filles et les garçons peuvent-ils faire les mêmes métiers&nbsp;?", "Oui, tous les métiers", ["Non, il y a des métiers de filles", "Seulement quand ils sont grands"], "Filles et garçons peuvent choisir <b>tous les métiers</b>&nbsp;: pompière, danseur, pilote, infirmier…"],
+      ["Lucy veut jouer au foot avec Léo et Lyes. Ils disent&nbsp;: « Pas les filles&nbsp;! ». C'est…", "Injuste&nbsp;: tout le monde peut jouer au foot", ["Normal", "Une règle de l'école"], "Les jeux sont pour <b>tout le monde</b>, filles et garçons. C'est l'égalité&nbsp;!"],
+      ["Léo adore la danse. Un élève dit que c'est « pour les filles ». Que réponds-tu&nbsp;?", "La danse, c'est pour tout le monde&nbsp;!", ["Il a raison", "Léo doit arrêter la danse"], "Chacun peut aimer ce qu'il veut&nbsp;: la danse, le foot, le dessin… pour les filles comme pour les garçons."],
+      ["Un nouvel élève arrive et ne parle pas encore bien français. Que fais-tu&nbsp;?", "Je l'accueille et je l'invite à jouer", ["Je me moque de lui", "Je fais comme s'il n'était pas là"], "Accueillir les nouveaux, c'est gentil&nbsp;: un sourire et un jeu, ça aide à se faire des amis."],
+      ["Lyes porte des lunettes. Un élève se moque de lui. Que penses-tu&nbsp;?", "On ne se moque pas des différences", ["Les lunettes, c'est drôle", "Lyes doit les enlever"], "Nous sommes tous <b>différents</b>, et c'est une richesse. On respecte chacun comme il est."],
+      ["Léa et Lucy veulent le même ballon dans la cour. Que peuvent-elles faire&nbsp;?", "Jouer chacune leur tour ou jouer ensemble", ["Se tirer les cheveux", "Crier jusqu'à ce que l'une parte"], "Partager ou jouer ensemble, c'est la bonne solution. On peut aussi demander l'aide d'un adulte."],
+      ["Comment dire qu'on n'est pas d'accord&nbsp;?", "Avec des mots calmes, sans insulter", ["En poussant", "En criant des gros mots"], "On peut ne pas être d'accord&nbsp;! On le dit <b>calmement</b>, avec des mots respectueux."],
+      ["Léo a bousculé Léa sans faire exprès. Que doit-il faire&nbsp;?", "S'excuser et vérifier qu'elle va bien", ["Partir en courant", "Faire comme si de rien n'était"], "Dire « pardon » et demander « ça va&nbsp;? », c'est respecter l'autre."],
+      ["Quand on a peur ou qu'on est triste, à qui peut-on en parler&nbsp;?", "À un adulte de confiance", ["À personne", "Seulement à un inconnu"], "Un adulte de confiance (parents, maîtresse, famille) peut écouter et aider."],
+      ["Pourquoi range-t-on sa place à la fin de la journée&nbsp;?", "Pour que la classe reste agréable pour tous", ["Parce que c'est une punition", "Pour cacher ses affaires"], "Ranger, c'est respecter la classe et les autres élèves."]
+    ],
+    secu: [
+      ["Quel numéro appelle-t-on pour les pompiers&nbsp;?", "18", ["15", "17"], "Les <b>pompiers</b>, c'est le <b>18</b> 🚒 (incendie, accident).", "units3"],
+      ["Quel numéro appelle-t-on pour le SAMU (quelqu'un de malade ou blessé)&nbsp;?", "15", ["18", "17"], "Le <b>SAMU</b>, pour un malade ou un blessé, c'est le <b>15</b> 🚑.", "units3"],
+      ["Quel numéro appelle-t-on pour la police&nbsp;?", "17", ["15", "18"], "La <b>police</b>, c'est le <b>17</b> 🚓.", "units3"],
+      ["Le 112, c'est…", "Le numéro d'urgence qui marche dans toute l'Europe", ["Le numéro de la cantine", "Un jeu sur téléphone"], "Le <b>112</b> marche partout en Europe, même depuis un portable. Il te met en contact avec les secours."],
+      ["Au téléphone avec les secours, que dois-tu dire&nbsp;?", "Qui je suis, où je suis et ce qui se passe", ["Seulement « au secours » puis raccrocher", "La couleur de mon cartable"], "Je dis <b>mon nom</b>, <b>l'adresse</b> où je suis, et <b>ce qui se passe</b>. Je parle calmement."],
+      ["Quand on appelle les secours, qui raccroche en premier&nbsp;?", "La personne des secours&nbsp;: j'attends qu'elle me le dise", ["Moi, tout de suite", "Personne ne raccroche"], "On attend que la personne des secours dise de raccrocher&nbsp;: elle a peut-être encore une question."],
+      ["Papi s'est fait mal à la jambe et ne peut pas se lever. Que fait Léa&nbsp;?", "Elle prévient un adulte ou appelle le 15", ["Elle attend le lendemain", "Elle va jouer"], "Léa garde son calme et <b>prévient un adulte</b>, ou appelle le <b>15</b> pour avoir de l'aide."],
+      ["Où faut-il traverser la rue&nbsp;?", "Sur le passage piéton", ["Entre deux voitures garées", "Dans un virage"], "On traverse sur le <b>passage piéton</b>, là où les voitures peuvent bien nous voir."],
+      ["Avant de traverser, que fais-tu&nbsp;?", "Je regarde à gauche, à droite, puis encore à gauche", ["Je cours sans regarder", "Je regarde mon téléphone"], "Je m'arrête au bord du trottoir et je <b>regarde des deux côtés</b> avant de traverser."],
+      ["Le petit bonhomme du feu est rouge. Que fais-tu&nbsp;?", "J'attends qu'il passe au vert", ["Je traverse vite", "Je traverse en courant"], "Bonhomme <b class=\"tr\">rouge</b>&nbsp;: j'attends. Bonhomme <b class=\"td\">vert</b>&nbsp;: je peux traverser en regardant."],
+      ["À vélo, qu'est-ce qui protège la tête&nbsp;?", "Le casque", ["Une casquette", "Un bonnet"], "Le <b>casque</b> 🪖 protège la tête en cas de chute. Pour les enfants, il est obligatoire à vélo.", "units3"],
+      ["Lyes fait du vélo quand il commence à faire nuit. Pour être bien vu, il met…", "Un gilet jaune et des lumières", ["Des vêtements noirs", "Rien de spécial"], "Le <b>gilet jaune</b> et les <b>lumières</b> aident les voitures à voir le cycliste."],
+      ["À la maison, qu'est-ce qui peut être dangereux&nbsp;?", "Les produits ménagers et les médicaments", ["Les livres", "Les coussins"], "Les produits ménagers et les médicaments ne sont <b>pas des bonbons</b>&nbsp;: on n'y touche pas sans un adulte."],
+      ["Une casserole chauffe sur le feu. Que fait Léo&nbsp;?", "Il n'y touche pas&nbsp;: ça brûle", ["Il goûte avec ses doigts", "Il prend la casserole"], "Ce qui est sur le feu peut <b>brûler</b>. On laisse les adultes s'en occuper."],
+      ["Que ne faut-il jamais mettre dans une prise électrique&nbsp;?", "Ses doigts ou un objet", ["Une prise de lampe, avec un adulte", "Rien, tout est permis"], "Mettre ses doigts ou un objet dans une prise, c'est très dangereux&nbsp;: on peut s'électrocuter."],
+      ["Sur internet, un inconnu demande ton adresse. Que fais-tu&nbsp;?", "Je ne réponds pas et j'en parle à un adulte", ["Je donne mon adresse", "J'envoie ma photo"], "On ne donne <b>jamais</b> ses informations à un inconnu sur internet. On prévient un adulte."],
+      ["Quelles informations ne faut-il pas donner sur internet&nbsp;?", "Mon nom, mon adresse, mon école, mon mot de passe", ["On peut tout donner", "Seulement mon prénom et ma photo"], "Ces informations sont <b>personnelles</b>&nbsp;: on les garde pour soi."],
+      ["Lucy voit une vidéo qui lui fait peur. Que fait-elle&nbsp;?", "Elle arrête et en parle à un adulte", ["Elle continue toute seule", "Elle la garde secrète"], "Si quelque chose fait peur ou met mal à l'aise sur un écran, on arrête et on en <b>parle à un adulte</b>."],
+      ["À qui peut-on donner son mot de passe&nbsp;?", "À ses parents seulement", ["À tous ses copains", "À n'importe qui sur internet"], "Le mot de passe, c'est comme la clé de la maison&nbsp;: on le garde secret, sauf pour ses parents."],
+      ["En voiture, la ceinture de sécurité…", "Je l'attache à chaque trajet, même court", ["Seulement pour les longs voyages", "Ce n'est pas utile à l'arrière"], "On attache sa <b>ceinture</b> à chaque fois, même pour un petit trajet, avec un siège adapté."]
+    ],
+    droits: [
+      ["Lequel de ces droits est un droit de l'enfant&nbsp;?", "Aller à l'école", ["Conduire une voiture", "Voter aux élections"], "Tous les enfants ont le droit d'<b>aller à l'école</b> pour apprendre."],
+      ["Être soigné quand on est malade, c'est…", "Un droit de l'enfant", ["Un privilège pour quelques enfants", "Interdit aux enfants"], "Chaque enfant a le droit d'être <b>soigné</b> par un médecin."],
+      ["À sa naissance, chaque enfant a droit à…", "Un nom et un prénom", ["Un téléphone", "Une voiture"], "Avoir un <b>nom</b>, un <b>prénom</b> et une nationalité, c'est un droit de tous les enfants."],
+      ["Jouer et se reposer, pour un enfant, c'est…", "Un vrai droit", ["Interdit", "Seulement pour les bébés"], "Les enfants ont le droit de <b>jouer</b>, de se reposer et d'avoir des loisirs."],
+      ["Les enfants ont-ils le droit d'être protégés contre la violence&nbsp;?", "Oui, tous les enfants doivent être protégés", ["Non", "Seulement les plus petits"], "Personne n'a le droit de faire du mal à un enfant. Si cela arrive, on en parle à un adulte de confiance (ou au 119)."],
+      ["Les droits de l'enfant sont pour…", "Tous les enfants du monde", ["Seulement les enfants français", "Seulement les filles"], "Les droits de l'enfant sont pour <b>tous</b> les enfants, partout dans le monde."],
+      ["Quel jour est la Journée internationale des droits de l'enfant&nbsp;?", "Le 20 novembre", ["Le 14 juillet", "Le 1<sup>er</sup> avril"], "Le <b>20 novembre</b>, on fête les droits de l'enfant. Ils sont écrits dans la Convention internationale des droits de l'enfant (1989)."],
+      ["À l'école, quel est un devoir de l'élève&nbsp;?", "Respecter les autres et les règles", ["Faire tout ce qu'il veut", "Se moquer des autres"], "J'ai des <b>droits</b>, mais aussi des <b>devoirs</b>&nbsp;: respecter les autres et les règles de l'école."],
+      ["Léo a le droit d'apprendre. Quel est aussi son devoir&nbsp;?", "Écouter et laisser les autres apprendre", ["Bavarder pendant la leçon", "Lancer des boulettes"], "Mon droit d'apprendre va avec le devoir de laisser les <b>autres</b> apprendre aussi."],
+      ["Léa a le droit d'être respectée. Quel est son devoir&nbsp;?", "Respecter les autres aussi", ["Rien du tout", "Se moquer des autres"], "Si je veux être respecté, je dois <b>respecter</b> les autres. Droits et devoirs vont ensemble."],
+      ["Lyes est malade. Il a le droit…", "D'être soigné par un médecin", ["D'aller quand même à la piscine", "De ne jamais prendre de médicaments"], "Être soigné, c'est un droit de l'enfant."],
+      ["Ranger son matériel en classe, c'est un droit ou un devoir&nbsp;?", "Un devoir", ["Un droit"], "Ranger son matériel, c'est un <b>devoir</b>&nbsp;: c'est ce que je dois faire pour bien vivre ensemble.", "two"],
+      ["Jouer à la récréation, c'est un droit ou un devoir&nbsp;?", "Un droit", ["Un devoir"], "Jouer, c'est un <b>droit</b> de l'enfant&nbsp;!", "two"],
+      ["Être poli avec les adultes et les camarades, c'est un droit ou un devoir&nbsp;?", "Un devoir", ["Un droit"], "La politesse est un <b>devoir</b>&nbsp;: dire bonjour, merci, s'il te plaît…", "two"],
+      ["Avoir une famille qui s'occupe de moi, c'est un droit ou un devoir&nbsp;?", "Un droit", ["Un devoir"], "Être aimé et protégé par une famille, c'est un <b>droit</b> de l'enfant.", "two"],
+      ["Lucy veut donner son avis sur le choix des jeux de la classe. A-t-elle le droit&nbsp;?", "Oui, les enfants ont le droit de donner leur avis", ["Non, jamais", "Seulement si elle est la plus grande"], "Les enfants ont le droit de <b>donner leur avis</b> sur ce qui les concerne, en respectant celui des autres."]
+    ]
+  };
+  var EMC_THEMES = ["sym", "vivre", "secu", "droits"];
+  var EMC_TOTAL = 12;   // nombre de questions par quiz
+  function emcQuestion(theme, k) {
+    var Q = EMC_QUESTIONS[theme][k], opts = shuffle([Q[1]].concat(Q[2]));
+    return { key: "emc-" + theme + "-" + k, type: "choice", options: opts, answer: opts.indexOf(Q[1]), optClass: Q[4] || "",
+      prompt: '<div class="gp emc-q">' + Q[0] + "</div>", eq: "✔️ " + Q[1], explain: '<div class="expl">' + Q[3] + "</div>" };
+  }
+  function qEmc(mode) {
+    var theme = mode === "melange" ? rand(EMC_THEMES) : mode;
+    return emcQuestion(theme, rnd(0, EMC_QUESTIONS[theme].length - 1));
+  }
+  var FLAG_SVG = '<svg viewBox="0 0 90 60" class="emc-flag" role="img" aria-label="Drapeau français"><rect width="30" height="60" fill="#0055a4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#ef4135"/><rect width="90" height="60" fill="none" stroke="#3b2a5a" stroke-width="2"/></svg>';
+  var MARIANNE_SVG = '<svg viewBox="0 0 60 60" class="emc-svg" role="img" aria-label="Marianne avec son bonnet rouge"><circle cx="30" cy="36" r="16" fill="#ffd9b8" stroke="#3b2a5a" stroke-width="2"/><path d="M12 31 Q13 9 33 8 Q51 9 49 23 Q45 18 41 22 L46 31 Z" fill="#ef4135" stroke="#3b2a5a" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="38" r="2" fill="#3b2a5a"/><circle cx="36" cy="38" r="2" fill="#3b2a5a"/><path d="M25 45 Q30 48 35 45" stroke="#3b2a5a" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+  var EMC_FICHES = {
+    sym: '<h2>🇫🇷 Les symboles de la République</h2>' +
+      '<div class="emc-cards">' +
+      '<div class="emc-card">' + FLAG_SVG + '<b>Le drapeau</b><span><b class="tu">bleu</b>, blanc, <b class="tr">rouge</b></span></div>' +
+      '<div class="emc-card">' + MARIANNE_SVG + '<b>Marianne</b><span>la femme qui représente la République, avec un bonnet rouge</span></div>' +
+      '<div class="emc-card"><span class="emc-big">🎵</span><b>La Marseillaise</b><span>l\'hymne national</span></div>' +
+      '<div class="emc-card"><span class="emc-big">🎆</span><b>Le 14 juillet</b><span>la fête nationale</span></div>' +
+      '<div class="emc-card"><span class="emc-big">🐓</span><b>Le coq</b><span>un symbole de la France</span></div>' +
+      '<div class="emc-card"><span class="emc-big">🏛️</span><b>La devise</b><span>écrite sur les écoles et les mairies</span></div></div>' +
+      '<h2>✨ La devise&nbsp;: Liberté, Égalité, Fraternité</h2><ul class="rules">' +
+      '<li>🕊️ <b class="tu">Liberté</b>&nbsp;: je peux penser, parler, choisir… en respectant les autres. <i>Léa choisit son livre à la bibliothèque.</i></li>' +
+      '<li>⚖️ <b>Égalité</b>&nbsp;: tout le monde a les mêmes droits, filles et garçons. <i>Lucy et Léo ont les mêmes règles en classe.</i></li>' +
+      '<li>🤝 <b class="tr">Fraternité</b>&nbsp;: on s\'entraide. <i>Lyes aide Léo qui est tombé.</i></li></ul>',
+    vivre: '<h2>🤝 Vivre ensemble</h2><ul class="rules">' +
+      '<li>📏 Les <b>règles</b> de la classe servent à bien vivre ensemble et à apprendre dans le calme.</li>' +
+      '<li>✋ On lève le doigt, on écoute, on parle gentiment, on range ses affaires.</li></ul>' +
+      '<h2>💗 Mes émotions</h2><div class="emc-cards emo">' +
+      '<div class="emc-card"><span class="emc-big">😊</span><b>la joie</b></div><div class="emc-card"><span class="emc-big">😢</span><b>la tristesse</b></div>' +
+      '<div class="emc-card"><span class="emc-big">😠</span><b>la colère</b></div><div class="emc-card"><span class="emc-big">😨</span><b>la peur</b></div></div>' +
+      '<div class="tip">💬 Je dis ce que je ressens avec des mots&nbsp;: « Je suis en colère parce que… ». Je respire calmement. Je peux en parler à un adulte.</div>' +
+      '<h2>🛡️ Les moqueries et le harcèlement</h2><ul class="rules">' +
+      '<li>Quand un élève est embêté <b>souvent</b>, c\'est du harcèlement&nbsp;: ce n\'est jamais un jeu.</li>' +
+      '<li>👉 On en <b>parle à un adulte</b> (maîtresse, parents). Ce n\'est pas « rapporter », c\'est <b>aider</b>.</li></ul>' +
+      '<h2>🌈 Tous différents, tous égaux</h2><ul class="rules">' +
+      '<li>👧👦 Filles et garçons peuvent faire les mêmes jeux et les mêmes métiers.</li>' +
+      '<li>👓 On ne se moque pas des différences&nbsp;: elles rendent le monde plus riche.</li></ul>',
+    secu: '<h2>☎️ Les numéros d\'urgence</h2><div class="emc-cards nums">' +
+      '<div class="emc-card"><span class="emc-num">15</span><b>SAMU 🚑</b><span>malade, blessé</span></div>' +
+      '<div class="emc-card"><span class="emc-num">17</span><b>Police 🚓</b><span>danger, bagarre</span></div>' +
+      '<div class="emc-card"><span class="emc-num">18</span><b>Pompiers 🚒</b><span>feu, accident</span></div>' +
+      '<div class="emc-card"><span class="emc-num">112</span><b>Urgence 🇪🇺</b><span>partout en Europe</span></div></div>' +
+      '<div class="tip">📞 Au téléphone, je dis calmement&nbsp;: <b>qui je suis</b>, <b>où je suis</b>, <b>ce qui se passe</b>. J\'attends qu\'on me dise de raccrocher.</div>' +
+      '<h2>🚸 Dans la rue et à vélo</h2><ul class="rules">' +
+      '<li>🦓 Je traverse sur le <b>passage piéton</b>, quand le bonhomme est <b class="td">vert</b>, après avoir regardé des deux côtés.</li>' +
+      '<li>🚲 À vélo&nbsp;: <b>casque</b> sur la tête, gilet jaune et lumières quand il fait sombre.</li></ul>' +
+      '<h2>🏠 À la maison</h2><ul class="rules"><li>🧴💊 Produits ménagers et médicaments&nbsp;: je n\'y touche pas. 🔥 Le feu et les casseroles brûlent. 🔌 Jamais les doigts dans une prise.</li></ul>' +
+      '<h2>💻 Écrans et internet</h2><ul class="rules"><li>🔒 Je ne donne pas mon nom, mon adresse, mon école ni mon mot de passe.</li>' +
+      '<li>🙋 Si quelque chose me fait peur ou me gêne, j\'arrête et j\'en parle à un adulte.</li></ul>',
+    droits: '<h2>🧒 Les droits de l\'enfant</h2><div class="emc-cards">' +
+      '<div class="emc-card"><span class="emc-big">🏫</span><b>aller à l\'école</b></div><div class="emc-card"><span class="emc-big">🩺</span><b>être soigné</b></div>' +
+      '<div class="emc-card"><span class="emc-big">🛡️</span><b>être protégé</b></div><div class="emc-card"><span class="emc-big">⚽</span><b>jouer</b></div>' +
+      '<div class="emc-card"><span class="emc-big">📛</span><b>avoir un nom</b></div><div class="emc-card"><span class="emc-big">🗣️</span><b>donner son avis</b></div></div>' +
+      '<div class="tip">🌍 Ces droits sont pour <b>tous les enfants du monde</b>. On les fête le <b>20 novembre</b>.</div>' +
+      '<h2>⚖️ Droits et devoirs</h2><ul class="rules">' +
+      '<li>À l\'école, j\'ai des <b class="td">droits</b>&nbsp;: apprendre, être respecté, jouer à la récré.</li>' +
+      '<li>J\'ai aussi des <b class="tr">devoirs</b>&nbsp;: respecter les autres et les règles, écouter, ranger mon matériel, être poli.</li></ul>' +
+      '<div class="frex">👉 J\'ai le droit d\'apprendre… et le devoir de laisser les autres apprendre.</div>'
+  };
+  function lessonEmc(mode) {
+    var list = mode === "melange" ? EMC_THEMES : [mode];
+    return list.map(function (t) { return '<div class="panel emc-fiche">' + EMC_FICHES[t] + "</div>"; }).join("");
+  }
+  MODULES.emc = {
+    id: "emc", title: "🇫🇷 L'EMC", short: "EMC", champ: "en EMC", total: EMC_TOTAL, home: "start",
+    lessonBtn: "📖 Revoir la fiche", lessonWord: "La fiche", ficheTitle: "📋 Fiche de révision",
+    levels: [
+      { id: "sym", label: "Les symboles de la République", ex: "🇫🇷 drapeau, Marianne, devise", color: "#2f6bff" },
+      { id: "vivre", label: "Vivre ensemble", ex: "🤝 règles, émotions, respect", color: "#ff4fa3" },
+      { id: "secu", label: "Sécurité et secours", ex: "☎️ 15 · 17 · 18 · 112", color: "#ef4444" },
+      { id: "droits", label: "Les droits de l'enfant", ex: "🧒 droits et devoirs", color: "#22b455" },
+      { id: "melange", label: "Mélange", ex: "🎲 un peu de tout", color: "#7c4dff" }
+    ],
+    lesson: lessonEmc, question: qEmc, problem: function (mode) { return qEmc(mode); }
+  };
+  $("#go-emc").addEventListener("click", function () { if (!needPlayer()) gOpen("emc"); });
 
   // =====================================================================
   // ---------- ÉCRAN DE DÉPART (MATHS / FRANÇAIS) ET BOUTON ACCUEIL ----------

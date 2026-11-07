@@ -994,6 +994,14 @@
   .fh-s.ok { color: var(--green-dark); }
   .fh-s small { font-size: .8rem; }
   @media (max-width: 560px) { .fh-row { grid-template-columns: auto 1fr auto; } .fh-c { display: none; } }
+  .gblank.gsuf { min-width: 1.6em; padding: 0 2px; }
+  .dm-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 8px; margin: 6px 0 12px; }
+  .dm-list span { background: #f6f1ff; border-radius: 14px; padding: 8px 12px; font-size: clamp(1.15rem, 3vw, 1.4rem); font-weight: 600; text-align: center; }
+  .dm-list b { font-size: 1.15em; }
+  .dm-part { font-weight: 700; color: var(--purple); font-size: 1.2rem; margin-top: 6px; }
+  .mes-ladder { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: 8px 0; }
+  .mes-ladder .ml-u { background: var(--purple); color: #fff; font-weight: 700; font-size: clamp(1.3rem, 3.6vw, 1.7rem); border-radius: 14px; padding: 6px 14px; min-width: 56px; text-align: center; }
+  .mes-ladder .ml-x { font-weight: 700; color: var(--orange-dark); font-size: clamp(1.05rem, 2.8vw, 1.25rem); }
 </style>
 </head>
 <body>
@@ -1313,7 +1321,7 @@
     <header class="menu-header">
       <button class="back-btn" id="gm-home" aria-label="Retour à l'accueil">⬅️</button>
       <h1 id="gm-title">Partie</h1>
-      <p class="subtitle">Choisis ton entraînement&nbsp;!</p>
+      <p class="subtitle" id="gm-sub">Choisis ton entraînement&nbsp;!</p>
     </header>
     <div class="panel">
       <div class="sub-grid" id="gm-grid"></div>
@@ -1884,6 +1892,19 @@ var INVARIABLES = [
   ["puis", "pui", "puit", "Je mange, _ je vais au lit."], ["quand", "kan", "quan", "_ il pleut, je mets mes bottes."]
 ];
 
+// é ou er ? : phrase avec le verbe entre { } (sans sa fin), puis la bonne fin "é" ou "er".
+// Astuce : on remplace par « mordre » (→ -er) ou « mordu » (→ -é).
+var E_OU_ER = [
+  ["Il a {ferm} la porte.", "é"], ["J'ai {mang} une pomme.", "é"], ["Lucy a {dessin} un chat.", "é"], ["Nous avons {jou} au ballon.", "é"],
+  ["Tu as {cass} ton crayon.", "é"], ["Papa a {prépar} le dîner.", "é"], ["Mamie a {lav} la voiture.", "é"], ["Les enfants ont {chant} une chanson.", "é"],
+  ["Vous avez {trouv} un trésor.", "é"], ["Le chat a {attrap} une souris.", "é"], ["Hier, j'ai {regard} un film.", "é"], ["Elle a {ramass} des feuilles.", "é"],
+  ["Tom a {gagn} la course.", "é"], ["On a {dans} toute la soirée.", "é"], ["Le maître a {expliqu} la leçon.", "é"], ["Lucy a {nag} dans la piscine.", "é"],
+  ["Je vais {mang} une pomme.", "er"], ["Il faut {ferm} la porte.", "er"], ["Lucy veut {dessin} un chat.", "er"], ["Nous allons {jou} au ballon.", "er"],
+  ["Tu dois {rang} ta chambre.", "er"], ["Papa va {prépar} le dîner.", "er"], ["Elle aime {chant} sous la douche.", "er"], ["Le chat veut {attrap} une souris.", "er"],
+  ["Je peux {port} ce gros sac.", "er"], ["Vous allez {gagn} la course.", "er"], ["Il commence à {neig}.", "er"], ["Range ta chambre avant de {jou}.", "er"],
+  ["On va {regard} un film.", "er"], ["Elle préfère {dans}.", "er"], ["Tom apprend à {nag}.", "er"], ["Lucy a {port} son kimono.", "é"]
+];
+
 // =====================================================================
 //  5. VOCABULAIRE
 // =====================================================================
@@ -2008,6 +2029,13 @@ var COURS = {
   "orth.sv": '<h2>🤝 L\'accord du verbe avec son sujet</h2><ul class="rules"><li>Le verbe s\'accorde avec son <b class="tu">sujet</b>.</li><li>Sujet au pluriel (= ils, elles) → le verbe se termine souvent par <b class="tc">-nt</b>.</li></ul>' +
     '<div class="frex"><b class="tu">Le chien</b> jou<b class="tc">e</b>. <b class="tu">Les chiens</b> jou<b class="tc">ent</b>.</div><div class="tip">Remplace le sujet par un pronom : « Les enfants » → ils → ils jouent.</div>',
   "orth.sons": '<h2>🎵 Les lettres qui changent le son</h2><ul class="rules"><li><b class="tc">c / ç</b> : ' + "garçon, leçon (ç devant a, o, u)" + '</li><li><b class="tc">g / ge / gu</b> : gâteau, pigeon, guitare</li><li><b class="tc">s / ss</b> : maison [z], poisson [s]</li><li><b class="tc">m devant m, b, p</b> : jambe, pompier, emmener</li></ul>',
+  "orth.eer": '<h2>✍️ é ou er ?</h2><ul class="rules"><li>Un verbe qui finit par le son [é] peut s\'écrire <b class="tc">-é</b> ou <b class="tc">-er</b>.</li>' +
+    '<li>🪄 L\'astuce : on remplace le verbe par <b>mordre</b> (ou <b>vendre</b>).</li>' +
+    '<li>Si on peut dire « <b class="tu">mordre</b> », on écrit <b class="tc">-er</b> : c\'est l\'<b>infinitif</b>.</li>' +
+    '<li>Si on peut dire « <b class="td">mordu</b> », on écrit <b class="tc">-é</b> : c\'est le <b>participe passé</b>.</li></ul>' +
+    '<div class="frex">Je vais mang<b class="tc">er</b> → Je vais <b class="tu">mordre</b> ✔️ → <b class="tc">-er</b></div>' +
+    '<div class="frex">J\'ai mang<b class="tc">é</b> → J\'ai <b class="td">mordu</b> ✔️ → <b class="tc">-é</b></div>' +
+    '<div class="tip">Souvent : après « a », « ai », « as », « ont »… → <b>-é</b>. Après « je vais », « il faut », « veut », « à », « de »… → <b>-er</b>.</div>',
   "orth.invar": '<h2>🧱 Les mots invariables</h2><ul class="rules"><li>Ils ne changent <b>jamais</b> : pas de -s, pas de -e. Il faut les apprendre par cœur !</li></ul>' +
     '<div class="frex">toujours · beaucoup · maintenant · avec · aujourd\'hui · demain · hier · jamais · souvent · bientôt · très · trop · encore · déjà · dans · sous · chez · mais · après · avant</div>',
   "voc.dico": '<h2>🔠 L\'ordre alphabétique et le dictionnaire</h2><ul class="rules"><li>Dans le dictionnaire, les mots sont rangés dans l\'ordre de l\'alphabet : <b>a b c d e f g h i j k l m n o p q r s t u v w x y z</b>.</li>' +
@@ -3746,18 +3774,34 @@ var COURS = {
     return qs;
   }
 
+  function gGrid(list, lab) {
+    $("#gm-grid").innerHTML = list.map(function (lv, k) {
+      return '<button class="sbtn" data-mode="' + lv.id + '" style="--c:' + lv.color + '"><span class="s-num">' + (k + 1) +
+        '</span><span class="s-title">' + (lab ? lv[lab] : lv.label) + '</span><span class="s-ex' + (lv.stack ? " stack" : "") + '">' + lv.ex + "</span></button>";
+    }).join("");
+  }
   function gOpen(id) {
     G.mod = MODULES[id];
+    G.partsOf = null;
     $("#gm-title").innerHTML = G.mod.title;
-    $("#gm-grid").innerHTML = G.mod.levels.map(function (lv, k) {
-      return '<button class="sbtn" data-mode="' + lv.id + '" style="--c:' + lv.color + '"><span class="s-num">' + (k + 1) +
-        '</span><span class="s-title">' + lv.label + '</span><span class="s-ex' + (lv.stack ? " stack" : "") + '">' + lv.ex + "</span></button>";
-    }).join("");
+    $("#gm-sub").innerHTML = "Choisis ton entraînement&nbsp;!";
+    gGrid(G.mod.menu || G.mod.levels);
     showScreen("gmenu");
+  }
+  // Menu en deux temps (ex. Doubles et moitiés : l'exercice, puis la partie)
+  function gParts(item) {
+    G.partsOf = item;
+    $("#gm-sub").innerHTML = item.label + "&nbsp;: choisis la partie";
+    gGrid(item.parts.map(function (id) { return gLevel(id); }), "plabel");
+    window.scrollTo(0, 0);
   }
   $("#gm-grid").addEventListener("click", function (e) {
     var b = e.target.closest(".sbtn");
-    if (b) gLesson(b.dataset.mode);
+    if (!b) return;
+    var item = (G.partsOf ? [] : (G.mod.menu || G.mod.levels)).filter(function (l) { return l.id === b.dataset.mode; })[0];
+    if (item && item.open) { gOpen(item.open); return; }
+    if (item && item.parts) { gParts(item); return; }
+    gLesson(b.dataset.mode);
   });
   function gLevel(mode) { return G.mod.levels.filter(function (l) { return l.id === mode; })[0]; }
   function gLesson(mode) {
@@ -3768,7 +3812,11 @@ var COURS = {
   }
   $("#gl-back").addEventListener("click", function () { showScreen("gmenu"); });
   $("#gl-go").addEventListener("click", function () { gStart(G.mode); });
-  $("#gm-home").addEventListener("click", function () { if (G.mod && G.mod.fr) showScreen("frhome"); else goHome(); });
+  $("#gm-home").addEventListener("click", function () {
+    if (G.partsOf) gOpen(G.mod.id);
+    else if (G.mod && G.mod.back) gOpen(G.mod.back);
+    else if (G.mod && G.mod.fr) showScreen("frhome"); else goHome();
+  });
   ["num", "add", "mulp", "div"].forEach(function (id) {
     $("#go-" + id).addEventListener("click", function () { gOpen(id); });
   });
@@ -3941,9 +3989,19 @@ var COURS = {
     var t = e.target.closest("button"), st = G.st;
     if (!t) return;
     if (t.hasAttribute("data-o")) st.sel = +t.dataset.o;
-    else if (t.hasAttribute("data-chip")) st.placed.push(+t.dataset.chip);
+    else if (t.hasAttribute("data-chip") || t.hasAttribute("data-slot")) {
+      // Rangement : un double appui rapide ne doit pas placer (ou enlever) aussi l'élément qui glisse sous le doigt
+      var now = Date.now();
+      if (now - (st.lastTap || 0) < 300) return;
+      var qo = G.qs[G.idx];
+      if (t.hasAttribute("data-chip")) {
+        var c = +t.dataset.chip;
+        if (!(c >= 0 && c < qo.items.length) || st.placed.indexOf(c) >= 0 || st.placed.length >= qo.items.length) return;   // pas de doublon, pas de mot en trop
+        st.placed.push(c);
+      } else { var k = +t.dataset.slot; if (k < st.placed.length) st.placed.splice(k, 1); else return; }
+      st.lastTap = now;
+    }
     else if (t.hasAttribute("data-clear")) st.on = st.on.map(function () { return false; });
-    else if (t.hasAttribute("data-slot")) { var k = +t.dataset.slot; if (k < st.placed.length) st.placed.splice(k, 1); else return; }
     else return;
     soundTap();
     gRender();
@@ -3955,6 +4013,25 @@ var COURS = {
   });
 
   // ---------- Correction ----------
+  // Rangement : on compare élément par élément l'ordre touché et l'ordre attendu.
+  // Mots : sans tenir compte des majuscules, des espaces en trop, des accents ni de l'encodage. Nombres : par leur valeur.
+  function orderNorm(x) {
+    if (typeof x === "number") return String(x);
+    var s = String(x).replace(/[\u00a0\u202f\u200b]/g, " ");
+    if (s.normalize) s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return s.toLowerCase().replace(/\s+/g, " ").trim();
+  }
+  function orderOk(q, placed) {
+    if (placed.length !== q.items.length || placed.length !== q.sorted.length) return false;
+    var seen = {};
+    for (var j = 0; j < placed.length; j++) {
+      var k = placed[j];
+      if (seen[k] || q.items[k] === undefined) return false;   // doublon ou case inconnue
+      seen[k] = true;
+      if (orderNorm(q.items[k]) !== orderNorm(q.sorted[j])) return false;
+    }
+    return true;
+  }
   function gCheck() {
     var q = G.qs[G.idx], st = G.st, i;
     if (q.type === "fields") {
@@ -3972,7 +4049,7 @@ var COURS = {
     if (q.type === "color") { var nOn = st.on.filter(Boolean).length; return nOn ? { ok: nOn === q.k } : { empty: "Touche des parts pour les colorier 🖍️" }; }
     if (q.type === "order") {
       if (st.placed.length < q.items.length) return { empty: q.orderLbl ? "Range tous les mots 😉" : "Range tous les nombres 😉" };
-      return { ok: st.placed.every(function (k, j) { return q.items[k] === q.sorted[j]; }) };
+      return { ok: orderOk(q, st.placed) };
     }
     var hi = -1;
     for (i = 0; i < st.res.length; i++) if (st.res[i] !== "") hi = i;
@@ -3984,6 +4061,7 @@ var COURS = {
   }
   function gValidate() {
     if (G.phase === "feedback") { gNext(); return; }
+    if (G.st && G.st.lastTap && Date.now() - G.st.lastTap < 300) return;   // rangement : un double appui sur le dernier élément ne valide pas tout seul
     var q = G.qs[G.idx], st = G.st, card = $("#g-card"), v = $("#g-validate"), c = gCheck();
     if (c.empty) {
       if (c.focus !== undefined) st.active = c.focus;
@@ -4020,7 +4098,7 @@ var COURS = {
       $("#g-keypad").classList.add("hidden");
       corr.classList.remove("hidden");
       // Parties 7 à 13 : si la correction est longue, on fait juste apparaître le bouton "J'ai compris"
-      if (["calc", "frac", "mes", "heure", "money", "geo", "prob"].indexOf(G.mod.id) >= 0 || G.mod.fr) {
+      if (["calc", "frac", "mes", "heure", "money", "geo", "prob", "dm"].indexOf(G.mod.id) >= 0 || G.mod.fr) {
         requestAnimationFrame(function () { if (v.getBoundingClientRect().bottom > window.innerHeight) v.scrollIntoView({ block: "nearest", behavior: "smooth" }); });
       }
       v.textContent = "J'ai compris ➜";
@@ -4232,9 +4310,125 @@ var COURS = {
       { id: "x10", label: "× 10 et × 100", ex: "34 × 10 = 340", color: "#2f8cff" },
       { id: "compl", label: "Compléments", ex: "64 + ? = 100", color: "#22b455" },
       { id: "pm", label: "+ ou − 9, 11, 19", ex: "47 + 9", color: "#ef4444" },
+      { id: "dmlecon", label: "Doubles et moitiés · la leçon", ex: "Parties 1, 2, 3", color: "#ff4fa3", open: "dm" },
       { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
     ],
     lesson: lessonCalc, question: qCalcMode, problem: pbCalc
+  };
+
+  // =========================================================
+  // ---------- CALCUL MENTAL : DOUBLES ET MOITIÉS (leçon de l'école) ----------
+  // Les nombres à connaître, partie par partie (on peut compléter ces listes).
+  // =========================================================
+  var DM_DOUBLES = {
+    1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    2: [20, 25, 30, 35, 40, 45, 50, 60, 75],
+    3: [100, 150, 200, 250, 300, 350, 400, 500, 600]
+  };
+  var DM_MOITIES = {
+    1: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40],
+    2: [40, 50, 60, 70, 80, 90, 100, 120, 150],
+    3: [200, 300, 400, 500, 600, 700, 1000, 1200]
+  };
+  var DM_REVERSE = 4;   // nombre de questions « à l'envers » dans une série de 20
+  var DM_GROUPS = {
+    d: { label: "Les doubles", color: "#2f8cff" },
+    m: { label: "Les moitiés", color: "#ef4444" },
+    x: { label: "Mélange", color: "#7c4dff" }
+  };
+  var DM_PARTS = [
+    { p: [1], id: "1", label: "Partie 1" }, { p: [2], id: "2", label: "Partie 2" },
+    { p: [3], id: "3", label: "Partie 3" }, { p: [1, 2, 3], id: "a", label: "Toutes les parties" }
+  ];
+  function dmParse(mode) {   // "d1", "ma", "x2"…
+    var g = mode.charAt(0), part = DM_PARTS.filter(function (x) { return x.id === mode.charAt(1); })[0];
+    return { g: g, parts: part.p, part: part };
+  }
+  function dmRange(list) { return list.length > 4 ? fmt(list[0]) + " … " + fmt(list[list.length - 1]) : list.map(fmt).join(", "); }
+  function dmPool(mode) {
+    var M = dmParse(mode), pool = [];
+    M.parts.forEach(function (p) {
+      if (M.g !== "m") DM_DOUBLES[p].forEach(function (n) { pool.push({ t: "d", n: n }); });
+      if (M.g !== "d") DM_MOITIES[p].forEach(function (n) { pool.push({ t: "m", n: n }); });
+    });
+    return pool.filter(function (x, k) { return !pool.slice(0, k).some(function (y) { return y.t === x.t && y.n === x.n; }); });   // 40 est dans deux parties : une seule fois
+  }
+  // Aide : on coupe le nombre en deux morceaux faciles (35 = 30 + 5 ; 700 = 600 + 100)
+  function dmSplitDouble(n) {
+    var place = Math.pow(10, String(n).length - 1), a = n - n % place, b = n % place;
+    return a && b ? "Astuce&nbsp;: " + fmt(n) + " = " + fmt(a) + " + " + fmt(b) + " → " + fmt(2 * a) + " + " + fmt(2 * b) + " = " + fmt(2 * n) + "." : "";
+  }
+  function dmSplitHalf(n) {
+    var a = n >= 1000 ? 1000 : n >= 100 ? (n - n % 200 || 100) : n - n % 20, b = n - a;
+    return a && b && b !== a ? "Astuce&nbsp;: " + fmt(n) + " = " + fmt(a) + " + " + fmt(b) + " → " + fmt(a / 2) + " + " + fmt(b / 2) + " = " + fmt(n / 2) + "." : "";
+  }
+  var DM_BAG = { list: [], k: 0, sid: "" };
+  var DM_SERIES = 0;
+  function dmBuildBag(mode) {   // 20 questions : tout le monde passe avant de recommencer, jamais deux fois de suite le même nombre
+    var pool = dmPool(mode), list = [];
+    while (list.length < TOTAL) {
+      var sh = shuffle(pool.slice());
+      if (list.length && sh.length > 1 && sh[0].t === list[list.length - 1].t && sh[0].n === list[list.length - 1].n) sh.push(sh.shift());
+      list = list.concat(sh);
+    }
+    list = list.slice(0, TOTAL).map(function (x) { return { t: x.t, n: x.n, rev: false }; });
+    var same = function (a, c) { return a && c && a.t === c.t && a.n === c.n; };
+    for (var i = 1; i < list.length; i++) if (same(list[i], list[i - 1])) {   // jamais deux fois de suite le même nombre
+      for (var j = 0; j < list.length; j++) if (j !== i && !same(list[j], list[i - 1]) && !same(list[j], list[i + 1]) && !same(list[i], list[j - 1]) && !same(list[i], list[j + 1])) { var tmp = list[i]; list[i] = list[j]; list[j] = tmp; break; }
+    }
+    shuffle(list.map(function (x, k) { return k; }).slice(1)).slice(0, DM_REVERSE).forEach(function (k) { list[k].rev = true; });
+    DM_BAG = { list: list, k: 0, sid: Date.now().toString(36) + (++DM_SERIES) };
+  }
+  function dmQuestion(it, k) {
+    var n = it.n, key = "dm" + DM_BAG.sid + "-" + k + "-" + it.t + (it.rev ? "r" : "") + n;   // clé propre à la série
+    if (it.t === "d") {
+      var d = 2 * n, help = '<div class="expl">Double de ' + fmt(n) + "&nbsp;: <b>" + fmt(n) + " + " + fmt(n) + " = " + fmt(d) + "</b></div>" + (dmSplitDouble(n) ? '<div class="expl">' + dmSplitDouble(n) + "</div>" : "");
+      if (it.rev) return { key: key, type: "fields", fields: [n], prompt: '<div class="gp">Le <b class="tu">double</b> de quel nombre fait <b class="tr">' + fmt(d) + "</b>&nbsp;?</div><div class=\"gq\">{0}</div>",
+        eq: "Le double de " + fmt(n) + " fait " + fmt(d), explain: '<div class="expl">' + fmt(n) + " + " + fmt(n) + " = " + fmt(d) + ", donc le double de <b>" + fmt(n) + "</b> fait " + fmt(d) + ".</div>" };
+      return { key: key, type: "fields", fields: [d], prompt: '<div class="gq">Double de <b class="tu">' + fmt(n) + "</b> = {0}</div>", eq: "Double de " + fmt(n) + " = " + fmt(d), explain: help };
+    }
+    var h = n / 2, helpM = '<div class="expl">Moitié de ' + fmt(n) + "&nbsp;: <b>" + fmt(h) + " + " + fmt(h) + " = " + fmt(n) + "</b>, donc la moitié de " + fmt(n) + " est " + fmt(h) + ".</div>" + (dmSplitHalf(n) ? '<div class="expl">' + dmSplitHalf(n) + "</div>" : "");
+    if (it.rev) return { key: key, type: "fields", fields: [n], prompt: '<div class="gp"><b class="tu">' + fmt(h) + '</b> est la <b class="tr">moitié</b> de quel nombre&nbsp;?</div><div class="gq">{0}</div>',
+      eq: fmt(h) + " est la moitié de " + fmt(n), explain: '<div class="expl">' + fmt(h) + " + " + fmt(h) + " = " + fmt(n) + ", donc " + fmt(h) + " est la moitié de <b>" + fmt(n) + "</b>.</div>" };
+    return { key: key, type: "fields", fields: [h], prompt: '<div class="gq">Moitié de <b class="tr">' + fmt(n) + "</b> = {0}</div>", eq: "Moitié de " + fmt(n) + " = " + fmt(h), explain: helpM };
+  }
+  function qDm(mode, L, i) {
+    if (i === 0 || !DM_BAG.list.length) dmBuildBag(mode);
+    var k = DM_BAG.k++;
+    return dmQuestion(DM_BAG.list[k % DM_BAG.list.length], k);
+  }
+  function lessonDm(mode) {
+    var M = dmParse(mode), h = '<div class="panel"><h2>👯 Doubles et moitiés</h2><ul class="rules"><li>Le <b class="tu">double</b>, c\'est 2 fois le nombre.</li><li>La <b class="tr">moitié</b>, c\'est partager en 2 parts égales.</li></ul></div>';
+    function list(title, data, dbl) {
+      var out = '<div class="panel"><h2>' + title + "</h2>";
+      M.parts.forEach(function (p) {
+        out += (M.parts.length > 1 ? '<div class="dm-part">Partie ' + p + "</div>" : "") + '<div class="dm-list">' + data[p].map(function (n) {
+          return dbl ? '<span>double de <b class="tu">' + fmt(n) + '</b> = <b class="tr">' + fmt(2 * n) + "</b></span>"
+            : '<span>moitié de <b class="tr">' + fmt(n) + '</b> = <b class="tu">' + fmt(n / 2) + "</b></span>";
+        }).join("") + "</div>";
+      });
+      return out + "</div>";
+    }
+    if (M.g !== "m") h += list("🔵 Les doubles à retenir" + (M.parts.length === 1 ? " · Partie " + M.parts[0] : ""), DM_DOUBLES, true);
+    if (M.g !== "d") h += list("🔴 Les moitiés à retenir" + (M.parts.length === 1 ? " · Partie " + M.parts[0] : ""), DM_MOITIES, false);
+    return h;
+  }
+  var DM_LEVELS = [], DM_MENU = [];
+  ["d", "m", "x"].forEach(function (g) {
+    var parts = [];
+    DM_PARTS.forEach(function (pt) {
+      var id = g + pt.id, ex;
+      if (pt.id === "a") ex = "🎲 1 + 2 + 3";
+      else ex = g === "d" ? dmRange(DM_DOUBLES[pt.p[0]]) : g === "m" ? dmRange(DM_MOITIES[pt.p[0]]) : "doubles et moitiés";
+      DM_LEVELS.push({ id: id, label: DM_GROUPS[g].label + " · " + pt.label, plabel: pt.label, ex: ex, color: DM_GROUPS[g].color });
+      parts.push(id);
+    });
+    DM_MENU.push({ id: g, label: DM_GROUPS[g].label, ex: g === "d" ? "7 ➜ 14" : g === "m" ? "50 ➜ 25" : "🎲 doubles et moitiés", color: DM_GROUPS[g].color, parts: parts });
+  });
+  MODULES.dm = {
+    id: "dm", title: "👯 Doubles et moitiés", short: "Doubles et moitiés", champ: "des doubles et des moitiés", back: "calc",
+    menu: DM_MENU, levels: DM_LEVELS,
+    lesson: lessonDm, question: qDm, problem: function (mode, L) { return qDm(mode, L, -1); }
   };
 
   // =========================================================
@@ -4427,32 +4621,55 @@ var COURS = {
   // =========================================================
   // ---------- PARTIE 9 : MESURES ----------
   // =========================================================
-  var UNIT_FAM = { L: ["mm", "cm", "m", "km"], M: ["g", "kg"], C: ["cL", "L"] };
+  // Trois familles : LONGUEURS (mm, cm, dm, m, km), MASSES (g, kg), CONTENANCES (L, dL, cL), + mélange.
+  // Pour ajouter un objet à la question « Choisis l'unité » : compléter MES_ITEMS (e = emoji, t = texte, v = nombre, u = unité, f = famille).
+  var MES_FAM = {
+    L: { nom: "longueurs", plus: "le plus long", units: ["mm", "cm", "m", "km"], conv: [["cm", "mm", 10], ["dm", "cm", 10], ["m", "dm", 10], ["m", "cm", 100], ["km", "m", 1000]] },
+    M: { nom: "masses", plus: "le plus lourd", units: ["g", "kg"], conv: [["kg", "g", 1000]] },
+    C: { nom: "contenances", plus: "contient le plus", units: ["cL", "dL", "L"], conv: [["L", "dL", 10], ["L", "cL", 100], ["dL", "cL", 10]] }
+  };
+  var MES_MODE_FAM = { long: "L", masse: "M", cont: "C" };
   var UNIT_REF = {
-    mm: "1 mm, c'est tout petit&nbsp;: l'épaisseur d'une carte.", cm: "1 cm, c'est à peu près la largeur d'un doigt.",
-    m: "1 m, c'est un grand pas d'adulte.", km: "1 km, c'est environ 15 minutes de marche.",
-    g: "1 g, c'est la masse d'un trombone.", kg: "1 kg, c'est un paquet de farine.",
-    cL: "1 cL, c'est une petite cuillère.", L: "1 L, c'est une grande bouteille d'eau."
+    mm: "1 mm, c'est tout petit&nbsp;: l'épaisseur d'une carte bancaire.", cm: "1 cm, c'est à peu près la largeur d'un doigt.",
+    dm: "1 dm, c'est à peu près la largeur d'une main d'adulte (10 cm).", m: "1 m, c'est un grand pas d'adulte.",
+    km: "1 km, c'est environ 15 minutes de marche.",
+    g: "1 g, c'est la masse d'un trombone.", kg: "1 kg, c'est un paquet de sucre.",
+    cL: "1 cL, c'est une petite cuillère.", dL: "1 dL, c'est un petit verre (ou un pot de yaourt).", L: "1 L, c'est une bouteille d'eau."
   };
   var MES_ITEMS = [
-    { e: "✏️", t: "La longueur d'un crayon", v: 15, u: "cm", f: "L", L: 0 }, { e: "🚪", t: "La hauteur d'une porte", v: 2, u: "m", f: "L", L: 0 },
-    { e: "🚗", t: "La distance entre deux villes", v: 80, u: "km", f: "L", L: 0 }, { e: "📏", t: "La longueur de la règle de la trousse", v: 20, u: "cm", f: "L", L: 0 },
-    { e: "🏫", t: "La longueur de la cour de l'école", v: 40, u: "m", f: "L", L: 0 }, { e: "🌳", t: "La hauteur d'un grand arbre", v: 12, u: "m", f: "L", L: 0 },
-    { e: "🧽", t: "La longueur d'une gomme", v: 4, u: "cm", f: "L", L: 0 }, { e: "🚌", t: "La longueur d'un bus", v: 12, u: "m", f: "L", L: 0 },
-    { e: "🏃", t: "La longueur d'une course à pied", v: 10, u: "km", f: "L", L: 1 }, { e: "🛏️", t: "La longueur d'un lit", v: 2, u: "m", f: "L", L: 1 },
-    { e: "🍎", t: "La masse d'une pomme", v: 150, u: "g", f: "M", L: 1 }, { e: "🐱", t: "La masse d'un chat", v: 4, u: "kg", f: "M", L: 1 },
-    { e: "🧳", t: "La masse d'une valise", v: 15, u: "kg", f: "M", L: 1 }, { e: "✉️", t: "La masse d'une lettre", v: 20, u: "g", f: "M", L: 1 },
-    { e: "🥛", t: "Un verre de lait", v: 20, u: "cL", f: "C", L: 1 }, { e: "🛁", t: "L'eau d'une baignoire", v: 150, u: "L", f: "C", L: 1 },
-    { e: "🪣", t: "Un seau d'eau", v: 10, u: "L", f: "C", L: 1 }, { e: "🐜", t: "La longueur d'une fourmi", v: 5, u: "mm", f: "L", L: 2 },
-    { e: "🪙", t: "L'épaisseur d'une pièce", v: 2, u: "mm", f: "L", L: 2 }, { e: "🍉", t: "La masse d'une pastèque", v: 3, u: "kg", f: "M", L: 2 },
-    { e: "🍬", t: "La masse d'un bonbon", v: 5, u: "g", f: "M", L: 2 }, { e: "☕", t: "Une tasse de chocolat chaud", v: 25, u: "cL", f: "C", L: 2 },
-    { e: "🐟", t: "L'eau d'un aquarium", v: 60, u: "L", f: "C", L: 2 }, { e: "🐶", t: "La masse d'un petit chien", v: 6, u: "kg", f: "M", L: 2 },
-    { e: "🧃", t: "Une petite brique de jus", v: 20, u: "cL", f: "C", L: 2 }, { e: "🏔️", t: "La hauteur d'une montagne", v: 4, u: "km", f: "L", L: 2 }
+    { e: "✏️", t: "La longueur d'un crayon", v: 15, u: "cm", f: "L" }, { e: "🚪", t: "La hauteur d'une porte", v: 2, u: "m", f: "L" },
+    { e: "🚗", t: "La distance entre deux villes", v: 80, u: "km", f: "L" }, { e: "📏", t: "La longueur d'une règle", v: 20, u: "cm", f: "L" },
+    { e: "🏫", t: "La longueur de la cour de l'école", v: 40, u: "m", f: "L" }, { e: "🌳", t: "La hauteur d'un grand arbre", v: 12, u: "m", f: "L" },
+    { e: "🧽", t: "La longueur d'une gomme", v: 4, u: "cm", f: "L" }, { e: "🚌", t: "La longueur d'un bus", v: 12, u: "m", f: "L" },
+    { e: "🏃", t: "La longueur d'une course à pied", v: 10, u: "km", f: "L" }, { e: "🛏️", t: "La longueur d'un lit", v: 2, u: "m", f: "L" },
+    { e: "🐜", t: "La longueur d'une fourmi", v: 5, u: "mm", f: "L" }, { e: "🪙", t: "L'épaisseur d'une pièce", v: 2, u: "mm", f: "L" },
+    { e: "🏔️", t: "La hauteur d'une montagne", v: 4, u: "km", f: "L" }, { e: "🏊", t: "La longueur d'une piscine", v: 25, u: "m", f: "L" },
+    { e: "📎", t: "La longueur d'un trombone", v: 3, u: "cm", f: "L" }, { e: "🐞", t: "La longueur d'une coccinelle", v: 7, u: "mm", f: "L" },
+    { e: "🚲", t: "Une balade à vélo", v: 15, u: "km", f: "L" }, { e: "📖", t: "L'épaisseur d'un livre", v: 15, u: "mm", f: "L" },
+    { e: "🍎", t: "La masse d'une pomme", v: 150, u: "g", f: "M" }, { e: "🐱", t: "La masse d'un chat", v: 4, u: "kg", f: "M" },
+    { e: "🧳", t: "La masse d'une valise", v: 15, u: "kg", f: "M" }, { e: "✉️", t: "La masse d'une lettre", v: 20, u: "g", f: "M" },
+    { e: "🍉", t: "La masse d'une pastèque", v: 3, u: "kg", f: "M" }, { e: "🍬", t: "La masse d'un bonbon", v: 5, u: "g", f: "M" },
+    { e: "🐶", t: "La masse d'un petit chien", v: 6, u: "kg", f: "M" }, { e: "🎒", t: "La masse d'un cartable", v: 3, u: "kg", f: "M" },
+    { e: "🧈", t: "La masse d'une plaquette de beurre", v: 250, u: "g", f: "M" }, { e: "🍫", t: "La masse d'une tablette de chocolat", v: 100, u: "g", f: "M" },
+    { e: "🚲", t: "La masse d'un vélo", v: 12, u: "kg", f: "M" }, { e: "🍓", t: "La masse d'une fraise", v: 15, u: "g", f: "M" },
+    { e: "🥔", t: "Un sac de pommes de terre", v: 5, u: "kg", f: "M" }, { e: "👨", t: "La masse d'un papa", v: 75, u: "kg", f: "M" },
+    { e: "🛁", t: "L'eau d'une baignoire", v: 150, u: "L", f: "C" }, { e: "🪣", t: "Un seau d'eau", v: 10, u: "L", f: "C" },
+    { e: "☕", t: "Une tasse de chocolat chaud", v: 25, u: "cL", f: "C" }, { e: "🐟", t: "L'eau d'un aquarium", v: 60, u: "L", f: "C" },
+    { e: "🧃", t: "Une petite brique de jus", v: 20, u: "cL", f: "C" }, { e: "🥄", t: "Une petite cuillère de sirop", v: 1, u: "cL", f: "C" },
+    { e: "🥣", t: "Un bol de soupe", v: 3, u: "dL", f: "C" }, { e: "🥤", t: "Une canette de limonade", v: 33, u: "cL", f: "C" },
+    { e: "🚿", t: "Un arrosoir", v: 5, u: "L", f: "C" }, { e: "🍼", t: "Un biberon", v: 2, u: "dL", f: "C" },
+    { e: "💧", t: "Une grande bouteille d'eau", v: 1, u: "L", f: "C" }, { e: "🥛", t: "Un verre de lait", v: 2, u: "dL", f: "C" }
   ];
-  var CONV = [["m", "cm", 100], ["cm", "mm", 10], ["km", "m", 1000], ["kg", "g", 1000], ["L", "cL", 100]];
-  function convRule(c) { return "1 " + c[0] + " = " + fmt(c[2]) + " " + c[1]; }
-  function unitsHTML() {
-    return '<div class="gtable"><span>1 km = 1' + NB + "000 m</span><span>1 m = 100 cm</span><span>1 cm = 10 mm</span><span>1 kg = 1" + NB + "000 g</span><span>1 L = 100 cL</span></div>";
+  function unitsHTML(f) {   // tableau de conversion de la famille (ou des trois)
+    var rows = { L: ["1 cm = 10 mm", "1 dm = 10 cm", "1 m = 10 dm = 100 cm", "1 km = 1" + NB + "000 m"], M: ["1 kg = 1" + NB + "000 g"], C: ["1 L = 10 dL = 100 cL", "1 dL = 10 cL"] };
+    var list = f ? rows[f] : rows.L.concat(rows.M, rows.C);
+    return '<div class="gtable">' + list.map(function (x) { return "<span>" + x + "</span>"; }).join("") + "</div>";
+  }
+  function mesLadder(f) {   // les unités de la plus grande à la plus petite, avec ce qu'on multiplie entre elles
+    var L = { L: [["km", "× 1" + NB + "000"], ["m", "× 10"], ["dm", "× 10"], ["cm", "× 10"], ["mm", ""]], M: [["kg", "× 1" + NB + "000"], ["g", ""]], C: [["L", "× 10"], ["dL", "× 10"], ["cL", ""]] }[f];
+    return '<div class="mes-ladder">' + L.map(function (x) {
+      return '<span class="ml-u">' + x[0] + "</span>" + (x[1] ? '<span class="ml-x">' + x[1] + " ➜</span>" : "");
+    }).join("") + "</div>";
   }
   // Règle graduée : objet de "from" à "to" (en mm)
   function rulerSVG(from, to, maxcm, mm) {
@@ -4471,58 +4688,77 @@ var COURS = {
     }
     return svgWrap(W, 124, s, "wide", "règle graduée");
   }
-  function qMes(kind, L) {
-    var c, n, m, it;
-    if (kind === "unite") {
-      var pool = MES_ITEMS.filter(function (x) { return x.L <= L; });
-      it = rand(pool);
-      var units = UNIT_FAM[it.f].slice();
-      if (units.length > 3) units = shuffle(units.filter(function (u) { return u !== it.u; })).slice(0, 2).concat([it.u]);
-      units = shuffle(units);
-      return { key: "un-" + it.t, type: "choice", optClass: units.length === 2 ? "two" : "units3", options: units, answer: units.indexOf(it.u),
-        prompt: '<div class="gemoji">' + it.e + '</div><div class="gp">' + it.t + "&nbsp;: <b>" + it.v + ' …</b></div><div class="gp gsmall">Choisis la bonne unité.</div>',
-        eq: it.t + "&nbsp;: " + it.v + " " + it.u, explain: '<div class="expl">' + UNIT_REF[it.u] + " Donc " + it.v + " " + it.u + " ✔️</div>" + unitsHTML() };
-    }
-    if (kind === "conv") {
-      c = rand(CONV);
-      if (L === 0) {
-        n = rnd(1, 9);
-        return { key: "cv-" + c[0] + "-" + n, type: "fields", fields: [n * c[2]], prompt: '<div class="gq">' + n + " " + c[0] + " = {0} " + c[1] + "</div>",
-          eq: n + " " + c[0] + " = " + fmt(n * c[2]) + " " + c[1], explain: '<div class="expl">' + convRule(c) + ", donc " + n + " " + c[0] + " = " + n + " × " + fmt(c[2]) + " = <b>" + fmt(n * c[2]) + " " + c[1] + "</b>.</div>" + unitsHTML() };
-      }
-      if (L === 1) {
-        n = rnd(2, 9);
-        return { key: "cvr-" + c[0] + "-" + n, type: "fields", fields: [n], prompt: '<div class="gq">' + fmt(n * c[2]) + " " + c[1] + " = {0} " + c[0] + "</div>",
-          eq: fmt(n * c[2]) + " " + c[1] + " = " + n + " " + c[0], explain: '<div class="expl">' + convRule(c) + "&nbsp;: dans " + fmt(n * c[2]) + " " + c[1] + ", il y a " + n + " fois " + fmt(c[2]) + " " + c[1] + ", donc <b>" + n + " " + c[0] + "</b>.</div>" + unitsHTML() };
-      }
-      n = rnd(1, 5); m = c[2] === 10 ? rnd(1, 9) : c[2] === 100 ? rnd(5, 95) : rand([rnd(1, 9) * 100, rnd(1, 19) * 50, rnd(101, 999)]);
-      return { key: "cvm-" + c[0] + "-" + n + "-" + m, type: "fields", fields: [n * c[2] + m], prompt: '<div class="gq gsmall">' + n + " " + c[0] + " " + m + " " + c[1] + " = {0} " + c[1] + "</div>",
-        eq: n + " " + c[0] + " " + m + " " + c[1] + " = " + fmt(n * c[2] + m) + " " + c[1],
-        explain: '<div class="expl">' + n + " " + c[0] + " = " + fmt(n * c[2]) + " " + c[1] + ", puis " + fmt(n * c[2]) + " + " + m + " = <b>" + fmt(n * c[2] + m) + " " + c[1] + "</b>.</div>" + unitsHTML() };
-    }
-    // lire une règle
-    var from, len;
-    if (L === 0) { from = 0; len = rnd(3, 10) * 10; }
-    else if (L === 1) { from = rnd(1, 4) * 10; len = rnd(3, 10 - from / 10) * 10; }
-    else { from = rand([0, 10]); do { len = rnd(25, 95 - from); } while (len % 10 === 0); }
-    var cm = Math.floor(len / 10), mmv = len % 10;
-    return { key: "reg-" + from + "-" + len, type: "fields", fields: L === 2 ? [cm, mmv] : [cm],
-      prompt: '<div class="gp">Combien mesure le crayon&nbsp;?</div>' + rulerSVG(from, from + len, 10, L === 2) +
-        '<div class="gq gsmall">' + (L === 2 ? "{0} cm {1} mm" : "{0} cm") + "</div>",
-      hint: from ? "⚠️ Regarde bien où commence le crayon&nbsp;!" : (L === 2 ? "Compte les cm, puis les petits traits (mm) ✏️" : undefined),
-      eq: "Le crayon mesure " + (mmv ? cm + " cm " + mmv + " mm" : cm + " cm"),
-      explain: rulerSVG(from, from + len, 10, L === 2) + '<div class="expl">' + (from ? "Le crayon va de " + from / 10 + " à " + (from + len) / 10 + "&nbsp;: " + (from + len) / 10 + " − " + from / 10 + " = <b>" + cm + " cm</b>." :
-        "Le crayon commence au 0 et s'arrête " + (mmv ? "après le " + cm + ", au " + mmv + "<sup>e</sup> petit trait&nbsp;: <b>" + cm + " cm " + mmv + " mm</b>." : "au " + cm + "&nbsp;: <b>" + cm + " cm</b>.")) + "</div>" };
+  function mesConv(f) { return rand(MES_FAM[f].conv); }
+  function mesNum(c, L, lo) {   // un nombre adapté au CE2 selon le niveau et le rapport entre les unités
+    if (c[2] === 10) return L === 0 ? rnd(lo || 1, 9) : L === 1 ? rnd(2, 15) : rnd(10, 30);
+    return L === 2 ? rnd(2, 9) : rnd(lo || 1, 6);
   }
-  function qMesMode(mode, L) { return qMes(mode === "melange" ? rand(["unite", "conv", "regle"]) : mode, L); }
+  function qMes(f, kind, L) {
+    var c, n, m, it, F = MES_FAM[f];
+    if (kind === "b2s") {   // grande unité ➜ petite unité
+      c = mesConv(f); n = mesNum(c, L);
+      return { key: "mb-" + c[0] + c[1] + n, type: "fields", fields: [n * c[2]], prompt: '<div class="gp">Convertis&nbsp;:</div><div class="gq">' + n + " " + c[0] + " = {0} " + c[1] + "</div>",
+        eq: n + " " + c[0] + " = " + fmt(n * c[2]) + " " + c[1],
+        explain: '<div class="expl">1 ' + c[0] + " = " + fmt(c[2]) + " " + c[1] + ", donc " + n + " " + c[0] + " = " + n + " × " + fmt(c[2]) + " = <b>" + fmt(n * c[2]) + " " + c[1] + "</b>.</div>" + unitsHTML(f) };
+    }
+    if (kind === "s2b") {   // petite unité ➜ grande unité
+      c = mesConv(f); n = mesNum(c, L, 2);
+      return { key: "ms-" + c[0] + c[1] + n, type: "fields", fields: [n], prompt: '<div class="gp">Convertis&nbsp;:</div><div class="gq">' + fmt(n * c[2]) + " " + c[1] + " = {0} " + c[0] + "</div>",
+        eq: fmt(n * c[2]) + " " + c[1] + " = " + n + " " + c[0],
+        explain: '<div class="expl">1 ' + c[0] + " = " + fmt(c[2]) + " " + c[1] + ". Dans " + fmt(n * c[2]) + " " + c[1] + ", il y a " + n + " fois " + fmt(c[2]) + " " + c[1] + ", donc <b>" + n + " " + c[0] + "</b>.</div>" + unitsHTML(f) };
+    }
+    if (kind === "two") {   // deux unités ➜ une seule (et l'inverse au niveau 3)
+      c = mesConv(f); n = L === 0 ? rnd(1, 3) : rnd(1, 5);
+      m = c[2] === 10 ? rnd(1, 9) : c[2] === 100 ? (L === 0 ? rnd(1, 9) * 10 : rnd(5, 95)) : (L === 0 ? rnd(1, 9) * 100 : rand([rnd(1, 9) * 100, rnd(1, 19) * 50, rnd(101, 999)]));
+      if (m % c[2] === 0) m = c[2] / 2;
+      var tot = n * c[2] + m;
+      if (L === 2 && Math.random() < 0.5) return { key: "mt2-" + c[0] + c[1] + tot, type: "fields", fields: [n, m],
+        prompt: '<div class="gp">Convertis avec deux unités&nbsp;:</div><div class="gq gsmall">' + fmt(tot) + " " + c[1] + " = {0} " + c[0] + " {1} " + c[1] + "</div>",
+        eq: fmt(tot) + " " + c[1] + " = " + n + " " + c[0] + " " + m + " " + c[1],
+        explain: '<div class="expl">1 ' + c[0] + " = " + fmt(c[2]) + " " + c[1] + ". " + fmt(tot) + " = " + fmt(n * c[2]) + " + " + m + ", donc <b>" + n + " " + c[0] + " " + m + " " + c[1] + "</b>.</div>" + unitsHTML(f) };
+      return { key: "mt-" + c[0] + c[1] + tot, type: "fields", fields: [tot], prompt: '<div class="gp">Convertis&nbsp;:</div><div class="gq gsmall">' + n + " " + c[0] + " " + m + " " + c[1] + " = {0} " + c[1] + "</div>",
+        eq: n + " " + c[0] + " " + m + " " + c[1] + " = " + fmt(tot) + " " + c[1],
+        explain: '<div class="expl">' + n + " " + c[0] + " = " + fmt(n * c[2]) + " " + c[1] + ", puis " + fmt(n * c[2]) + " + " + m + " = <b>" + fmt(tot) + " " + c[1] + "</b>.</div>" + unitsHTML(f) };
+    }
+    if (kind === "unite") {   // choisir l'unité qui convient
+      it = rand(MES_ITEMS.filter(function (x) { return x.f === f; }));
+      var units = F.units.slice();
+      return { key: "mu-" + it.t, type: "choice", optClass: units.length === 2 ? "two" : (units.length === 3 ? "units3" : "two"), options: units, answer: units.indexOf(it.u),
+        prompt: '<div class="gemoji">' + it.e + '</div><div class="gp">' + it.t + "&nbsp;: <b>" + it.v + ' …</b></div><div class="gp gsmall">Quelle unité convient&nbsp;?</div>',
+        eq: it.t + "&nbsp;: " + it.v + " " + it.u, explain: '<div class="expl">' + UNIT_REF[it.u] + " Donc " + it.v + " " + it.u + " ✔️</div>" };
+    }
+    // comparer deux mesures
+    c = mesConv(f); n = L === 0 ? rnd(1, 3) : rnd(1, 6);
+    var same = Math.random() < 0.2, step = c[2] === 10 ? 1 : c[2] / 10, big = n * c[2];
+    m = same ? big : big + (Math.random() < 0.5 ? -1 : 1) * rnd(1, 9) * step;
+    if (m <= 0) m = big + step;
+    var A = n + " " + c[0], B = fmt(m) + " " + c[1], pareil = "C'est pareil", opts = shuffle([A, B]).concat([pareil]);
+    var good = m === big ? pareil : (big > m ? A : B), sign = m === big ? "=" : (big > m ? "&gt;" : "&lt;");
+    return { key: "mc-" + c[0] + c[1] + n + "-" + m, type: "choice", optClass: "units3", options: opts, answer: opts.indexOf(good),
+      prompt: '<div class="gp">' + (f === "C" ? "Qui " : "Qui est ") + "<b>" + F.plus + "</b>&nbsp;?</div>" + '<div class="gq gsmall">' + A + " &nbsp;ou&nbsp; " + B + "</div>",
+      eq: A + " " + sign + " " + B,
+      explain: '<div class="expl">On met tout dans la même unité&nbsp;: ' + A + " = " + fmt(big) + " " + c[1] + ". Et " + fmt(big) + " " + c[1] + " " + sign + " " + B + ".</div>" + unitsHTML(f) };
+  }
+  var MES_KINDS = ["b2s", "b2s", "b2s", "s2b", "s2b", "s2b", "two", "two", "unite", "unite", "comp", "comp"];
+  function mesFam(mode) { return MES_MODE_FAM[mode] || rand(["L", "L", "M", "C"]); }
+  function qMesMode(mode, L) { return qMes(mesFam(mode), rand(MES_KINDS), L); }
   function pbMes(mode, L) {
-    var k = rand(mode === "unite" ? ["sac", "ruban"] : mode === "regle" ? ["ruban", "taille"] : ["taille", "sac", "bouteille", "ruban"]), a, b;
+    var f = mesFam(mode), k = rand({ L: ["taille", "ruban", "etagere"], M: ["sac", "colis"], C: ["bouteille", "verres"] }[f]), a, b;
     if (k === "taille") { a = rnd(10, 45);
       return { key: "pmt-" + a, type: "fields", fields: [100 + a], prompt: '<div class="gp gstory">📏 Lucy mesure <b>1 m ' + a + ' cm</b>. Combien de centimètres cela fait-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
         eq: "1 m " + a + " cm = " + (100 + a) + " cm", explain: '<div class="expl">1 m = 100 cm, et 100 + ' + a + " = <b>" + (100 + a) + " cm</b>.</div>" }; }
+    if (k === "etagere") { a = rnd(3, 9);
+      return { key: "pme-" + a, type: "fields", fields: [a * 10], prompt: '<div class="gp gstory">📚 Une étagère mesure <b>' + a + ' dm</b>. Combien de centimètres cela fait-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
+        eq: a + " dm = " + a * 10 + " cm", explain: '<div class="expl">1 dm = 10 cm, donc ' + a + " dm = " + a + " × 10 = <b>" + a * 10 + " cm</b>.</div>" }; }
     if (k === "sac") { a = rnd(1, 4); b = rand([200, 250, 300, 500, 750]);
       return { key: "pms-" + a + "-" + b, type: "fields", fields: [a * 1000 + b], prompt: '<div class="gp gstory">🛒 Maman achète <b>' + a + " kg</b> de pommes et <b>" + b + ' g</b> de raisin. Combien de grammes en tout&nbsp;?</div><div class="gq gsmall">{0} g</div>',
         eq: a + " kg + " + b + " g = " + fmt(a * 1000 + b) + " g", explain: '<div class="expl">' + a + " kg = " + fmt(a * 1000) + " g, et " + fmt(a * 1000) + " + " + b + " = <b>" + fmt(a * 1000 + b) + " g</b>.</div>" }; }
+    if (k === "colis") { a = rand([200, 250, 400, 500]);
+      return { key: "pmc-" + a, type: "fields", fields: [1000 - a], prompt: '<div class="gp gstory">📦 Un colis pèse <b>1 kg</b>. On enlève un livre de <b>' + a + ' g</b>. Combien pèse le colis maintenant&nbsp;?</div><div class="gq gsmall">{0} g</div>',
+        eq: "1" + NB + "000 g − " + a + " g = " + (1000 - a) + " g", explain: '<div class="expl">1 kg = 1' + NB + "000 g, et 1" + NB + "000 − " + a + " = <b>" + (1000 - a) + " g</b>.</div>" }; }
+    if (k === "verres") { a = rand([2, 5]);
+      return { key: "pmv-" + a, type: "fields", fields: [10 / a], prompt: '<div class="gp gstory">🥛 Avec <b>1 L</b> de lait, combien de verres de <b>' + a + ' dL</b> peut-on remplir&nbsp;?</div><div class="gq gsmall">{0} verres</div>',
+        eq: "1 L = 10 dL, et 10 : " + a + " = " + 10 / a + " verres", explain: '<div class="expl">1 L = 10 dL. ' + a + " dL + " + a + " dL + … = 10 dL, donc <b>" + 10 / a + " verres</b>.</div>" }; }
     if (k === "bouteille") { a = rand([20, 25, 30, 40, 50, 75]);
       return { key: "pmb-" + a, type: "fields", fields: [100 - a], prompt: '<div class="gp gstory">🧃 Une bouteille contient <b>1 L</b> de jus. Lucy en boit <b>' + a + ' cL</b>. Combien en reste-t-il&nbsp;?</div><div class="gq gsmall">{0} cL</div>',
         eq: "100 cL − " + a + " cL = " + (100 - a) + " cL", explain: '<div class="expl">1 L = 100 cL, et 100 − ' + a + " = <b>" + (100 - a) + " cL</b>.</div>" }; }
@@ -4530,29 +4766,32 @@ var COURS = {
     return { key: "pmr-" + a + "-" + b, type: "fields", fields: [a - 2 * b], prompt: '<div class="gp gstory">🎀 Le ruban mesure <b>' + a + " cm</b>. On en coupe deux morceaux de <b>" + b + ' cm</b>. Combien en reste-t-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
       eq: a + " − " + b + " − " + b + " = " + (a - 2 * b) + " cm", explain: '<div class="expl">On coupe ' + b + " + " + b + " = " + (2 * b) + " cm, et " + a + " − " + (2 * b) + " = <b>" + (a - 2 * b) + " cm</b>.</div>" };
   }
+  var MES_LESSON = {
+    L: { h: "📏 Les longueurs", rep: ["mm", "cm", "dm", "m", "km"], ex: [["3 cm = ? mm", "3 × 10 = <b>30 mm</b>"], ["400 cm = ? m", "100 cm = 1 m, donc <b>4 m</b>"], ["1 m 20 cm = ? cm", "100 + 20 = <b>120 cm</b>"]] },
+    M: { h: "⚖️ Les masses", rep: ["g", "kg"], ex: [["3 kg = ? g", "3 × 1" + NB + "000 = <b>3" + NB + "000 g</b>"], ["2" + NB + "000 g = ? kg", "1" + NB + "000 g = 1 kg, donc <b>2 kg</b>"], ["2 kg 300 g = ? g", "2" + NB + "000 + 300 = <b>2" + NB + "300 g</b>"]] },
+    C: { h: "🥤 Les contenances", rep: ["cL", "dL", "L"], ex: [["2 L = ? dL", "2 × 10 = <b>20 dL</b>"], ["300 cL = ? L", "100 cL = 1 L, donc <b>3 L</b>"], ["1 L 25 cL = ? cL", "100 + 25 = <b>125 cL</b>"]] }
+  };
+  function lessonMesFam(f) {
+    var D = MES_LESSON[f];
+    return '<div class="panel"><h2>' + D.h + '</h2><ul class="rules">' + D.rep.map(function (u) { return "<li><b class=\"tc\">" + u + "</b>&nbsp;: " + UNIT_REF[u] + "</li>"; }).join("") + "</ul>" +
+      (f === "L" ? '<div class="gp gsmall">Sur la règle, entre deux nombres&nbsp;: 1 cm = 10 petits traits de 1 mm.</div>' + rulerSVG(0, 30, 5, true) : "") +
+      "<h2>🔁 Le tableau de conversion</h2>" + mesLadder(f) + unitsHTML(f) +
+      '<ul class="rules"><li>⬇️ D\'une <b>grande</b> unité vers une <b>petite</b>&nbsp;: le nombre devient plus grand (on multiplie).</li>' +
+      "<li>⬆️ D'une <b>petite</b> unité vers une <b>grande</b>&nbsp;: le nombre devient plus petit (on cherche combien de fois).</li>" +
+      "<li>⚖️ Pour <b>comparer</b>, on met les deux mesures dans la même unité.</li></ul>" +
+      '<div class="steps">' + D.ex.map(function (e, k) { return stepHTML(k + 1, e[0], '<div class="gp">' + e[1] + "</div>"); }).join("") + "</div></div>";
+  }
   function lessonMes(mode) {
-    var h = '<div class="panel"><h2>📏 Les unités</h2><ul class="rules">' +
-      "<li>📏 <b>Longueurs</b>&nbsp;: km, m, cm, mm. " + UNIT_REF.cm + "</li><li>⚖️ <b>Masses</b>&nbsp;: kg, g. " + UNIT_REF.kg + "</li><li>🥤 <b>Contenances</b>&nbsp;: L, cL. " + UNIT_REF.L + "</li></ul>" + unitsHTML() + "</div>";
-    if (mode === "conv" || mode === "melange") {
-      h += '<div class="panel"><h2>🔁 Convertir</h2><div class="steps">' +
-        stepHTML(1, "1 m = 100 cm", '<div class="gq gsmall">3 m = 3 × 100</div>') + stepHTML(2, "Je calcule", '<div class="gq gsmall">= 300 cm</div>') +
-        stepHTML(3, "Avec deux unités&nbsp;: 2 m 35 cm", '<div class="gq gsmall">200 + 35 = 235 cm</div>') + "</div></div>";
-    }
-    if (mode === "regle" || mode === "melange" || mode === "unite") {
-      h += '<div class="panel"><h2>📐 Lire une règle</h2><div class="steps">' +
-        stepHTML(1, "Le crayon commence au <b>0</b>&nbsp;: je lis le nombre au bout → 7 cm", rulerSVG(0, 70, 10, false)) +
-        stepHTML(2, "Il commence au 2 et finit au 9&nbsp;: 9 − 2 = 5 cm", rulerSVG(20, 70, 10, false)) +
-        stepHTML(3, "Les petits traits sont des mm&nbsp;: 4 cm 6 mm", rulerSVG(0, 46, 10, true)) + "</div></div>";
-    }
-    return h;
+    var f = MES_MODE_FAM[mode];
+    return f ? lessonMesFam(f) : lessonMesFam("L") + lessonMesFam("M") + lessonMesFam("C");
   }
   MODULES.mes = {
     id: "mes", title: "📏 Les mesures", short: "Mesures", champ: "des mesures",
     levels: [
-      { id: "unite", label: "Choisir la bonne unité", ex: "✏️ 15 cm ou 15 m&nbsp;?", color: "#22b455" },
-      { id: "conv", label: "Convertir", ex: "1 m = 100 cm", color: "#2f8cff" },
-      { id: "regle", label: "Lire une règle", ex: "📏 ➜ 7 cm", color: "#ff7a1a" },
-      { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
+      { id: "long", label: "Longueurs", ex: "mm · cm · dm · m · km", color: "#2f8cff" },
+      { id: "masse", label: "Masses", ex: "g · kg", color: "#22b455" },
+      { id: "cont", label: "Contenances", ex: "L · dL · cL", color: "#ff7a1a" },
+      { id: "melange", label: "Mélange", ex: "🎲 Les trois mélangées", color: "#7c4dff" }
     ],
     lesson: lessonMes, question: qMesMode, problem: pbMes
   };
@@ -5656,6 +5895,14 @@ var COURS = {
       return qChoice("so-" + i, '<div class="gp">Quelle(s) lettre(s) manque(nt)&nbsp;?</div><div class="gbigword">' + SL[0].replace("_", '<span class="gblank">?</span>') + "</div>",
         ch.slice(), SL[1], word, SONS_REGLE[SL[2]] + '<div class="frex">On écrit&nbsp;: <b class="tc">' + word + "</b></div>", { optClass: ch.length === 2 ? "two" : "units3" });
     }
+    if (kind === "eer") {   // é ou er ?
+      i = rnd(0, E_OU_ER.length - 1); var EE = E_OU_ER[i], ans = EE[1], stem = EE[0].match(/\{(.+?)\}/)[1];
+      var full = EE[0].replace(/\{.+?\}/, stem + ans), testOk = EE[0].replace(/\{.+?\}/, "<b>" + (ans === "er" ? "mordre" : "mordu") + "</b>");
+      return qChoice("eer-" + i, '<div class="gp">Complète avec <b>é</b> ou <b>er</b>&nbsp;:</div>' + sent(EE[0].replace(/\{(.+?)\}/, '$1<span class="gblank gsuf">…</span>')),
+        ["é", "er"], ans, full,
+        "🪄 Astuce : on remplace par « mordre » ou « mordu ».<div class=\"frex\">" + testOk + " ✔️ → on écrit <b class=\"tc\">-" + ans + "</b> : " + stem + ans + "</div>" +
+        (ans === "er" ? "On peut dire « mordre » : c'est l'<b>infinitif</b>." : "On peut dire « mordu » : c'est le <b>participe passé</b>."), { optClass: "two" });
+    }
     // mots invariables
     i = rnd(0, INVARIABLES.length - 1); var IV = INVARIABLES[i], atS = IV[3].charAt(0) === "_", sh = function (w) { return atS ? capFirst(w) : w; };
     if (Math.random() < 0.7 || /\s/.test(IV[0])) return qChoice("iv-" + i, '<div class="gp">Choisis le mot <b>bien écrit</b>&nbsp;:</div>' + sent(blank(IV[3])),
@@ -5666,7 +5913,7 @@ var COURS = {
     return wordsQ("it-" + i, '<div class="gp">Touche le mot <b>invariable</b> de la phrase&nbsp;:</div>', toks, idx, "Le mot invariable : « " + IV[0] + " »",
       "« " + IV[0] + " » ne change jamais : ni féminin, ni pluriel.");
   }
-  var ORTH_MODES = ["a", "et", "son", "on", "accgn", "sv", "sons", "invar"];
+  var ORTH_MODES = ["a", "et", "son", "on", "accgn", "sv", "sons", "invar", "eer"];
   COURS["orth.homo"] = COURS["orth.a"] + COURS["orth.et"] + COURS["orth.son"] + COURS["orth.on"];
   MODULES.orth = {
     id: "orth", fr: true, title: "🔤 L'orthographe", short: "Orthographe", champ: "d'orthographe",
@@ -5680,6 +5927,7 @@ var COURS = {
       { id: "sv", label: "Accord sujet-verbe", ex: "les enfants jouent", color: "#f5b400" },
       { id: "sons", label: "c/ç, g/ge/gu, s/ss, m/n", ex: "garçon, pigeon, poisson, jambe", color: "#ff4fa3" },
       { id: "invar", label: "Les mots invariables", ex: "toujours, beaucoup, avec…", color: "#2fb0d0" },
+      { id: "eer", label: "é ou er ?", ex: "J'ai mangé / Je vais manger", color: "#ff9a1f" },
       { id: "melange", label: "Mélange de tout", ex: "🎲 Un peu de tout", color: "#7c4dff" }
     ],
     lesson: function (mode) { return mode === "homo" ? '<div class="panel">' + COURS["orth.homo"] + "</div>" : frLesson("orth", ORTH_MODES, mode); },
@@ -5691,7 +5939,7 @@ var COURS = {
   // ---------- FRANÇAIS : VOCABULAIRE ----------
   // =====================================================================
   function sansAccent(s) { return s.normalize ? s.normalize("NFD").replace(/[̀-ͯ]/g, "") : s; }
-  function alphaCmp(a, b) { var x = sansAccent(a), y = sansAccent(b); return x < y ? -1 : x > y ? 1 : 0; }
+  function alphaCmp(a, b) { return a.localeCompare(b, "fr", { sensitivity: "base" }); }   // ordre du dictionnaire
   function qVoc(kind) {
     var i, w;
     if (kind === "dico") {
@@ -5706,6 +5954,7 @@ var COURS = {
         pool.forEach(function (x) { var c = sansAccent(x.charAt(0)); if (!seenL[c] && pick.length < n) { seenL[c] = 1; pick.push(x); } });
       }
       var sorted = pick.slice().sort(alphaCmp);
+      for (var ci = 1; ci < sorted.length; ci++) if (alphaCmp(sorted[ci - 1], sorted[ci]) >= 0) return qVoc("dico");   // sécurité : jamais deux mots « égaux » ni mal rangés
       var tip = same && sansAccent(sorted[0].charAt(0)) === sansAccent(sorted[1].charAt(0)) ? "Les mots commencent par la même lettre : on regarde la <b>2e lettre</b> (puis la 3e…)." : "On regarde la <b>première lettre</b> de chaque mot et on suit l'alphabet : a b c d e f g h i j k l m n o p q r s t u v w x y z.";
       if (sub === "premier") return qChoice("dp-" + sorted.join(), '<div class="gp">Quel mot vient en <b>premier</b> dans le dictionnaire&nbsp;?</div>', shuffle(pick.slice()), sorted[0],
         "Ordre alphabétique : " + sorted.join(", "), tip, { optClass: "units3" });

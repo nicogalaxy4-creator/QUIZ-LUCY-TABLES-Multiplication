@@ -78,8 +78,13 @@
        et FRANÇAIS. Un bouton rond "🏠 Accueil" (en bas à gauche) ramène à
        ce choix depuis tous les écrans.
      - Les parties de maths ne changent pas : elles sont derrière MATHS.
-     - Menu Français, dans cet ordre : 1. Lecture fluence, 2. Grammaire,
-       3. Conjugaison, 4. Orthographe, 5. Vocabulaire.
+     - Menu Français, dans cet ordre : 1. Dictée, 2. Lecture fluence,
+       3. Grammaire, 4. Conjugaison, 5. Orthographe, 6. Vocabulaire.
+     - Dictée : 50 dictées (niveaux 1, 2, 3). La tablette lit (voix française
+       du navigateur) : toute la dictée, puis morceau par morceau deux fois
+       avec la ponctuation, puis une relecture. Le texte reste caché ; la
+       correction surligne les mots importants (explication au toucher).
+       Coches des dictées faites gardées sur la tablette, pour chaque enfant.
      - Parties 2 à 5 : même déroulé que la règle 4 (rappel de cours avec
        exemples, 20 questions, correction immédiate et explication courte,
        "Mélange"). Questions : QCM, phrase à trous avec choix, toucher le bon
@@ -1031,6 +1036,41 @@
   .mes-ladder { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: 8px 0; }
   .mes-ladder .ml-u { background: var(--purple); color: #fff; font-weight: 700; font-size: clamp(1.3rem, 3.6vw, 1.7rem); border-radius: 14px; padding: 6px 14px; min-width: 56px; text-align: center; }
   .mes-ladder .ml-x { font-weight: 700; color: var(--orange-dark); font-size: clamp(1.05rem, 2.8vw, 1.25rem); }
+  /* Dictée */
+  .home-card.dictee { background: linear-gradient(150deg, #a78bfa, #ec4899); }
+  .dic-speed { display: flex; gap: 6px; flex: none; }
+  .dic-speed button { background: #fff; border-radius: 16px; padding: 10px 12px; font-size: 1.05rem; font-weight: 700; box-shadow: 0 4px 0 #d9cbff; border: 3px solid transparent; min-height: 48px; }
+  .dic-speed button.on { border-color: var(--purple); background: #f3eeff; color: var(--purple); }
+  .dic-status { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 0; }
+  .dic-ear { font-size: clamp(3.6rem, 10vw, 5rem); line-height: 1; }
+  .dic-ear.talk { animation: dicTalk 1s ease-in-out infinite; }
+  @keyframes dicTalk { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+  .dic-phase { font-size: clamp(1.4rem, 3.8vw, 1.9rem); font-weight: 700; color: var(--purple); }
+  .dic-step { font-size: clamp(1.15rem, 3vw, 1.4rem); color: var(--ink-soft); min-height: 1.4em; }
+  .dic-status .bar { width: min(100%, 520px); }
+  .dic-hidden { font-size: 1.05rem; color: var(--ink-soft); }
+  .dic-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dic-btn {
+    min-height: 74px; border-radius: 22px; background: #fff; border: 4px solid #e1d6ff; box-shadow: 0 6px 0 #d9cbff;
+    font-size: clamp(1.2rem, 3.3vw, 1.6rem); font-weight: 700; color: var(--ink);
+  }
+  .dic-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #d9cbff; }
+  .dic-btn.play { grid-column: 1 / 2; background: var(--green); color: #fff; border-color: transparent; box-shadow: 0 6px 0 var(--green-dark); }
+  .dic-btn.pause { grid-column: 2 / 3; background: var(--orange); color: #fff; border-color: transparent; box-shadow: 0 6px 0 var(--orange-dark); }
+  .dic-btn.play.on, .dic-btn.pause.on { outline: 5px solid #fff3c4; }
+  #dic-repeat { grid-column: 1 / 3; }
+  @media (min-width: 900px) { .dic-controls { grid-template-columns: repeat(4, 1fr); } .dic-btn.play { grid-column: 1 / 3; } .dic-btn.pause { grid-column: 3 / 5; } #dic-repeat { grid-column: auto; } #dic-prev { grid-column: auto; } #dic-next { grid-column: span 2; } }
+  .dic-corr-btn { align-self: center; opacity: .75; }
+  .dic-corr-btn.ready { opacity: 1; animation: pop .4s ease; }
+  .dic-nospeech { background: #fff4e3; border: 4px solid #ffd8a3; border-radius: 22px; padding: 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .dic-warn { font-size: clamp(1.1rem, 3vw, 1.35rem); font-weight: 600; }
+  .dic-adult { background: #fff; border-radius: 22px; padding: 12px 16px; font-size: clamp(1.15rem, 3vw, 1.4rem); line-height: 1.6; }
+  .dic-adult-t { font-weight: 700; color: var(--purple); }
+  .dc-tip { position: sticky; top: 0; z-index: 10; background: #fffbe6; border: 4px solid var(--yellow); border-radius: 20px; padding: 10px 14px; margin: 0 0 14px; font-size: clamp(1.15rem, 3vw, 1.4rem); min-height: 3.2em; }
+  .dc-text p { margin: 0; font-size: clamp(1.55rem, 3.6vw, 2.1rem); line-height: 2; word-spacing: .15em; font-weight: 500; }
+  .dc-title { font-size: clamp(1.4rem, 3.6vw, 1.8rem); font-weight: 700; color: var(--purple); text-align: center; margin-bottom: 6px; }
+  .dmk { font: inherit; font-weight: 700; color: #cc1f74; background: #ffe3f1; border-radius: 10px; padding: 0 6px; border-bottom: 3px solid #ff8fc7; cursor: pointer; }
+  .dmk.on { background: #fff3c4; color: #8a5a00; border-bottom-color: #ffb800; }
 </style>
 </head>
 <body>
@@ -1451,32 +1491,114 @@
       <p class="subtitle">Qu'est-ce qu'on révise aujourd'hui&nbsp;?</p>
     </header>
     <div class="home-choices">
+      <button class="home-card dictee" id="go-dictee">
+        <span class="hc-emoji">🎧</span>
+        <span class="hc-title">1. Dictée</span>
+        <span class="hc-sub">La tablette lit, tu écris sur ton cahier</span>
+      </button>
       <button class="home-card fluence" id="go-fluence">
         <span class="hc-emoji">📖</span>
-        <span class="hc-title">1. Lecture fluence</span>
+        <span class="hc-title">2. Lecture fluence</span>
         <span class="hc-sub">Lire à voix haute pendant 1 minute</span>
       </button>
       <button class="home-card gram" id="go-gram">
         <span class="hc-emoji">✏️</span>
-        <span class="hc-title">2. Grammaire</span>
+        <span class="hc-title">3. Grammaire</span>
         <span class="hc-sub">Phrase, nature des mots, sujet</span>
       </button>
       <button class="home-card conj" id="go-conj">
         <span class="hc-emoji">⏳</span>
-        <span class="hc-title">3. Conjugaison</span>
+        <span class="hc-title">4. Conjugaison</span>
         <span class="hc-sub">Présent, futur, imparfait, passé composé</span>
       </button>
       <button class="home-card orth" id="go-orth">
         <span class="hc-emoji">🔤</span>
-        <span class="hc-title">4. Orthographe</span>
+        <span class="hc-title">5. Orthographe</span>
         <span class="hc-sub">a/à, et/est, accords, sons</span>
       </button>
       <button class="home-card voc" id="go-voc">
         <span class="hc-emoji">📗</span>
-        <span class="hc-title">5. Vocabulaire</span>
+        <span class="hc-title">6. Vocabulaire</span>
         <span class="hc-sub">Dictionnaire, familles, synonymes</span>
       </button>
       <!-- Place pour les prochaines parties de français : ajouter ici un bouton "home-card" -->
+    </div>
+  </div>
+</section>
+
+<!-- ================= FRANÇAIS : DICTÉE — CHOIX ================= -->
+<section class="screen" id="screen-dicmenu">
+  <div class="menu-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="dic-back" aria-label="Retour au menu Français">⬅️</button>
+      <h1>🎧 La dictée</h1>
+      <p class="subtitle">La tablette lit, tu écris sur ton cahier&nbsp;!</p>
+    </header>
+    <div class="panel">
+      <div class="fl-levels" id="dic-levels">
+        <button data-lv="1">⭐ Niveau 1</button>
+        <button data-lv="2">⭐⭐ Niveau 2</button>
+        <button data-lv="3">⭐⭐⭐ Niveau 3</button>
+      </div>
+      <div class="fl-random-wrap"><button class="go-btn" id="dic-random">🎲 Dictée au hasard</button><span class="fl-count" id="dic-count"></span></div>
+      <div class="fl-list" id="dic-list"></div>
+    </div>
+    <div class="panel fl-howto">
+      <h2>👩‍🏫 Comment ça marche&nbsp;?</h2>
+      <ul class="rules">
+        <li>1. La voix lit d'abord toute la dictée&nbsp;: on écoute sans écrire.</li>
+        <li>2. Puis elle lit morceau par morceau, deux fois, avec la ponctuation («&nbsp;virgule&nbsp;», «&nbsp;point&nbsp;»)&nbsp;: on écrit sur le cahier.</li>
+        <li>3. À la fin, elle relit tout&nbsp;: on se relit.</li>
+        <li>4. «&nbsp;Voir la correction&nbsp;»&nbsp;: on compare et on cherche ses erreurs. Touche les mots en couleur pour une petite explication.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FRANÇAIS : DICTÉE — LECTURE À VOIX HAUTE ================= -->
+<section class="screen" id="screen-dicread">
+  <div class="fl-wrap">
+    <div class="topbar">
+      <button class="home-btn" id="dic-quit" aria-label="Retour aux dictées">⬅️ <span class="lbl">Dictées</span></button>
+      <div class="fl-ttl" id="dic-title">Dictée</div>
+      <div class="dic-speed" id="dic-speed">
+        <button data-slow="1">🐢 Lente</button>
+        <button data-slow="0">🐇 Normale</button>
+      </div>
+    </div>
+    <div class="panel dic-status">
+      <div class="dic-ear" id="dic-ear">🎧</div>
+      <div class="dic-phase" id="dic-phase">Appuie sur «&nbsp;Lecture&nbsp;» pour commencer.</div>
+      <div class="dic-step" id="dic-step"></div>
+      <div class="bar"><div class="bar-fill" id="dic-bar"></div></div>
+      <div class="dic-hidden">🙈 Le texte est caché pendant la dictée.</div>
+    </div>
+    <div class="dic-nospeech hidden" id="dic-nospeech"></div>
+    <div class="dic-controls">
+      <button class="dic-btn play" id="dic-play">▶️ Lecture</button>
+      <button class="dic-btn pause" id="dic-pause">⏸️ Pause</button>
+      <button class="dic-btn" id="dic-repeat">🔁 Répéter</button>
+      <button class="dic-btn" id="dic-prev">⏮️ Morceau précédent</button>
+      <button class="dic-btn" id="dic-next">⏭️ Morceau suivant</button>
+    </div>
+    <div class="dic-adult hidden" id="dic-adult"></div>
+    <button class="go-btn purple dic-corr-btn" id="dic-corr">✅ Voir la correction</button>
+  </div>
+</section>
+
+<!-- ================= FRANÇAIS : DICTÉE — CORRECTION ================= -->
+<section class="screen" id="screen-diccorr">
+  <div class="menu-wrap">
+    <header class="menu-header">
+      <button class="back-btn" id="dc-back" aria-label="Retour à la dictée">⬅️</button>
+      <h1>✅ La correction</h1>
+      <p class="subtitle" id="dc-sub">Relis ta dictée et cherche tes erreurs.</p>
+    </header>
+    <div class="dc-tip" id="dc-tip">👆 Touche un mot en couleur pour savoir pourquoi il s'écrit comme ça.</div>
+    <div class="panel dc-text" id="dc-text"></div>
+    <div class="end-actions">
+      <button class="go-btn" id="dc-again">🔁 Refaire cette dictée</button>
+      <button class="go-btn purple" id="dc-other">📋 Autre dictée</button>
     </div>
   </div>
 </section>
@@ -1576,6 +1698,120 @@
 //  DONNÉES DE LA PARTIE FRANÇAIS — on peut ajouter des textes, phrases, mots… ici.
 //  (Le programme du quiz est dans le <script> suivant.)
 // =====================================================================
+// =====================================================================
+//  0. DICTÉES — 50 dictées originales (niveau 1 : 17, niveau 2 : 17, niveau 3 : 16).
+//  Pour ajouter une dictée : copier un bloc { ... } et changer id, niveau, titre, texte.
+//  Dans "texte", les mots à surligner dans la correction s'écrivent [mot|petite explication].
+//  Exemple : "Les [chats|Les chats : pluriel, donc s.] jouent."
+// =====================================================================
+var DICTEES = [
+  // ---------- NIVEAU 1 : présent (être, avoir, verbes en -er), pluriel en -s ----------
+  { id: "d1-chat", niveau: 1, titre: "Le chat de Lucy",
+    texte: "[Lucy|Un prénom commence toujours par une majuscule.] [a|a = verbe avoir : on peut dire « Lucy avait ».] un petit chat. Il [est|est = verbe être : on peut dire « il était ».] gris et [très|très : mot invariable, il s'écrit toujours pareil.] doux. Le chat [joue|il joue : verbe jouer au présent, avec un e à la fin.] [avec|avec : mot invariable.] une balle. Il saute [sur|sur : mot invariable.] le lit. Le soir, il reste [dans|dans : mot invariable.] son panier. Lucy adore son chat." },
+  { id: "d1-classe", niveau: 1, titre: "En classe",
+    texte: "Léo arrive en classe. Il porte un cartable bleu. [Les élèves|Les élèves : pluriel, donc s à la fin.] [sont|sont = verbe être au pluriel : ils sont.] calmes. La maîtresse [est|est = verbe être : elle était.] gentille. Léo écoute [et|et : il relie deux mots, on peut dire « et puis ».] il [travaille|il travaille : verbe travailler, avec un e à la fin.] bien. Il aime le calcul." },
+  { id: "d1-jardin", niveau: 1, titre: "Dans le jardin",
+    texte: "Léa et sa maman [sont|sont : verbe être, il y a deux personnes (elles sont).] dans le jardin. Elles [plantent|elles plantent : le verbe se termine par -ent au pluriel.] [des tomates|des tomates : pluriel, donc s.]. Léa arrose [les fleurs|les fleurs : pluriel, donc s.] avec un arrosoir. Le soleil brille. Les merles [chantent|ils chantent : -ent au pluriel (on n'entend pas ces lettres).] sur les branches. Léa est très [contente|Léa est une fille : contente avec un e.]." },
+  { id: "d1-gouter", niveau: 1, titre: "Le goûter de Lyes",
+    texte: "Lyes rentre de l'école. Il [a|a = verbe avoir : il avait faim.] faim. Il prépare un goûter. Il coupe une pomme [et|et : on peut dire « et puis ».] il mange une tartine. Ensuite, il range la table. Lyes [est|est = verbe être : il était.] un garçon [très|très : mot invariable.] sage." },
+  { id: "d1-pluie", niveau: 1, titre: "Un jour gris",
+    texte: "Le ciel [est|est = verbe être.] gris. La pluie tombe sur la ville. Lucy et Léo [regardent|ils regardent : deux enfants, donc -ent.] par la fenêtre. Ils dessinent [des nuages|des nuages : pluriel, donc s.] et [des parapluies|des parapluies : pluriel, donc s.]. Ils [sont|sont = verbe être : ils sont.] bien au chaud." },
+  { id: "d1-chien", niveau: 1, titre: "Le chien de Léa",
+    texte: "Le chien de Léa [est|est = verbe être.] noir et blanc. Il [a|a = verbe avoir : il avait.] de grandes oreilles. Il saute [dans|dans : mot invariable.] [les flaques|les flaques : pluriel, donc s.]. Léa lance la balle et le chien rapporte la balle. Le soir, Léa lave son chien. Le chien [adore|il adore : verbe adorer, avec un e à la fin.] Léa." },
+  { id: "d1-parc", niveau: 1, titre: "Au parc",
+    texte: "Léo et Lyes [jouent|ils jouent : deux garçons, donc -ent.] au parc. Ils grimpent [sur|sur : mot invariable.] le toboggan. Ils glissent [très|très : mot invariable.] vite. Ensuite, ils montent sur la balançoire. [Les deux amis|Les deux amis : pluriel, donc s.] [rigolent|ils rigolent : -ent au pluriel.]." },
+  { id: "d1-dessin", niveau: 1, titre: "Le dessin",
+    texte: "Lucy dessine une maison. La maison [a|a = verbe avoir : elle avait.] un toit rouge [et|et : on peut dire « et puis ».] [des volets bleus|des volets bleus : pluriel, donc s à volets et à bleus.]. Devant la maison, il y a un arbre. Lucy colorie le ciel en jaune. Elle [est|est = verbe être.] [fière|Lucy est une fille : fière avec un e.] de son dessin." },
+  { id: "d1-soupe", niveau: 1, titre: "La soupe de Mamie",
+    texte: "Léa et Lucy cuisinent [avec|avec : mot invariable.] Mamie. Elles [préparent|elles préparent : -ent au pluriel.] une soupe. Elles épluchent [les carottes|les carottes : pluriel, donc s.] et les navets. La soupe chauffe [dans|dans : mot invariable.] la casserole. Mamie goûte. La soupe [est|est = verbe être : elle était.] très bonne." },
+  { id: "d1-foot", niveau: 1, titre: "Le football",
+    texte: "Lyes aime le football. Le samedi, il [joue|il joue : un e à la fin.] avec [ses copains|ses copains : pluriel, donc s.]. Il porte un maillot vert. Il frappe le ballon. Le ballon entre [dans|dans : mot invariable.] le but. Lyes [crie|il crie : verbe crier, avec un e à la fin.] de joie." },
+  { id: "d1-neige", niveau: 1, titre: "La neige",
+    texte: "Il neige sur le village. Léo porte un bonnet [et|et : on peut dire « et puis ».] [des gants|des gants : pluriel, donc s.]. Il fabrique un [bonhomme|bonhomme s'écrit avec deux m.] de neige avec son papa. Le bonhomme [a|a = verbe avoir.] un nez orange. Léo [est|est = verbe être.] très [content|Léo est un garçon : content, sans e.]." },
+  { id: "d1-plage", niveau: 1, titre: "La plage",
+    texte: "Lucy et [ses parents|ses parents : pluriel, donc s.] [sont|sont = verbe être : ils sont.] sur la plage. [Les vagues|Les vagues : pluriel, donc s.] [arrivent|elles arrivent : -ent au pluriel.] sur le sable. Lucy nage avec sa bouée. Ensuite, elle ramasse des coquillages. Elle [est|est = verbe être.] très [contente|Lucy est une fille : contente avec un e.]." },
+  { id: "d1-matin", niveau: 1, titre: "Le matin",
+    texte: "Le matin, Lyes [est|est = verbe être : il était.] encore [fatigué|Lyes est un garçon : fatigué, sans e.]. Il se lave [les mains|les mains : pluriel, donc s.] et le visage. Il mange une tartine [avec|avec : mot invariable.] du beurre. Il brosse [ses dents|ses dents : pluriel, donc s.]. Il [est|est = verbe être.] prêt pour la journée." },
+  { id: "d1-poissons", niveau: 1, titre: "Les poissons rouges",
+    texte: "Léa [a|a = verbe avoir : elle avait.] un aquarium [dans|dans : mot invariable.] sa chambre. Trois [poissons rouges|poissons rouges : pluriel, donc s aux deux mots.] nagent dedans. Le matin, Léa donne la nourriture. Les poissons [montent|ils montent : -ent au pluriel.] et ils mangent. Léa regarde [ses poissons|ses poissons : pluriel, donc s.]." },
+  { id: "d1-fete", niveau: 1, titre: "La fête de Lucy",
+    texte: "C'est la fête de Lucy. Léa, Léo et Lyes [arrivent|ils arrivent : trois enfants, donc -ent.] [avec|avec : mot invariable.] [des ballons|des ballons : pluriel, donc s.]. [Les enfants|Les enfants : pluriel, donc s.] chantent et ils dansent. Lucy souffle [les bougies|les bougies : pluriel, donc s.]. Tout le monde [est|est = verbe être.] très gai." },
+  { id: "d1-velo", niveau: 1, titre: "Le vélo rouge",
+    texte: "Léo [a|a = verbe avoir.] un vélo rouge. Il roule [dans|dans : mot invariable.] la rue avec son papa. Il porte un casque [et|et : on peut dire « et puis ».] des gants. Il freine devant la maison. [Les voisins|Les voisins : pluriel, donc s.] [regardent|ils regardent : -ent au pluriel.] Léo. Léo [adore|il adore : un e à la fin.] son vélo." },
+  { id: "d1-livres", niveau: 1, titre: "Les livres",
+    texte: "Lucy et Lyes [cherchent|ils cherchent : deux enfants, donc -ent.] un livre. Lucy trouve une histoire de pirates. Lyes [préfère|il préfère : accent aigu puis accent grave.] un livre [sur|sur : mot invariable.] les étoiles. Ils écoutent la dame qui raconte un conte. [Les enfants|Les enfants : pluriel, donc s.] [adorent|ils adorent : -ent au pluriel.] les livres." },
+
+  // ---------- NIVEAU 2 : présent et futur, accords dans le groupe nominal, a/à, et/est ----------
+  { id: "d2-zoo", niveau: 2, titre: "La sortie au zoo",
+    texte: "[Aujourd'hui|Aujourd'hui : mot invariable, avec une apostrophe.], la classe de Lucy visite le zoo. Les élèves regardent [les animaux|un animal, des animaux : -al devient -aux au pluriel.]. [Les singes sautent|Les singes sautent : sujet au pluriel, donc le verbe finit par -ent.] dans les arbres. Un gros ours mange des fruits. Lucy [est|est = verbe être : on peut dire « était ».] contente [et|et : on peut dire « et puis ».] elle dessine [les girafes|les girafes : pluriel, donc s.]. Ce soir, elle [racontera|racontera : verbe raconter au futur.] tout [à|à : petit mot, on ne peut pas dire « avait ».] sa maman." },
+  { id: "d2-gateau", niveau: 2, titre: "Le gâteau de Léo",
+    texte: "Ce soir, Léo [préparera|préparera : verbe préparer au futur, on entend le r.] un gâteau avec son papa. Il cassera trois œufs dans un [grand bol|un grand bol : masculin singulier.]. Il ajoutera du sucre et de la farine. Papa [a|a = verbe avoir : il avait.] un [vieux livre|vieux livre : masculin singulier.] de recettes. Le gâteau [sera|sera : verbe être au futur.] prêt [à|à : on ne peut pas dire « avait ».] huit heures. Toute la famille sera [très|très : mot invariable.] gourmande." },
+  { id: "d2-poney", niveau: 2, titre: "Le poney",
+    texte: "Léa adore [les chevaux|un cheval, des chevaux : -al devient -aux.]. Le mercredi, elle monte un [poney blanc|un poney blanc : masculin, pas de e.]. Elle brosse [ses longs poils|ses longs poils : pluriel, donc s aux deux mots.] et elle soigne ses sabots. [Les poneys sont doux|Les poneys sont doux : doux finit toujours par x.] et calmes. Plus tard, Léa [aura|aura : verbe avoir au futur.] un [beau cheval|un beau cheval : masculin singulier.]." },
+  { id: "d2-boules", niveau: 2, titre: "Les boules de neige",
+    texte: "Il neige [beaucoup|beaucoup : mot invariable.] [aujourd'hui|aujourd'hui : mot invariable.]. Lyes et Léo enfilent [leurs bottes|leurs bottes : pluriel, donc s aux deux mots.] et leurs gants. [Ils lancent|Ils lancent : deux garçons, donc -ent.] des boules de neige. [Les joues|Les joues : pluriel, donc s.] des garçons sont toutes [rouges|les joues sont rouges : pluriel, donc s.]. Demain, ils [fabriqueront|ils fabriqueront : futur, -ont avec ils.] un igloo dans le jardin." },
+  { id: "d2-montagne", niveau: 2, titre: "Les vacances à la montagne",
+    texte: "Cet été, Lucy et Léa partiront [à|à : on ne peut pas dire « avait ».] la montagne. [Elles marcheront|elles marcheront : futur, -ont avec elles.] sur [les chemins|les chemins : pluriel, donc s.] et elles grimperont jusqu'au lac. Elles observeront [les vaches|les vaches : pluriel, donc s.] dans les prés. Le soir, elles dormiront sous une tente. Ce [sera|sera : verbe être au futur.] une [belle aventure|une belle aventure : féminin, belle avec deux l et un e.] !" },
+  { id: "d2-marche", niveau: 2, titre: "Le marché",
+    texte: "Le samedi, Léo accompagne sa maman [au|au : à + le.] marché. [Les tomates sont rouges|Les tomates sont rouges : pluriel, donc s.] [et|et : on peut dire « et puis ».] les pommes sont vertes. Le marchand [a|a = verbe avoir : il avait.] une [grosse voix|une grosse voix : féminin, grosse avec un e.]. Léo choisit des cerises. Maman donne [les pièces|les pièces : pluriel, donc s.] au marchand et elle range les fruits dans son panier." },
+  { id: "d2-anniv", niveau: 2, titre: "L'anniversaire de Lyes",
+    texte: "Demain, Lyes [aura|aura : verbe avoir au futur.] huit ans. Il invitera [ses copains|ses copains : pluriel, donc s.] et [ses copines|ses copines : féminin pluriel.]. Sa maman préparera un gâteau [au chocolat|au chocolat : au = à + le.]. [Les enfants joueront|Les enfants joueront : futur, -ont au pluriel.] dans le jardin [et|et : on peut dire « et puis ».] ils chanteront. Lyes ouvrira [ses cadeaux|un cadeau, des cadeaux : -eau prend un x.] avec [beaucoup|beaucoup : mot invariable.] de joie." },
+  { id: "d2-herisson", niveau: 2, titre: "Le hérisson",
+    texte: "Le hérisson [est|est = verbe être : on peut dire « était ».] un petit animal. Il [a|a = verbe avoir : il avait.] [beaucoup|beaucoup : mot invariable.] de piquants sur le dos. La nuit, il cherche [des vers|des vers : pluriel.] et des insectes. Le jour, il reste caché sous [les feuilles|les feuilles : pluriel, donc s.]. En hiver, il dort [très|très : mot invariable.] longtemps. Il se réveillera au printemps." },
+  { id: "d2-piscine", niveau: 2, titre: "La piscine",
+    texte: "Le jeudi, la classe de Léa va [à|à : on ne peut pas dire « avait ».] la piscine. Léa [est|est = verbe être : elle était.] un peu [inquiète|Léa est une fille : inquiète avec un e.], mais elle est courageuse. Elle plonge et elle nage jusqu'au bord. Le maître nageur [est|est = verbe être.] fier d'elle. Bientôt, Léa [nagera|nagera : verbe nager au futur.] comme un poisson !" },
+  { id: "d2-automne", niveau: 2, titre: "Les feuilles d'automne",
+    texte: "En automne, [les feuilles des arbres|les feuilles des arbres : pluriel, donc s.] deviennent [jaunes|les feuilles sont jaunes : pluriel, donc s.] et rouges. Le vent souffle et [elles tombent|elles tombent : -ent au pluriel.] sur le sol. Léo et Lucy ramassent les plus [belles feuilles|les belles feuilles : féminin pluriel.]. Ils [colleront|ils colleront : futur, -ont avec ils.] les feuilles dans un grand cahier. Ce [sera|sera : verbe être au futur.] un joli herbier." },
+  { id: "d2-souris", niveau: 2, titre: "Le chat et la souris",
+    texte: "Un [petit chat gris|un petit chat gris : masculin singulier.] guette une souris. La souris [est|est = verbe être : elle était.] [cachée|la souris est cachée : féminin, donc e.] dans un trou. Le chat attend [toujours|toujours : mot invariable, avec un s.] devant le trou. Mais la souris est [rusée|la souris est rusée : féminin, donc e.] ! Elle sort par un autre trou et elle file dans la cuisine. Le chat [restera|restera : verbe rester au futur.] longtemps devant le mur." },
+  { id: "d2-dentiste", niveau: 2, titre: "Chez le dentiste",
+    texte: "[Aujourd'hui|Aujourd'hui : mot invariable.], Lyes va chez le dentiste. Il [a|a = verbe avoir : il avait peur.] un peu peur. Le dentiste [est|est = verbe être.] gentil [et|et : on peut dire « et puis ».] il regarde les dents de Lyes. [Elles sont blanches|Elles sont blanches : féminin pluriel.] et propres. Lyes gagne un autocollant. Ce soir, il [brossera|brossera : verbe brosser au futur.] encore ses dents." },
+  { id: "d2-tempete", niveau: 2, titre: "La tempête",
+    texte: "Ce soir, une tempête arrive sur la ville. Le vent souffle [très|très : mot invariable.] fort [et|et : on peut dire « et puis ».] [les arbres plient|les arbres plient : pluriel, donc -ent.]. Les volets claquent. Léa et Léo sont [à|à : on ne peut pas dire « avait ».] la maison avec [leurs parents|leurs parents : pluriel, donc s aux deux mots.]. Ils jouent aux cartes. Demain, le ciel [sera|sera : verbe être au futur.] calme." },
+  { id: "d2-potager", niveau: 2, titre: "Le potager de Papi",
+    texte: "Papi [a|a = verbe avoir : il avait.] un [grand potager|un grand potager : masculin singulier.]. Il cultive [des choux|un chou, des choux : chou prend un x.], [des poireaux|un poireau, des poireaux : -eau prend un x.] et des haricots. Lucy arrose [les légumes|les légumes : pluriel, donc s.] avec un arrosoir vert. Bientôt, ils [mangeront|ils mangeront : futur, -ont avec ils.] une [bonne soupe|une bonne soupe : féminin, bonne avec un e.]. Lucy [est|est = verbe être.] fière de son travail." },
+  { id: "d2-cirque", niveau: 2, titre: "Le cirque",
+    texte: "Ce soir, Léo et Lyes iront au cirque. Ils [verront|ils verront : verbe voir au futur.] des clowns et [des jongleurs|des jongleurs : pluriel, donc s.]. [Les chevaux|un cheval, des chevaux : -al devient -aux.] danseront sur la piste. Un acrobate marchera sur une corde. [Les deux garçons|Les deux garçons : pluriel, donc s.] [applaudiront|ils applaudiront : futur, -ont avec ils.] [très|très : mot invariable.] fort." },
+  { id: "d2-dinos", niveau: 2, titre: "Les dinosaures",
+    texte: "Les dinosaures sont des [animaux disparus|des animaux disparus : masculin pluriel.]. Certains sont [énormes|énormes : pluriel, donc s.] et d'autres sont petits. Le diplodocus [a|a = verbe avoir : il avait.] un long cou. Il mange [les feuilles|les feuilles : pluriel, donc s.] des arbres. Le tyrannosaure a des [dents pointues|des dents pointues : féminin pluriel.]. [Aujourd'hui|Aujourd'hui : mot invariable.], les enfants observent leurs squelettes au musée." },
+  { id: "d2-fete", niveau: 2, titre: "La fête de l'école",
+    texte: "Samedi, ce [sera|sera : verbe être au futur.] la fête de l'école. Léa et Lucy [chanteront|elles chanteront : futur, -ont avec elles.] une chanson avec toute la classe. [Les parents seront assis|Les parents seront assis : masculin pluriel.] devant la scène. Les filles porteront de [jolies robes bleues|de jolies robes bleues : féminin pluriel, donc es.]. Il y [aura|aura : verbe avoir au futur.] [beaucoup|beaucoup : mot invariable.] de crêpes [et|et : on peut dire « et puis ».] de jeux." },
+
+  // ---------- NIVEAU 3 : présent, futur, imparfait, passé composé, son/sont, on/ont, é/er, dialogues ----------
+  { id: "d3-cabane", niveau: 3, titre: "La cabane dans les bois",
+    texte: "Pendant les vacances, Léo et Lyes [ont construit|ont = verbe avoir : on peut dire « ils avaient construit ».] une cabane dans les bois. Ils [passaient|ils passaient : imparfait, -aient avec ils.] toutes leurs journées dedans. Un matin, ils [ont trouvé|trouvé : on peut dire « mordu », donc -é.] la cabane [cassée|la cabane est cassée : féminin, donc e.] par le vent. Lyes [était|était : verbe être à l'imparfait.] triste. Léo a dit : « [On|on : on peut dire « il », donc on sans t.] va la [réparer|réparer : on peut dire « mordre », donc -er.] ensemble ! » Les deux amis ont ramassé des branches et ils ont travaillé jusqu'au soir. Maintenant, leur cabane est encore plus solide." },
+  { id: "d3-rentree", niveau: 3, titre: "Le jour de la rentrée",
+    texte: "Ce matin, Lucy [a retrouvé|retrouvé : on peut dire « mordu », donc -é.] ses copines dans la cour. Elle [avait|avait : verbe avoir à l'imparfait.] un [nouveau cartable|un nouveau cartable : masculin singulier.] et des crayons tout neufs. La maîtresse a appelé les élèves. Dans la classe, chacun a cherché [son prénom|son prénom : on peut dire « mon prénom », donc son.] sur une étiquette. Lucy était un peu timide, mais elle a vite souri. « Cette année, nous allons [beaucoup|beaucoup : mot invariable.] [apprendre|apprendre : verbe à l'infinitif après « allons ».] », a expliqué la maîtresse." },
+  { id: "d3-tarte", niveau: 3, titre: "La tarte aux pommes",
+    texte: "Dimanche, Léa a voulu [préparer|préparer : on peut dire « mordre », donc -er.] une tarte aux pommes avec son papa. Ils [ont épluché|ont = avoir (ils avaient) ; épluché = mordu, donc -é.] les fruits et ils ont coupé de [fines tranches|de fines tranches : féminin pluriel.]. Léa a posé les morceaux sur la pâte, en cercle. Pendant la cuisson, la cuisine [sentait|sentait : imparfait.] bon. À quatre heures, toute la famille a [goûté|goûté : on peut dire « mordu », donc -é.] la tarte. « Elle est délicieuse ! » a dit Maman. Léa [était|était : verbe être à l'imparfait.] très fière." },
+  { id: "d3-renard", niveau: 3, titre: "Le renard et les poules",
+    texte: "Autrefois, un [renard affamé|un renard affamé : masculin, sans e.] se promenait près d'une ferme. Chaque nuit, il [essayait|il essayait : imparfait, -ait avec il.] d'[entrer|entrer : on peut dire « mordre », donc -er.] dans le poulailler, mais le chien veillait. Un soir, le chien a oublié de surveiller la porte. Le renard a sauté par la fenêtre. Les poules [ont crié|ont = verbe avoir : elles avaient crié.] si fort que le fermier a allumé la lumière. Le renard a filé dans la forêt sans rien manger. [On|on : on peut dire « il », donc on sans t.] ne l'a jamais revu." },
+  { id: "d3-foret", niveau: 3, titre: "Dans la forêt",
+    texte: "Hier, la classe a marché dans la forêt. Lyes a ramassé [des glands|des glands : pluriel, donc s.] et des châtaignes. Lucy a [observé|observé : on peut dire « mordu », donc -é.] un écureuil qui [grimpait|il grimpait : imparfait.] sur un chêne. Il avait une [queue rousse|une queue rousse : féminin, donc e.] et touffue. « Regarde, il cache [ses provisions|ses provisions : on peut dire « mes provisions ».] ! » a chuchoté Lucy. Les enfants [ont rapporté|ont = verbe avoir : ils avaient rapporté.] leurs trésors à l'école. Demain, ils les [classeront|ils classeront : futur, -ont avec ils.] dans des boîtes." },
+  { id: "d3-match", niveau: 3, titre: "Le match de basket",
+    texte: "Samedi, l'équipe de Léo a joué un match de basket. [Les joueurs étaient nerveux|Les joueurs étaient nerveux : imparfait au pluriel, -aient.]. Au début, les adversaires [ont marqué|ont = avoir : ils avaient marqué.] beaucoup de paniers. Puis Léo a lancé le ballon de très loin et il a réussi un [panier magnifique|un panier magnifique : masculin singulier.]. Le public a [applaudi|applaudi : verbe applaudir, il se termine par i.]. À la fin, [son équipe|son équipe : on peut dire « mon équipe ».] a gagné. « [On|on : on peut dire « il », donc on sans t.] a gagné ! » ont crié les garçons." },
+  { id: "d3-lettre", niveau: 3, titre: "La lettre à Mamie",
+    texte: "Léa a écrit une lettre à sa grand-mère. Elle a [raconté|raconté : on peut dire « mordu », donc -é.] ses vacances à la mer. Elle a parlé des vagues, des crabes et [des châteaux|un château, des châteaux : -eau prend un x.] de sable. « Tu me manques [beaucoup|beaucoup : mot invariable.] », a-t-elle ajouté à la fin. Ensuite, elle a collé un timbre sur l'enveloppe. Demain, le facteur [apportera|apportera : verbe apporter au futur.] la lettre. Mamie [sera|sera : verbe être au futur.] sûrement très émue." },
+  { id: "d3-chaton", niveau: 3, titre: "Le chaton perdu",
+    texte: "Mercredi, Lucy et Lyes [ont entendu|ont = verbe avoir : ils avaient entendu.] un petit miaulement sous une voiture. Un chaton [tremblait|il tremblait : imparfait.] de peur. [Ses poils étaient mouillés|Ses poils étaient mouillés : masculin pluriel, donc s.] et sales. Lyes a parlé tout doucement pour le [rassurer|rassurer : on peut dire « mordre », donc -er.]. Lucy a apporté un bol d'eau. Le chaton a bu et il a ronronné. Les enfants ont trouvé la propriétaire grâce à une affiche. Elle a offert des bonbons aux enfants pour les remercier." },
+  { id: "d3-ruches", niveau: 3, titre: "Les ruches de Papi",
+    texte: "Le grand-père de Léo a des ruches au fond de son jardin. Hier, ils [ont enfilé|ont = avoir ; enfilé = mordu, donc -é.] de [grandes combinaisons blanches|de grandes combinaisons blanches : féminin pluriel.]. Papi a ouvert une ruche avec précaution. Les abeilles [bourdonnaient|elles bourdonnaient : imparfait, -aient au pluriel.] autour d'eux. Léo a regardé les cadres remplis de miel. Ensuite, ils ont versé le miel dans des pots. Léo en a goûté une cuillère : [c'était|c'était : verbe être à l'imparfait.] délicieux !" },
+  { id: "d3-magie", niveau: 3, titre: "Le spectacle de magie",
+    texte: "Samedi soir, un magicien a [présenté|présenté : on peut dire « mordu », donc -é.] un spectacle à l'école. Il [portait|il portait : imparfait.] un chapeau noir et une [cape rouge|une cape rouge : féminin singulier.]. Il a sorti un lapin de [son chapeau|son chapeau : on peut dire « mon chapeau ».] ! Ensuite, il a demandé : « Qui veut m'[aider|aider : on peut dire « mordre », donc -er.] ? » Léa a levé la main. Le magicien a fait disparaître une pièce. Lyes n'a pas compris le secret. [Tous les enfants|Tous les enfants : masculin pluriel.] [ont applaudi|ont = avoir : ils avaient applaudi.]." },
+  { id: "d3-lac", niveau: 3, titre: "Au bord du lac",
+    texte: "Dimanche, la famille de Lyes a pique-niqué au bord du lac. [Son père|Son père : on peut dire « mon père ».] a préparé des sandwichs et sa mère a apporté une salade de fruits. Il faisait beau et l'eau [brillait|elle brillait : imparfait.] au soleil. Lyes a lancé des [cailloux plats|un caillou, des cailloux : caillou prend un x.] sur l'eau. Ils [faisaient|ils faisaient : imparfait, -aient avec ils.] des ricochets. « Regarde, j'ai fait cinq bonds ! » a crié Lyes. Après le repas, ils [ont joué|ont = avoir : ils avaient joué.] au ballon." },
+  { id: "d3-train", niveau: 3, titre: "Le voyage en train",
+    texte: "Pendant les vacances, Lucy a pris le train pour [aller|aller : on peut dire « mordre », donc -er.] chez ses cousins. Par la fenêtre, elle [regardait|elle regardait : imparfait.] les champs, les vaches et les villages. Elle a lu une bande dessinée et elle a [mangé|mangé : on peut dire « mordu », donc -é.] une pomme. Le voyage a duré trois heures. Sur le quai, [ses cousins|ses cousins : on peut dire « mes cousins ».] l'attendaient avec une pancarte : « Bienvenue, Lucy ! » Elle a couru vers eux en riant." },
+  { id: "d3-campagne", niveau: 3, titre: "Trois jours à la campagne",
+    texte: "Au printemps, la classe de Léo et Léa a passé trois jours à la campagne. [Les élèves dormaient|Les élèves dormaient : imparfait au pluriel, -aient.] dans un grand chalet. Le matin, ils [observaient|ils observaient : imparfait.] les oiseaux avec des jumelles. L'après-midi, ils [ont fabriqué|ont = avoir ; fabriqué = mordu, donc -é.] des nichoirs en bois. Le dernier soir, ils ont chanté autour d'un feu de camp. « Je voudrais [rester|rester : on peut dire « mordre », donc -er.] ici toute l'année ! » a dit Léo." },
+  { id: "d3-etoiles", niveau: 3, titre: "La nuit des étoiles",
+    texte: "Hier soir, Lyes a observé le ciel avec son père. Il n'y avait pas de nuages et [on|on : on peut dire « il », donc on sans t.] [voyait|on voyait : imparfait.] des milliers d'étoiles. [Son père|Son père : on peut dire « mon père ».] a montré la Grande Ourse à Lyes. Elle ressemble à une [grande casserole|une grande casserole : féminin singulier.]. Ensuite, ils [ont vu|ont = avoir : ils avaient vu.] une étoile filante. Lyes a fermé les yeux et il a fait un vœu. Il ne veut pas le [révéler|révéler : on peut dire « mordre », donc -er.] !" },
+  { id: "d3-voisin", niveau: 3, titre: "Le nouveau voisin",
+    texte: "Samedi, un grand camion a [stationné|stationné : on peut dire « mordu », donc -é.] devant la maison de Léa. Des déménageurs portaient des cartons et [des meubles|des meubles : pluriel, donc s.]. Un garçon [regardait|il regardait : imparfait.] par la fenêtre. Léa lui a fait un signe de la main. Le lendemain, il a sonné à la porte : « Bonjour, je m'appelle Léo ! » Depuis, Léa et Léo [sont|sont = verbe être : ils étaient.] amis. Ils font [leurs devoirs|leurs devoirs : pluriel, donc s aux deux mots.] ensemble." },
+  { id: "d3-concours", niveau: 3, titre: "Le concours de dessin",
+    texte: "La mairie a organisé un concours de dessin sur la mer. Lucy a [dessiné|dessiné : on peut dire « mordu », donc -é.] une baleine et ses petits. Lyes a peint un [bateau de pirates|un bateau de pirates : bateau au singulier, pirates au pluriel.]. Pendant une semaine, [on|on : on peut dire « il », donc on sans t.] a exposé les dessins à la bibliothèque. Samedi, le jury a annoncé les gagnants : Lucy a reçu le premier prix ! Lyes a [félicité|félicité : on peut dire « mordu », donc -é.] son amie. [Leurs dessins sont|Leurs dessins sont : sont = verbe être, on peut dire « étaient ».] maintenant accrochés dans la classe." }
+];
+
 // =====================================================================
 //  1. LECTURE FLUENCE — 36 textes originaux (150 à 200 mots) : 12 au niveau 1, 12 au niveau 2, 12 au niveau 3.
 //  Pour ajouter un texte : copier un bloc { ... } et changer id, niveau, titre, texte, questions.
@@ -6492,6 +6728,237 @@ var COURS = {
     if (window.confirm("Effacer tout l'historique de lecture de " + pn() + NB + "? Cette action est définitive.")) { store(flKey("fluence"), []); flHist(); }
   });
 
+
+  // =====================================================================
+  // ---------- FRANÇAIS : DICTÉE ----------
+  // La tablette lit la dictée (synthèse vocale du navigateur, fr-FR) :
+  // 1) lecture complète, 2) morceau par morceau, deux fois, avec la ponctuation, 3) relecture complète.
+  // Le texte reste caché ; « Voir la correction » l'affiche avec les mots importants en couleur.
+  // =====================================================================
+  var DIC = { niveau: 1, d: null, steps: [], pos: 0, playing: false, token: 0, slow: load("dictee-lente", true), timer: null, voice: null, wake: null, nchunks: 0, ok: true };
+  var DIC_PONCT = { ",": "virgule", ".": "point", "!": "point d'exclamation", "?": "point d'interrogation", ":": "deux points", ";": "point-virgule", "«": "ouvrez les guillemets", "»": "fermez les guillemets" };
+  var DIC_PETITS = /^(le|la|les|l'|un|une|des|de|du|d'|à|au|aux|et|dans|sur|avec|en|son|sa|ses|mon|ma|mes|ton|ta|tes|leur|leurs|ce|cet|cette|ces|il|elle|ils|elles|je|j'|tu|nous|vous|on|qui|que|qu'|ne|n'|très|pour|par|se|s'|me|m'|plus|tout|toute|tous|toutes|mais|sous|chez|si|a|ont|est|sont|y)$/i;
+  function dicPlain(t) { return t.replace(/\[([^|\]]+)\|[^\]]*\]/g, "$1"); }
+  function dicWords(s) { return s.split(/\s+/).filter(function (w) { return /[A-Za-zÀ-ÿ]/.test(w); }).length; }
+  // Découpe la dictée en petits morceaux (phrases courtes, ou groupes de 3 à 7 mots)
+  function dicChunks(plain) {
+    var toks = plain.replace(/«\s*/g, "« ").replace(/\s*»/g, " »").split(/\s+/).filter(Boolean), chunks = [], cur = [];
+    function flush() { if (cur.length) chunks.push(cur.join(" ")); cur = []; }
+    function rest(k) {   // nombre de mots jusqu'à la prochaine ponctuation
+      var n = 0;
+      for (var j = k + 1; j < toks.length; j++) { if (/[A-Za-zÀ-ÿ]/.test(toks[j])) n++; if (/[.!?:;,»]$/.test(toks[j])) break; }
+      return n;
+    }
+    toks.forEach(function (w, k) {
+      if (w === "«") { flush(); cur.push(w); return; }
+      cur.push(w);
+      var nw = dicWords(cur.join(" ")), next = toks[k + 1];
+      if (/[.!?:»]$/.test(w)) { if (next === "»") return; flush(); return; }
+      if (/[,;]$/.test(w) && nw >= 3) { flush(); return; }
+      var bare = w.replace(/[^A-Za-zÀ-ÿ']/g, "");
+      if (nw >= 5 && next && !/^[.,!?:;»]$/.test(next) && !DIC_PETITS.test(bare) && (rest(k) >= 3 || nw >= 8)) flush();
+    });
+    flush();
+    return chunks;
+  }
+  // Ce que dit la voix pour un morceau : les mots, puis la ponctuation en toutes lettres
+  function dicSpoken(chunk) {
+    var out = [], words = [];
+    chunk.split(/\s+/).forEach(function (w) {
+      var m = w.match(/^([«]?)(.*?)([.,!?:;»]*)$/);
+      if (m[1]) { if (words.length) { out.push(words.join(" ")); words = []; } out.push(DIC_PONCT["«"]); }
+      if (m[2]) words.push(m[2]);
+      if (m[3]) { if (words.length) { out.push(words.join(" ")); words = []; } m[3].split("").forEach(function (p) { out.push(DIC_PONCT[p]); }); }
+    });
+    if (words.length) out.push(words.join(" "));
+    return out.join(", ").replace(/, (virgule|point|point d'exclamation|point d'interrogation|deux points|point-virgule|fermez les guillemets)/g, " … $1");
+  }
+  function dicSentences(plain) { return plain.replace(/[«»]/g, "").match(/[^.!?]+[.!?]+\s*/g) || [plain]; }
+  // Le programme de lecture (étapes : parler ou attendre)
+  function dicBuild() {
+    var plain = dicPlain(DIC.d.texte), chunks = dicChunks(plain), st = [], full = DIC.slow ? 0.85 : 0.95, rc = DIC.slow ? 0.7 : 0.88;
+    st.push({ say: "Écoute bien toute la dictée, sans écrire.", rate: 1, part: "intro", c: -1 });
+    dicSentences(plain).forEach(function (s) { st.push({ say: s.trim(), rate: full, part: "intro", c: -1 }); });
+    st.push({ wait: 1500, part: "intro", c: -1 });
+    st.push({ say: "Maintenant, prends ton crayon. À toi d'écrire !", rate: 1, part: "intro", c: -1 });
+    chunks.forEach(function (ch, i) {
+      var sp = dicSpoken(ch), nw = dicWords(ch), pause = (DIC.slow ? 2200 : 1400) * nw + (DIC.slow ? 2500 : 1500);
+      st.push({ say: sp, rate: rc, part: "chunk", c: i, first: true });
+      st.push({ wait: 1300, part: "chunk", c: i });
+      st.push({ say: sp, rate: rc, part: "chunk", c: i });
+      st.push({ wait: pause, part: "chunk", c: i, write: true });
+    });
+    st.push({ say: "Relis bien ta dictée pendant que je la lis une dernière fois.", rate: 1, part: "final", c: chunks.length, first: true });
+    dicSentences(plain).forEach(function (s) { st.push({ say: s.trim(), rate: full, part: "final", c: chunks.length }); });
+    st.push({ say: "C'est fini ! Tu peux regarder la correction.", rate: 1, part: "final", c: chunks.length, end: true });
+    DIC.steps = st; DIC.nchunks = chunks.length; DIC.chunks = chunks;
+    $("#dic-adult").innerHTML = "";
+  }
+  function dicSupported() { return "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined"; }
+  function dicPickVoice() {
+    if (!dicSupported()) return;
+    var vs = speechSynthesis.getVoices() || [], fr = vs.filter(function (v) { return /^fr[-_]FR/i.test(v.lang); });
+    if (!fr.length) fr = vs.filter(function (v) { return /^fr/i.test(v.lang); });
+    var fem = /(amélie|amelie|audrey|aurélie|aurelie|marie|julie|céline|celine|hortense|denise|virginie|chantal|sylvie|brigitte|claire|eloise|élise|elise|vivienne|juliette|female|femme|google français)/i;
+    DIC.voice = fr.filter(function (v) { return fem.test(v.name); })[0] || fr[0] || null;
+    DIC.nVoices = vs.length; DIC.nFr = fr.length;
+  }
+  if (dicSupported()) { dicPickVoice(); try { speechSynthesis.addEventListener("voiceschanged", dicPickVoice); } catch (e) { speechSynthesis.onvoiceschanged = dicPickVoice; } }
+  function dicShowProblem(msg) {
+    var box = $("#dic-nospeech");
+    box.innerHTML = '<div class="dic-warn">🔇 ' + msg + '</div><button class="small-btn" id="dic-show-adult">👩‍🏫 Afficher le texte pour qu\'un adulte lise la dictée</button>';
+    box.classList.remove("hidden");
+    $("#dic-show-adult").addEventListener("click", function () {   // le texte n'est mis dans la page que si un adulte le demande
+      $("#dic-adult").innerHTML = '<div class="dic-adult-t">👩‍🏫 Texte pour l\'adulte (morceau par morceau)&nbsp;:</div>' + DIC.chunks.map(function (c, i) { return "<div><b>" + (i + 1) + ".</b> " + c + "</div>"; }).join("");
+      $("#dic-adult").classList.toggle("hidden");
+    });
+  }
+  function dicCheckSpeech() {
+    $("#dic-nospeech").classList.add("hidden");
+    if (!dicSupported()) { DIC.ok = false; dicShowProblem("La lecture à voix haute ne marche pas sur cette tablette (ou dans ce navigateur). Essaie avec Chrome, ou demande à un adulte de lire la dictée."); return; }
+    DIC.ok = true;
+    dicPickVoice();
+    if (DIC.nVoices && !DIC.nFr) dicShowProblem("Aucune voix française n'est installée. Un adulte peut en ajouter dans les réglages de la tablette (Paramètres › Synthèse vocale › Langue : français).");
+  }
+  function dicStopSpeech() { DIC.token++; clearTimeout(DIC.timer); try { if (dicSupported()) speechSynthesis.cancel(); } catch (e) {} }
+  function dicWakeLock(on) {
+    try {
+      if (on && navigator.wakeLock && !DIC.wake) navigator.wakeLock.request("screen").then(function (w) { DIC.wake = w; }).catch(function () {});
+      else if (!on && DIC.wake) { DIC.wake.release(); DIC.wake = null; }
+    } catch (e) {}
+  }
+  function dicSay(text, rate, cb) {
+    var tok = DIC.token, done = false, u = new SpeechSynthesisUtterance(text);
+    u.lang = "fr-FR"; if (DIC.voice) u.voice = DIC.voice; u.rate = rate; u.pitch = 1.05;
+    function fin() { if (done) return; done = true; clearTimeout(guard); if (tok === DIC.token) cb(); }
+    var guard = setTimeout(fin, 2500 + text.length * 160 / rate);   // sécurité si la tablette n'annonce pas la fin
+    u.onend = fin;
+    u.onerror = function (e) {
+      if (e && (e.error === "interrupted" || e.error === "canceled")) return;
+      if (e && /not-allowed|synthesis-unavailable|audio-hardware|synthesis-failed|language-unavailable|voice-unavailable/.test(e.error || "")) {
+        dicShowProblem("La tablette n'arrive pas à lire à voix haute (" + e.error + "). Vérifie le son, ou demande à un adulte de lire la dictée.");
+      }
+      fin();
+    };
+    try { speechSynthesis.speak(u); } catch (e2) { fin(); }
+  }
+  function dicRender() {
+    var s = DIC.steps[Math.min(DIC.pos, DIC.steps.length - 1)] || {}, n = DIC.nchunks, phase, step = "";
+    var finished = DIC.pos >= DIC.steps.length;
+    if (finished) { phase = "✅ C'est fini&nbsp;! Regarde la correction."; }
+    else if (s.part === "intro") phase = "🎧 Écoute toute la dictée, sans écrire.";
+    else if (s.part === "chunk") { phase = s.write ? "✍️ Écris sur ton cahier…" : "🎧 Écoute bien…"; step = "Morceau <b>" + (s.c + 1) + "</b> sur " + n; }
+    else phase = "👀 Relis ta dictée pendant la dernière lecture.";
+    $("#dic-phase").innerHTML = phase;
+    $("#dic-step").innerHTML = step;
+    var c = finished ? n + 1 : (s.part === "intro" ? 0 : s.part === "final" ? n : s.c + 0.5);
+    $("#dic-bar").style.width = Math.min(100, c / (n + 1) * 100) + "%";
+    $("#dic-ear").classList.toggle("talk", DIC.playing);
+    $("#dic-play").classList.toggle("on", DIC.playing);
+    $("#dic-pause").classList.toggle("on", !DIC.playing && DIC.pos > 0 && !finished);
+    $("#dic-corr").classList.toggle("ready", finished);
+    $("#dic-speed").querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", (b.dataset.slow === "1") === !!DIC.slow); });
+  }
+  function dicRun() {
+    if (!DIC.playing) return;
+    if (DIC.pos >= DIC.steps.length) { DIC.playing = false; dicWakeLock(false); dicRender(); return; }
+    var s = DIC.steps[DIC.pos];
+    dicRender();
+    var go = function () { DIC.pos++; dicRun(); };
+    if (s.wait) DIC.timer = setTimeout(go, s.wait);
+    else dicSay(s.say, s.rate, go);
+  }
+  function dicPlay() {
+    if (!dicSupported()) { dicCheckSpeech(); return; }
+    dicStopSpeech();
+    if (DIC.pos >= DIC.steps.length) DIC.pos = 0;
+    DIC.playing = true; dicWakeLock(true);
+    dicRun();
+  }
+  function dicPause() { DIC.playing = false; dicStopSpeech(); dicWakeLock(false); dicRender(); }
+  function dicChunkStart(c) {   // première étape du morceau c (-1 = début, n = relecture finale)
+    if (c < 0) return 0;
+    for (var k = 0; k < DIC.steps.length; k++) if (DIC.steps[k].c === c && (DIC.steps[k].first || c >= DIC.nchunks)) return k;
+    return DIC.steps.length;
+  }
+  function dicCurChunk() { var s = DIC.steps[DIC.pos]; return DIC.pos >= DIC.steps.length ? DIC.nchunks : (s.part === "intro" ? -1 : s.c); }
+  function dicJump(c) { c = Math.max(-1, Math.min(DIC.nchunks, c)); DIC.pos = c === -1 ? 0 : dicChunkStart(c); dicPlay(); }
+  function dicOpen(id) {
+    dicStopSpeech();
+    DIC.d = DICTEES.filter(function (d) { return d.id === id; })[0];
+    DIC.pos = 0; DIC.playing = false;
+    $("#dic-title").textContent = DIC.d.titre;
+    $("#dic-adult").classList.add("hidden");
+    dicBuild(); dicCheckSpeech(); dicRender();
+    showScreen("dicread");
+  }
+  // Coches : dictées déjà faites (chaque enfant a les siennes)
+  function dicDone() { var d = load(flKey("dictees-faites"), []), o = {}; (Array.isArray(d) ? d : []).forEach(function (id) { o[id] = true; }); return o; }
+  function dicMarkDone(id) { var d = load(flKey("dictees-faites"), []); if (!Array.isArray(d)) d = []; if (d.indexOf(id) < 0) { d.push(id); store(flKey("dictees-faites"), d); } }
+  function dicMenu() {
+    dicStopSpeech();
+    $("#dic-levels").querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", +b.dataset.lv === DIC.niveau); });
+    var done = dicDone(), list = DICTEES.filter(function (d) { return d.niveau === DIC.niveau; }), nd = 0;
+    $("#dic-list").innerHTML = list.map(function (d) {
+      if (done[d.id]) nd++;
+      return '<button class="fl-card' + (done[d.id] ? " done" : "") + '" data-id="' + d.id + '">' + (done[d.id] ? '<span class="fl-check" aria-label="Déjà faite">✔</span>' : "") +
+        '<span class="fl-genre">📝 Dictée</span><span class="fl-title">' + d.titre + '</span><span class="fl-meta">' + dicWords(dicPlain(d.texte)) + " mots</span></button>";
+    }).join("");
+    $("#dic-count").innerHTML = "✔ " + nd + " / " + list.length + " dictées déjà faites";
+    showScreen("dicmenu");
+  }
+  function dicCorrection() {
+    dicPause();
+    dicMarkDone(DIC.d.id);
+    var k = 0, html = DIC.d.texte.replace(/&/g, "&amp;").replace(/\[([^|\]]+)\|([^\]]*)\]/g, function (m, w, ex) {
+      return '<button type="button" class="dmk" data-ex="' + ex.replace(/"/g, "&quot;") + '" data-w="' + w.replace(/"/g, "&quot;") + '">' + w + "</button>";
+    });
+    $("#dc-text").innerHTML = '<div class="dc-title">' + DIC.d.titre + "</div><p>" + html + "</p>";
+    $("#dc-tip").innerHTML = "👆 Touche un mot en couleur pour savoir pourquoi il s'écrit comme ça.";
+    showScreen("diccorr");
+  }
+  $("#dc-text").addEventListener("click", function (e) {
+    var b = e.target.closest(".dmk");
+    if (!b) return;
+    $("#dc-text").querySelectorAll(".dmk.on").forEach(function (x) { x.classList.remove("on"); });
+    b.classList.add("on");
+    $("#dc-tip").innerHTML = "💡 <b>" + b.dataset.w + "</b>&nbsp;: " + b.dataset.ex;
+    soundTap();
+  });
+  $("#dic-levels").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) { DIC.niveau = +b.dataset.lv; soundTap(); dicMenu(); } });
+  $("#dic-list").addEventListener("click", function (e) { var b = e.target.closest(".fl-card"); if (b) dicOpen(b.dataset.id); });
+  $("#dic-random").addEventListener("click", function () {
+    var done = dicDone(), list = DICTEES.filter(function (d) { return d.niveau === DIC.niveau; }), todo = list.filter(function (d) { return !done[d.id]; });
+    dicOpen(rand(todo.length ? todo : list).id);
+  });
+  $("#dic-back").addEventListener("click", function () { dicStopSpeech(); showScreen("frhome"); });
+  $("#dic-quit").addEventListener("click", function () {
+    if (DIC.playing && !window.confirm("Arrêter la dictée et revenir à la liste" + NB + "?")) return;
+    dicPause(); dicMenu();
+  });
+  $("#dic-play").addEventListener("click", dicPlay);
+  $("#dic-pause").addEventListener("click", dicPause);
+  $("#dic-repeat").addEventListener("click", function () { dicJump(dicCurChunk()); });
+  $("#dic-next").addEventListener("click", function () { dicJump(dicCurChunk() + 1); });
+  $("#dic-prev").addEventListener("click", function () { dicJump(dicCurChunk() - 1); });
+  $("#dic-speed").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    var was = DIC.playing, c = dicCurChunk();
+    DIC.slow = b.dataset.slow === "1"; store("dictee-lente", DIC.slow);
+    dicStopSpeech(); dicBuild();
+    DIC.pos = c === -1 ? 0 : dicChunkStart(c);
+    if (was) dicPlay(); else dicRender();
+  });
+  $("#dic-corr").addEventListener("click", function () {
+    if (DIC.pos < DIC.steps.length && DIC.pos > 0 && !window.confirm("La dictée n'est pas finie. Voir quand même la correction" + NB + "?")) return;
+    dicCorrection();
+  });
+  $("#dc-back").addEventListener("click", function () { showScreen("dicread"); dicRender(); });
+  $("#dc-again").addEventListener("click", function () { dicOpen(DIC.d.id); });
+  $("#dc-other").addEventListener("click", dicMenu);
+  $("#go-dictee").addEventListener("click", dicMenu);
+
   // =====================================================================
   // ---------- ÉCRAN DE DÉPART (MATHS / FRANÇAIS) ET BOUTON ACCUEIL ----------
   // =====================================================================
@@ -6527,10 +6994,11 @@ var COURS = {
   // Bouton "Accueil" présent sur tous les écrans : retour au choix Maths / Français
   $("#accueil-btn").addEventListener("click", function () {
     var cur = document.body.getAttribute("data-screen") || "";
-    var busy = { quiz: 1, squiz: 1, gquiz: 1 }[cur] || (cur === "flread" && FL.phase === "reading");
+    var busy = { quiz: 1, squiz: 1, gquiz: 1 }[cur] || (cur === "flread" && FL.phase === "reading") || (cur === "dicread" && DIC.playing);
     if (busy && !window.confirm("Tu veux arrêter et revenir à l'accueil" + NB + "?")) return;
     clearTimeout(autoTimer); clearTimeout(sTimer); clearTimeout(G.timer);
     clearInterval(FL.timer); flWake(false); FL.phase = "ready";
+    DIC.playing = false; dicStopSpeech(); dicWakeLock(false);
     goStart();
   });
 })();

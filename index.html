@@ -94,6 +94,18 @@
        ligne à 90 et bouton pour effacer (avec confirmation).
      - Toutes les données de français (textes, phrases, verbes, mots, rappels
        de cours) sont dans le premier <script>, en listes faciles à compléter.
+     - Lecture fluence : 12 textes par niveau (36 en tout), bouton « Texte au
+       hasard » (priorité aux textes pas encore lus) et coche verte sur les
+       textes déjà lus (gardée sur la tablette).
+  7. Les prénoms des copains : le quiz est utilisé par Lucy, Léa, Léo et Lyes.
+     Toutes les phrases avec des personnages utilisent ces quatre prénoms,
+     répartis à peu près également (dans les maths, tirés au hasard avec KIDS).
+     Lucy et Léa sont des filles, Léo et Lyes des garçons : bien accorder
+     (il/elle, content/contente…). Le titre reste « Les révisions de Lucy ».
+     - « Qui joue ? » : 4 bulles sur l'écran de départ (Lucy, Léo, Léa, Lyes).
+       Les messages (Bravo…, Parfait…, champion/championne, prêt/prête…)
+       s'adressent à l'enfant choisi, avec le bon accord. Chaque enfant a son
+       propre historique de lecture fluence (Lucy garde les anciennes données).
   ==========================================================================
 -->
 <!doctype html>
@@ -844,6 +856,17 @@
   /* =========================================================
      DÉPART (MATHS / FRANÇAIS), BOUTON ACCUEIL, PARTIE FRANÇAIS
      ========================================================= */
+  .who { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 4px 0 6px; }
+  .who-btn {
+    min-height: 74px; border-radius: 999px; background: #fff; font-size: clamp(1.35rem, 3.6vw, 1.8rem); font-weight: 700;
+    border: 5px solid #e1d6ff; box-shadow: 0 6px 0 #d9cbff; color: var(--ink);
+  }
+  .who-btn.g { color: #cc1f74; } .who-btn.b { color: #1d5fd1; }
+  .who-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #d9cbff; }
+  .who-btn.on { color: #fff; border-color: transparent; transform: scale(1.06); }
+  .who-btn.g.on { background: linear-gradient(150deg, #ff6fb5, #ff4f7b); box-shadow: 0 6px 0 #c2185b; }
+  .who-btn.b.on { background: linear-gradient(150deg, #3ec7ff, #2f6bff); box-shadow: 0 6px 0 #1d4ed8; }
+  @media (max-width: 560px) { .who { grid-template-columns: 1fr 1fr; } }
   .start-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 18px 0 24px; }
   .start-card {
     border-radius: 40px; padding: 34px 18px 30px; color: #fff; min-height: clamp(300px, 38vh, 440px);
@@ -917,6 +940,11 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 6px 0 #d9cbff;
   }
   .fl-card:active { transform: translateY(4px); box-shadow: 0 2px 0 #d9cbff; }
+  .fl-card { position: relative; }
+  .fl-card.done { border-color: #b8ecc8; background: #f6fdf8; }
+  .fl-check { position: absolute; top: 8px; right: 10px; width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 var(--green-dark); }
+  .fl-random-wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 18px; margin: 0 0 16px; }
+  .fl-count { font-size: 1.1rem; font-weight: 600; color: var(--ink-soft); }
   .fl-genre { font-size: 1.05rem; font-weight: 600; color: var(--ink-soft); }
   .fl-title { font-size: clamp(1.35rem, 3.6vw, 1.7rem); font-weight: 700; color: var(--purple); }
   .fl-meta { font-size: 1.05rem; color: var(--ink-soft); }
@@ -1017,9 +1045,16 @@
   <div class="home-wrap">
     <header class="menu-header">
       <h1>🌈 Les révisions de Lucy 🦄</h1>
-      <p class="subtitle">Qu'est-ce qu'on révise aujourd'hui&nbsp;?</p>
+      <p class="subtitle" id="start-sub">Qui joue&nbsp;? Touche ton prénom&nbsp;!</p>
       <button class="sound-btn" id="start-sound" aria-label="Son activé ou coupé">🔊</button>
     </header>
+    <!-- Qui joue ? : 4 bulles. Le prénom choisi est gardé sur la tablette. -->
+    <div class="who" id="who">
+      <button class="who-btn g" data-who="Lucy">👧 Lucy</button>
+      <button class="who-btn b" data-who="Léo">👦 Léo</button>
+      <button class="who-btn g" data-who="Léa">👧 Léa</button>
+      <button class="who-btn b" data-who="Lyes">👦 Lyes</button>
+    </div>
     <div class="start-choices">
       <button class="start-card maths" id="go-maths">
         <span class="sc-emoji">🔢</span>
@@ -1126,7 +1161,7 @@
   <div class="menu-wrap">
     <header class="menu-header">
       <button class="back-btn" id="menu-home-btn" aria-label="Retour à l'accueil">⬅️</button>
-      <h1>✖️ Les tables de Lucy 🦄</h1>
+      <h1>✖️ Les tables de <span class="player-name">Lucy</span> 🦄</h1>
       <p class="subtitle">Choisis comment tu veux jouer&nbsp;!</p>
       <button class="sound-btn" id="sound-btn" aria-label="Son activé ou coupé">🔊</button>
     </header>
@@ -1460,6 +1495,7 @@
         <button data-lv="2">⭐⭐ Niveau 2</button>
         <button data-lv="3">⭐⭐⭐ Niveau 3</button>
       </div>
+      <div class="fl-random-wrap"><button class="go-btn" id="fl-random">🎲 Texte au hasard</button><span class="fl-count" id="fl-count"></span></div>
       <div class="fl-list" id="fl-list"></div>
     </div>
     <div class="fl-bottom"><button class="go-btn purple" id="fl-histbtn">📈 Mes progrès</button></div>
@@ -1467,7 +1503,7 @@
       <h2>👩‍🏫 Pour l'adulte</h2>
       <ul class="rules">
         <li>1. Appuyez sur <b>GO</b>&nbsp;: le texte apparaît et le chrono d'1 minute démarre.</li>
-        <li>2. Lucy lit à voix haute. Au bout d'1 minute, un signal sonne. (<b>Stop</b> si elle finit avant&nbsp;: le vrai temps est utilisé.)</li>
+        <li>2. L'enfant lit à voix haute. Au bout d'1 minute, un signal sonne. (<b>Stop</b> s'il ou elle finit avant&nbsp;: le vrai temps est utilisé.)</li>
         <li>3. Touchez le <b class="td">dernier mot lu</b>, puis les <b class="tr">mots mal lus</b> (toucher encore pour annuler).</li>
         <li>4. <b>Valider</b> donne le score en mots correctement lus par minute. Repère&nbsp;: environ 90 en fin de CE2.</li>
       </ul>
@@ -1484,7 +1520,7 @@
       <div class="fl-timer" id="fl-timer"><div class="fl-ring" id="fl-ring"></div><span id="fl-time">1:00</span></div>
     </div>
     <div class="fl-ready" id="fl-ready">
-      <p class="fl-ready-msg">Prête&nbsp;? Le texte apparaîtra quand tu appuieras sur <b>GO</b>.</p>
+      <p class="fl-ready-msg"><span id="fl-pret">Prête</span>&nbsp;? Le texte apparaîtra quand tu appuieras sur <b>GO</b>.</p>
       <button class="fl-go" id="fl-go">GO&nbsp;! 🚀</button>
     </div>
     <div class="fl-text hidden" id="fl-text"></div>
@@ -1527,7 +1563,7 @@
     <header class="menu-header">
       <button class="back-btn" id="fh-back" aria-label="Retour aux textes">⬅️</button>
       <h1>📈 Mes progrès</h1>
-      <p class="subtitle">Mots correctement lus par minute</p>
+      <p class="subtitle">Mots correctement lus par minute · <b class="player-name">Lucy</b></p>
     </header>
     <div class="panel"><div id="fh-chart"></div></div>
     <div class="panel"><h2>📅 Historique</h2><div id="fh-list"></div></div>
@@ -1541,23 +1577,23 @@
 //  (Le programme du quiz est dans le <script> suivant.)
 // =====================================================================
 // =====================================================================
-//  1. LECTURE FLUENCE — 12 textes originaux (150 à 200 mots), du niveau 1 au niveau 3.
+//  1. LECTURE FLUENCE — 36 textes originaux (150 à 200 mots) : 12 au niveau 1, 12 au niveau 2, 12 au niveau 3.
 //  Pour ajouter un texte : copier un bloc { ... } et changer id, niveau, titre, texte, questions.
 //  Dans "texte", "\n" commence un nouveau paragraphe. "bonne" = numéro de la bonne réponse (0, 1 ou 2).
 // =====================================================================
 var FLUENCE_TEXTES = [
   { id: "chaton", niveau: 1, genre: "📖 Histoire", titre: "Le chaton de Mamie",
-    texte: "Mamie a un petit chaton. Il s'appelle Pompon. Il est tout gris avec des pattes blanches. Pompon aime jouer avec une pelote de laine. Il court partout dans la maison. Il saute sur le canapé, puis il grimpe sur la table. Mamie rit et dit : « Pompon, descends tout de suite ! » Mais Pompon ne l'écoute pas.\nUn matin, Pompon a disparu. Mamie le cherche dans la cuisine, dans le salon et dans le jardin. Elle l'appelle très fort. Lucy arrive pour l'aider. Elle regarde sous le lit, derrière les rideaux et dans le placard. Pas de Pompon !\nSoudain, Lucy entend un petit bruit. Le bruit vient du panier à linge. Lucy soulève une serviette. Pompon est là, roulé en boule, au milieu des chaussettes. Il dort comme un bébé. Mamie est soulagée. Elle prend le chaton dans ses bras et lui fait un gros câlin. Lucy sourit. Maintenant, elle sait où chercher quand Pompon se cache !",
+    texte: "Mamie a un petit chaton. Il s'appelle Pompon. Il est tout gris avec des pattes blanches. Pompon aime jouer avec une pelote de laine. Il court partout dans la maison. Il saute sur le canapé, puis il grimpe sur la table. Mamie rit et dit : « Pompon, descends tout de suite ! » Mais Pompon ne l'écoute pas.\nUn matin, Pompon a disparu. Mamie le cherche dans la cuisine, dans le salon et dans le jardin. Elle l'appelle très fort. Léa arrive pour l'aider. Elle regarde sous le lit, derrière les rideaux et dans le placard. Pas de Pompon !\nSoudain, Léa entend un petit bruit. Le bruit vient du panier à linge. Léa soulève une serviette. Pompon est là, roulé en boule, au milieu des chaussettes. Il dort comme un bébé. Mamie est soulagée. Elle prend le chaton dans ses bras et lui fait un gros câlin. Léa sourit. Maintenant, elle sait où chercher quand Pompon se cache !",
     questions: [
       { q: "Comment s'appelle le chaton ?", choix: ["Pompon", "Caramel", "Moustache"], bonne: 0 },
-      { q: "Où Lucy trouve-t-elle le chaton ?", choix: ["Dans le panier à linge", "Sous le lit", "Dans le jardin"], bonne: 0 },
-      { q: "Que fait le chaton quand Lucy le trouve ?", choix: ["Il dort", "Il mange", "Il joue avec la laine"], bonne: 0 }] },
-  { id: "karate1", niveau: 1, genre: "🥋 Histoire", titre: "Lucy au karaté",
-    texte: "Tous les mercredis, Lucy va au karaté. Elle met son kimono blanc et serre bien sa ceinture. Dans la salle, les enfants enlèvent leurs chaussures. Ils marchent pieds nus sur le tatami. Le professeur s'appelle Maître Kenji. Il est grand et très calme.\nAu début du cours, tout le monde se met en ligne. Les élèves saluent le maître en s'inclinant. Puis ils font l'échauffement. Ils courent, ils sautent et ils s'étirent. Ensuite, Lucy apprend un nouveau mouvement. Elle doit lever la jambe et donner un coup de pied rapide. Au début, elle perd l'équilibre et tombe sur le tapis. Ses amis rigolent gentiment.\nLucy ne se décourage pas. Elle essaie encore et encore. Maître Kenji lui dit : « Regarde un point devant toi et garde ton dos bien droit. » Lucy recommence. Cette fois, elle reste debout ! Son coup de pied est rapide et précis. Le maître lève le pouce. À la fin du cours, Lucy est fatiguée, mais très fière.",
+      { q: "Où Léa trouve-t-elle le chaton ?", choix: ["Dans le panier à linge", "Sous le lit", "Dans le jardin"], bonne: 0 },
+      { q: "Que fait le chaton quand Léa le trouve ?", choix: ["Il dort", "Il mange", "Il joue avec la laine"], bonne: 0 }] },
+  { id: "karate1", niveau: 1, genre: "🥋 Histoire", titre: "Lyes au karaté",
+    texte: "Tous les mercredis, Lyes va au karaté. Il met son kimono blanc et serre bien sa ceinture. Dans la salle, les enfants enlèvent leurs chaussures. Ils marchent pieds nus sur le tatami. Le professeur s'appelle Maître Kenji. Il est grand et très calme.\nAu début du cours, tout le monde se met en ligne. Les élèves saluent le maître en s'inclinant. Puis ils font l'échauffement. Ils courent, ils sautent et ils s'étirent. Ensuite, Lyes apprend un nouveau mouvement. Il doit lever la jambe et donner un coup de pied rapide. Au début, il perd l'équilibre et tombe sur le tapis. Ses amis rigolent gentiment.\nLyes ne se décourage pas. Il essaie encore et encore. Maître Kenji lui dit : « Regarde un point devant toi et garde ton dos bien droit. » Lyes recommence. Cette fois, il reste debout ! Son coup de pied est rapide et précis. Le maître lève le pouce. À la fin du cours, Lyes est fatigué, mais très fier.",
     questions: [
-      { q: "Quel jour Lucy va-t-elle au karaté ?", choix: ["Le mercredi", "Le samedi", "Le lundi"], bonne: 0 },
-      { q: "Comment s'appelle le professeur ?", choix: ["Maître Kenji", "Maître Tom", "Maître Hugo"], bonne: 0 },
-      { q: "Que fait Lucy quand elle tombe ?", choix: ["Elle essaie encore", "Elle rentre chez elle", "Elle pleure longtemps"], bonne: 0 }] },
+      { q: "Quel jour Lyes va-t-il au karaté ?", choix: ["Le mercredi", "Le samedi", "Le lundi"], bonne: 0 },
+      { q: "Comment s'appelle le professeur ?", choix: ["Maître Kenji", "Maître Léo", "Maître Léa"], bonne: 0 },
+      { q: "Que fait Lyes quand il tombe ?", choix: ["Il essaie encore", "Il rentre chez lui", "Il pleure longtemps"], bonne: 0 }] },
   { id: "abeilles", niveau: 1, genre: "🐝 Documentaire", titre: "Les abeilles",
     texte: "Les abeilles sont de petits insectes qui vivent en groupe. Elles habitent dans une ruche. Dans une ruche, il peut y avoir des milliers d'abeilles ! Chaque abeille a un travail.\nLa reine est la plus grande. Elle pond des œufs toute la journée. Les ouvrières sont les plus nombreuses. Certaines nettoient la ruche, d'autres nourrissent les bébés abeilles. Les plus âgées sortent pour chercher de la nourriture. Elles volent de fleur en fleur. Avec leur longue langue, elles aspirent le nectar, un liquide sucré caché au fond des fleurs. Elles récoltent aussi le pollen, une poudre jaune qui colle à leurs pattes.\nDe retour à la ruche, les abeilles transforment le nectar en miel. Le miel leur sert de nourriture pendant l'hiver. Les abeilles sont très utiles. En passant d'une fleur à l'autre, elles transportent le pollen. Grâce à elles, les fleurs deviennent des fruits. Sans les abeilles, nous aurions beaucoup moins de pommes, de cerises et de fraises !",
     questions: [
@@ -1565,11 +1601,11 @@ var FLUENCE_TEXTES = [
       { q: "Que fait la reine ?", choix: ["Elle pond des œufs", "Elle cherche du nectar", "Elle nettoie la ruche"], bonne: 0 },
       { q: "Pourquoi les abeilles sont-elles utiles ?", choix: ["Elles aident les fleurs à devenir des fruits", "Elles mangent les insectes", "Elles font peur aux oiseaux"], bonne: 0 }] },
   { id: "piquenique", niveau: 1, genre: "💬 Dialogue", titre: "Le pique-nique",
-    texte: "— Maman, on peut faire un pique-nique aujourd'hui ? demande Lucy.\n— Bonne idée ! Il fait beau. Qu'est-ce qu'on emporte ?\n— Des sandwichs, des tomates et des fraises !\nLucy prépare le panier avec son petit frère Tom. Ils mettent aussi une grande nappe à carreaux, des serviettes et un ballon rouge. Toute la famille part au parc à vélo. Papa porte le panier sur son dos. Ils s'installent sous un grand chêne, près de l'étang. Les canards s'approchent en faisant coin-coin.\n— Je peux leur donner du pain ? demande Tom.\n— Non, le pain leur fait mal au ventre, répond Papa. On va plutôt les regarder.\nMaman sort les sandwichs et chacun choisit le sien. Après le repas, Lucy et Tom jouent au ballon. Soudain, de gros nuages arrivent.\n— Oh non, il va pleuvoir ! crie Lucy.\nTout le monde range vite le panier. Ils rentrent à la maison en pédalant très fort. Ils arrivent juste avant l'orage. Ils sont un peu mouillés, mais ils rient beaucoup !",
+    texte: "— Maman, on peut faire un pique-nique aujourd'hui ? demande Lucy.\n— Bonne idée ! Il fait beau. Qu'est-ce qu'on emporte ?\n— Des sandwichs, des tomates et des fraises !\nLucy prépare le panier avec son petit frère Léo. Ils mettent aussi une grande nappe à carreaux, des serviettes et un ballon rouge. Toute la famille part au parc à vélo. Papa porte le panier sur son dos. Ils s'installent sous un grand chêne, près de l'étang. Les canards s'approchent en faisant coin-coin.\n— Je peux leur donner du pain ? demande Léo.\n— Non, le pain leur fait mal au ventre, répond Papa. On va plutôt les regarder.\nMaman sort les sandwichs et chacun choisit le sien. Après le repas, Lucy et Léo jouent au ballon. Soudain, de gros nuages arrivent.\n— Oh non, il va pleuvoir ! crie Lucy.\nTout le monde range vite le panier. Ils rentrent à la maison en pédalant très fort. Ils arrivent juste avant l'orage. Ils sont un peu mouillés, mais ils rient beaucoup !",
     questions: [
       { q: "Où va la famille ?", choix: ["Au parc", "À la plage", "À la montagne"], bonne: 0 },
       { q: "Pourquoi ne donne-t-on pas de pain aux canards ?", choix: ["Ça leur fait mal au ventre", "Ils n'aiment pas le pain", "Il n'y a plus de pain"], bonne: 0 },
-      { q: "Pourquoi rentrent-ils vite à la maison ?", choix: ["Il va pleuvoir", "Il fait nuit", "Tom est fatigué"], bonne: 0 }] },
+      { q: "Pourquoi rentrent-ils vite à la maison ?", choix: ["Il va pleuvoir", "Il fait nuit", "Léo est fatigué"], bonne: 0 }] },
   { id: "herisson", niveau: 2, genre: "🦔 Documentaire", titre: "Le hérisson",
     texte: "Le hérisson est un petit animal sauvage que l'on peut rencontrer dans les jardins, les haies et les forêts. Son dos est couvert de piquants. Un hérisson adulte en possède environ six mille ! Quand il a peur, il se roule en boule. Ses piquants se dressent alors pour le protéger des renards et des chiens.\nLe hérisson vit surtout la nuit. Le jour, il dort caché sous un tas de feuilles ou de branches. Quand la nuit tombe, il part chercher sa nourriture en reniflant le sol avec son museau pointu. Il mange des vers de terre, des limaces, des escargots et des insectes. C'est pourquoi les jardiniers l'aiment bien : il protège leurs salades !\nEn automne, le hérisson mange beaucoup pour faire des réserves. Puis, quand il fait froid, il construit un nid bien abrité et s'endort pour tout l'hiver. On dit qu'il hiberne. Il se réveille au printemps, très maigre et affamé. Attention : il ne faut jamais lui donner de lait, car cela le rend malade. Une coupelle d'eau fraîche lui fait bien plus plaisir.",
     questions: [
@@ -1577,23 +1613,23 @@ var FLUENCE_TEXTES = [
       { q: "Pourquoi les jardiniers aiment-ils le hérisson ?", choix: ["Il mange les limaces qui abîment les salades", "Il arrose le jardin", "Il chasse les oiseaux"], bonne: 0 },
       { q: "Que faut-il lui donner à boire ?", choix: ["De l'eau fraîche", "Du lait", "Du jus de fruits"], bonne: 0 }] },
   { id: "cabane", niveau: 2, genre: "📖 Histoire", titre: "La cabane dans le jardin",
-    texte: "Pendant les vacances, Lucy et son cousin Hugo décident de construire une cabane au fond du jardin de Papi. Papi leur prête de vieilles planches, une boîte de clous et un marteau. « Faites attention à vos doigts ! » dit-il en souriant.\nLes deux enfants choisissent un endroit à l'ombre, entre deux grands arbres. D'abord, ils posent les planches sur le sol pour faire un plancher. Ensuite, ils attachent une bâche bleue aux branches pour fabriquer un toit. Hugo tient les planches pendant que Lucy plante les clous. Le travail est long et difficile. Plusieurs fois, la bâche s'envole avec le vent et il faut tout recommencer. Mais les cousins ne baissent pas les bras.\nÀ la fin de l'après-midi, la cabane est enfin terminée. Lucy accroche une pancarte sur la porte : « Club secret. Entrée interdite aux grands ! » Papi fait semblant d'être vexé. Pour se faire pardonner, les enfants l'invitent à goûter dans la cabane. Ils partagent des biscuits et une limonade bien fraîche.",
+    texte: "Pendant les vacances, Léa et son cousin Lyes décident de construire une cabane au fond du jardin de Papi. Papi leur prête de vieilles planches, une boîte de clous et un marteau. « Faites attention à vos doigts ! » dit-il en souriant.\nLes deux enfants choisissent un endroit à l'ombre, entre deux grands arbres. D'abord, ils posent les planches sur le sol pour faire un plancher. Ensuite, ils attachent une bâche bleue aux branches pour fabriquer un toit. Lyes tient les planches pendant que Léa plante les clous. Le travail est long et difficile. Plusieurs fois, la bâche s'envole avec le vent et il faut tout recommencer. Mais les cousins ne baissent pas les bras.\nÀ la fin de l'après-midi, la cabane est enfin terminée. Léa accroche une pancarte sur la porte : « Club secret. Entrée interdite aux grands ! » Papi fait semblant d'être vexé. Pour se faire pardonner, les enfants l'invitent à goûter dans la cabane. Ils partagent des biscuits et une limonade bien fraîche.",
     questions: [
-      { q: "Avec qui Lucy construit-elle la cabane ?", choix: ["Son cousin Hugo", "Son frère Tom", "Sa copine Léa"], bonne: 0 },
+      { q: "Avec qui Léa construit-elle la cabane ?", choix: ["Son cousin Lyes", "Son frère Léo", "Sa copine Lucy"], bonne: 0 },
       { q: "Avec quoi font-ils le toit ?", choix: ["Une bâche bleue", "Des planches", "Des feuilles"], bonne: 0 },
-      { q: "Qu'écrit Lucy sur la pancarte ?", choix: ["Club secret. Entrée interdite aux grands !", "Maison de Papi", "Attention au chien !"], bonne: 0 }] },
+      { q: "Qu'écrit Léa sur la pancarte ?", choix: ["Club secret. Entrée interdite aux grands !", "Maison de Papi", "Attention au chien !"], bonne: 0 }] },
   { id: "marche", niveau: 2, genre: "💬 Dialogue", titre: "Au marché",
-    texte: "Ce samedi, Lucy accompagne son papa au marché. Il y a beaucoup de monde et les marchands crient pour attirer les clients.\n— Belles fraises ! Fraises toutes fraîches ! lance une dame.\n— Papa, on peut en acheter ? demande Lucy.\n— D'accord, mais c'est toi qui paies. Voici un billet de cinq euros.\nLucy s'approche du stand, un peu intimidée.\n— Bonjour madame, je voudrais une barquette de fraises, s'il vous plaît.\n— Bien sûr, ma grande. Cela fait trois euros.\nLucy tend le billet. La marchande lui rend deux pièces d'un euro.\n— Merci beaucoup, au revoir !\nPapa la félicite. Ils achètent ensuite des carottes, un gros melon et une baguette encore chaude. Devant le stand du fromager, Lucy fronce le nez.\n— Pouah, ça sent fort !\n— C'est normal, ce fromage est très affiné, explique Papa en riant. Tu veux goûter ?\nLucy hésite, puis prend un minuscule morceau. Elle le croque du bout des dents et fait une drôle de grimace. Finalement, elle préfère largement les fraises !",
+    texte: "Ce samedi, Léo accompagne son papa au marché. Il y a beaucoup de monde et les marchands crient pour attirer les clients.\n— Belles fraises ! Fraises toutes fraîches ! lance une dame.\n— Papa, on peut en acheter ? demande Léo.\n— D'accord, mais c'est toi qui paies. Voici un billet de cinq euros.\nLéo s'approche du stand, un peu intimidé.\n— Bonjour madame, je voudrais une barquette de fraises, s'il vous plaît.\n— Bien sûr, mon grand. Cela fait trois euros.\nLéo tend le billet. La marchande lui rend deux pièces d'un euro.\n— Merci beaucoup, au revoir !\nPapa le félicite. Ils achètent ensuite des carottes, un gros melon et une baguette encore chaude. Devant le stand du fromager, Léo fronce le nez.\n— Pouah, ça sent fort !\n— C'est normal, ce fromage est très affiné, explique Papa en riant. Tu veux goûter ?\nLéo hésite, puis prend un minuscule morceau. Il le croque du bout des dents et fait une drôle de grimace. Finalement, il préfère largement les fraises !",
     questions: [
       { q: "Combien coûte la barquette de fraises ?", choix: ["Trois euros", "Cinq euros", "Deux euros"], bonne: 0 },
-      { q: "Combien la marchande rend-elle à Lucy ?", choix: ["Deux euros", "Un euro", "Trois euros"], bonne: 0 },
-      { q: "Que pense Lucy du fromage ?", choix: ["Elle préfère les fraises", "Elle l'adore", "Elle en achète beaucoup"], bonne: 0 }] },
+      { q: "Combien la marchande rend-elle à Léo ?", choix: ["Deux euros", "Un euro", "Trois euros"], bonne: 0 },
+      { q: "Que pense Léo du fromage ?", choix: ["Il préfère les fraises", "Il l'adore", "Il en achète beaucoup"], bonne: 0 }] },
   { id: "karate2", niveau: 2, genre: "🥋 Histoire", titre: "La ceinture jaune",
     texte: "Depuis des semaines, Lucy s'entraîne pour son passage de ceinture. Si elle réussit, elle aura enfin la ceinture jaune ! Le grand jour est arrivé. Dans le gymnase, les parents sont assis sur des bancs. Lucy a le cœur qui bat très fort. Elle serre les poings pour se donner du courage.\nMaître Kenji appelle son nom. Lucy s'avance au milieu du tatami et salue le jury. D'abord, elle doit montrer un kata, une suite de mouvements apprise par cœur. Elle se concentre et commence. Blocage, coup de poing, coup de pied, demi-tour… Elle n'oublie aucun geste. Ensuite, le maître lui demande quelques techniques avec un partenaire. Lucy reste calme et précise, comme on le lui a appris.\nLe jury discute à voix basse. Lucy attend, les mains tremblantes. Enfin, Maître Kenji s'approche avec un sourire. Il lui tend une ceinture jaune toute neuve. Les parents applaudissent. Lucy noue sa nouvelle ceinture avec fierté. Le soir, elle refuse de l'enlever, même pour aller dormir !",
     questions: [
       { q: "Quelle ceinture Lucy veut-elle obtenir ?", choix: ["La ceinture jaune", "La ceinture noire", "La ceinture verte"], bonne: 0 },
       { q: "Qu'est-ce qu'un kata ?", choix: ["Une suite de mouvements apprise par cœur", "Un tapis de karaté", "Une sorte de ceinture"], bonne: 0 },
-      { q: "Que fait Lucy le soir ?", choix: ["Elle garde sa ceinture pour dormir", "Elle range sa ceinture", "Elle prête sa ceinture à Tom"], bonne: 0 }] },
+      { q: "Que fait Lucy le soir ?", choix: ["Elle garde sa ceinture pour dormir", "Elle range sa ceinture", "Elle prête sa ceinture à Lyes"], bonne: 0 }] },
   { id: "manchots", niveau: 3, genre: "🐧 Documentaire", titre: "Les manchots empereurs",
     texte: "Le manchot empereur vit en Antarctique, la région la plus froide du monde, près du pôle Sud. Là-bas, la température peut descendre à moins cinquante degrés et le vent souffle très fort. Pour résister, le manchot possède une épaisse couche de graisse sous la peau et des plumes serrées, imperméables comme un manteau.\nContrairement à ce que l'on croit souvent, le manchot n'est pas un pingouin. Il ne sait pas voler, mais c'est un excellent nageur. Sous l'eau, il se sert de ses ailes comme de nageoires pour attraper des poissons et des calmars.\nAu début de l'hiver, la femelle pond un seul œuf. Elle le confie aussitôt au mâle, puis elle part se nourrir dans l'océan. Pendant deux mois, le mâle garde l'œuf bien au chaud, posé sur ses pattes et recouvert d'un repli de peau. Il ne mange rien pendant tout ce temps ! Pour lutter contre le froid, les mâles se serrent les uns contre les autres. Chacun prend son tour au centre du groupe, là où il fait plus chaud. Quand le poussin éclot, la femelle revient enfin pour le nourrir.",
     questions: [
@@ -1601,11 +1637,11 @@ var FLUENCE_TEXTES = [
       { q: "Qui garde l'œuf pendant deux mois ?", choix: ["Le mâle", "La femelle", "Le poussin"], bonne: 0 },
       { q: "Comment les mâles se protègent-ils du froid ?", choix: ["Ils se serrent les uns contre les autres", "Ils creusent un terrier", "Ils partent nager dans l'océan"], bonne: 0 }] },
   { id: "foret", niveau: 3, genre: "📖 Histoire", titre: "Le secret de la forêt",
-    texte: "Ce matin-là, Lucy se promène dans la forêt avec son chien, Filou. Les feuilles d'automne craquent sous ses bottes et l'air sent la mousse et les champignons. Soudain, Filou se met à aboyer et s'élance entre les arbres. « Filou, reviens ! » crie Lucy en courant derrière lui.\nLe chien s'arrête devant un vieux chêne au tronc creux. Il remue la queue en gémissant doucement. Intriguée, Lucy s'approche et se penche vers le trou. Au fond, sur un lit de feuilles sèches, trois petits renardeaux la regardent avec de grands yeux inquiets. Ils sont roux, avec le bout de la queue tout blanc.\nLucy retient son souffle. Elle sait qu'il ne faut surtout pas les toucher, sinon leur mère pourrait les abandonner. Elle attrape Filou par son collier et recule lentement, sans faire de bruit. Cachée derrière un buisson, elle attend quelques minutes. Bientôt, une renarde apparaît, une souris dans la gueule. Elle se glisse dans le tronc pour nourrir ses petits. Lucy sourit. De retour à la maison, elle dessine les renardeaux dans son carnet secret. Elle ne révélera à personne l'endroit de leur cachette.",
+    texte: "Ce matin-là, Lyes se promène dans la forêt avec son chien, Filou. Les feuilles d'automne craquent sous ses bottes et l'air sent la mousse et les champignons. Soudain, Filou se met à aboyer et s'élance entre les arbres. « Filou, reviens ! » crie Lyes en courant derrière lui.\nLe chien s'arrête devant un vieux chêne au tronc creux. Il remue la queue en gémissant doucement. Intrigué, Lyes s'approche et se penche vers le trou. Au fond, sur un lit de feuilles sèches, trois petits renardeaux le regardent avec de grands yeux inquiets. Ils sont roux, avec le bout de la queue tout blanc.\nLyes retient son souffle. Il sait qu'il ne faut surtout pas les toucher, sinon leur mère pourrait les abandonner. Il attrape Filou par son collier et recule lentement, sans faire de bruit. Caché derrière un buisson, il attend quelques minutes. Bientôt, une renarde apparaît, une souris dans la gueule. Elle se glisse dans le tronc pour nourrir ses petits. Lyes sourit. De retour à la maison, il dessine les renardeaux dans son carnet secret. Il ne révélera à personne l'endroit de leur cachette.",
     questions: [
       { q: "Qu'y a-t-il dans le tronc du vieux chêne ?", choix: ["Trois renardeaux", "Un hérisson", "Un nid d'oiseaux"], bonne: 0 },
-      { q: "Pourquoi Lucy ne touche-t-elle pas les petits ?", choix: ["Leur mère pourrait les abandonner", "Ils pourraient la mordre", "Filou serait jaloux"], bonne: 0 },
-      { q: "Que fait Lucy en rentrant chez elle ?", choix: ["Elle dessine les renardeaux dans son carnet", "Elle raconte tout à ses amis", "Elle retourne chercher les renardeaux"], bonne: 0 }] },
+      { q: "Pourquoi Lyes ne touche-t-il pas les petits ?", choix: ["Leur mère pourrait les abandonner", "Ils pourraient le mordre", "Filou serait jaloux"], bonne: 0 },
+      { q: "Que fait Lyes en rentrant chez lui ?", choix: ["Il dessine les renardeaux dans son carnet", "Il raconte tout à ses amis", "Il retourne chercher les renardeaux"], bonne: 0 }] },
   { id: "volcan", niveau: 3, genre: "🌋 Documentaire", titre: "Le volcan",
     texte: "Un volcan est une montagne pas comme les autres. Sous nos pieds, très profondément, il fait si chaud que les roches fondent. Elles forment un liquide brûlant et épais qu'on appelle le magma. Parfois, ce magma remonte vers la surface par une fissure. Quand il sort du volcan, on l'appelle la lave. C'est une éruption !\nIl existe plusieurs sortes d'éruptions. Certaines sont plutôt calmes : la lave coule lentement sur les pentes, comme une rivière de feu. D'autres sont explosives : le volcan projette dans le ciel des cendres, des gaz et des blocs de pierre, parfois à plusieurs kilomètres de hauteur. En refroidissant, la lave durcit et devient de la roche. Au fil des éruptions, les couches s'empilent et le volcan grandit.\nEn France, il y a de nombreux volcans endormis dans le Massif central. Le plus célèbre est le puy de Dôme. Sur l'île de La Réunion, le piton de la Fournaise, lui, est bien réveillé : il entre en éruption presque chaque année. Des scientifiques, les volcanologues, le surveillent jour et nuit pour prévenir les habitants en cas de danger.",
     questions: [
@@ -1613,11 +1649,158 @@ var FLUENCE_TEXTES = [
       { q: "Comment s'appelle le volcan très actif de La Réunion ?", choix: ["Le piton de la Fournaise", "Le puy de Dôme", "Le mont Blanc"], bonne: 0 },
       { q: "Que font les volcanologues ?", choix: ["Ils surveillent les volcans", "Ils éteignent la lave", "Ils construisent des volcans"], bonne: 0 }] },
   { id: "musee", niveau: 3, genre: "💬 Dialogue", titre: "La sortie au musée",
-    texte: "Aujourd'hui, la classe de Lucy visite le musée d'histoire naturelle. Dans le car, tout le monde est excité.\n— On va voir des dinosaures ? demande Inès.\n— Oui, et bien d'autres choses, répond la maîtresse. Mais n'oubliez pas les règles : on reste en groupe et on ne touche à rien.\nÀ l'entrée, un guide les accueille. Il les conduit dans une immense salle. Au milieu se dresse le squelette d'un dinosaure, si grand que sa tête touche presque le plafond.\n— Waouh ! s'écrie Hugo. Il mangeait des enfants ?\n— Pas du tout, rit le guide. Celui-ci était herbivore : il se nourrissait uniquement de plantes. Regardez ses dents plates, faites pour mâcher des feuilles.\nLucy lève la main.\n— Comment sait-on qu'il a vraiment existé ?\n— Grâce aux fossiles. Ce sont des os transformés en pierre, restés enfouis dans le sol pendant des millions d'années. Les paléontologues les déterrent avec patience, puis les assemblent comme un puzzle géant.\nAvant de partir, chaque élève reçoit un petit fossile de coquillage. Sur le chemin du retour, Lucy le serre précieusement dans sa main. Plus tard, elle sera peut-être paléontologue !",
+    texte: "Aujourd'hui, la classe de Lucy visite le musée d'histoire naturelle. Dans le car, tout le monde est excité.\n— On va voir des dinosaures ? demande Léa.\n— Oui, et bien d'autres choses, répond la maîtresse. Mais n'oubliez pas les règles : on reste en groupe et on ne touche à rien.\nÀ l'entrée, un guide les accueille. Il les conduit dans une immense salle. Au milieu se dresse le squelette d'un dinosaure, si grand que sa tête touche presque le plafond.\n— Waouh ! s'écrie Léo. Il mangeait des enfants ?\n— Pas du tout, rit le guide. Celui-ci était herbivore : il se nourrissait uniquement de plantes. Regardez ses dents plates, faites pour mâcher des feuilles.\nLucy lève la main.\n— Comment sait-on qu'il a vraiment existé ?\n— Grâce aux fossiles. Ce sont des os transformés en pierre, restés enfouis dans le sol pendant des millions d'années. Les paléontologues les déterrent avec patience, puis les assemblent comme un puzzle géant.\nAvant de partir, chaque élève reçoit un petit fossile de coquillage. Sur le chemin du retour, Lucy le serre précieusement dans sa main. Plus tard, elle sera peut-être paléontologue !",
     questions: [
       { q: "Que mangeait le dinosaure du musée ?", choix: ["Des plantes", "Des enfants", "Des poissons"], bonne: 0 },
       { q: "Qu'est-ce qu'un fossile ?", choix: ["Un os transformé en pierre", "Un dinosaure vivant", "Une plante du musée"], bonne: 0 },
-      { q: "Que reçoit chaque élève ?", choix: ["Un petit fossile de coquillage", "Un livre sur les dinosaures", "Une dent de dinosaure"], bonne: 0 }] }
+      { q: "Que reçoit chaque élève ?", choix: ["Un petit fossile de coquillage", "Un livre sur les dinosaures", "Une dent de dinosaure"], bonne: 0 }] },
+  // ---------- Nouveaux textes (niveau 1) ----------
+  { id: "gateau", niveau: 1, genre: "📖 Histoire", titre: "Le gâteau de Léa",
+    texte: "C'est l'anniversaire de Papa. Léa veut lui faire une surprise. Avec Maman, elle décide de préparer un gâteau au chocolat.\nD'abord, Léa met son tablier. Elle se lave bien les mains. Maman sort un grand bol, une cuillère en bois et un fouet. Léa casse les œufs. Oh non, un petit morceau de coquille tombe dans le bol ! Maman l'enlève avec une cuillère. Ce n'est pas grave.\nEnsuite, Léa verse le sucre et la farine. Maman fait fondre le chocolat avec le beurre. Ça sent très bon dans la cuisine ! Léa mélange tout avec le fouet. La pâte devient brune et toute lisse. Elle a envie de la goûter, mais elle attend.\nMaman met le gâteau dans le four. Léa regarde par la petite fenêtre. Le gâteau gonfle doucement. Après trente minutes, il est cuit. Léa pose dessus des bonbons de toutes les couleurs.\nLe soir, Papa rentre du travail. Toute la famille chante « Joyeux anniversaire ». Papa souffle les bougies et goûte le gâteau. « C'est le meilleur gâteau du monde ! » dit-il. Léa est très fière.",
+    questions: [
+      { q: "Pour qui Léa prépare-t-elle le gâteau ?", choix: ["Pour Papa", "Pour Maman", "Pour sa maîtresse"], bonne: 0 },
+      { q: "Qu'est-ce qui tombe dans le bol ?", choix: ["Un morceau de coquille", "Un bonbon", "Une cuillère"], bonne: 0 },
+      { q: "Que pose Léa sur le gâteau ?", choix: ["Des bonbons de toutes les couleurs", "Des fraises", "Du sucre glace"], bonne: 0 }] },
+  { id: "escargots", niveau: 1, genre: "🐌 Documentaire", titre: "Les escargots",
+    texte: "L'escargot est un petit animal tout mou. Il n'a pas d'os. Sur son dos, il porte une coquille en forme de spirale. C'est sa maison ! Quand il a peur, il rentre dedans pour se cacher.\nSur sa tête, l'escargot a quatre cornes. Les deux grandes cornes ont des yeux au bout. Les deux petites cornes servent à sentir et à toucher. Si on les touche, l'escargot les rentre très vite.\nL'escargot avance sur un pied large et plat. Il glisse sur une sorte de bave. Cette bave l'aide à avancer sans se blesser, même sur une pierre pointue. Derrière lui, il laisse une trace qui brille. L'escargot est très lent. Il lui faut plus d'une heure pour faire cinquante mètres !\nL'escargot aime la pluie et l'humidité. Quand il fait trop sec, il ferme sa coquille avec un petit couvercle et il attend. Il mange des feuilles, des fleurs et des salades. Avec sa langue, il râpe les feuilles comme une petite lime. Les jardiniers ne l'aiment pas beaucoup, car il dévore leurs légumes ! En hiver, l'escargot s'enterre et il dort jusqu'au printemps.",
+    questions: [
+      { q: "Où sont les yeux de l'escargot ?", choix: ["Au bout des grandes cornes", "Sur sa coquille", "Sous son pied"], bonne: 0 },
+      { q: "Que fait l'escargot quand il fait trop sec ?", choix: ["Il ferme sa coquille et il attend", "Il court plus vite", "Il cherche de la neige"], bonne: 0 },
+      { q: "Pourquoi les jardiniers n'aiment-ils pas l'escargot ?", choix: ["Il dévore leurs légumes", "Il fait du bruit", "Il pique les mains"], bonne: 0 }] },
+  { id: "cerfvolant", niveau: 1, genre: "📖 Histoire", titre: "Le cerf-volant de Léo",
+    texte: "Dimanche, il y a beaucoup de vent. Léo a une idée : il va faire voler son nouveau cerf-volant ! C'est un dragon rouge avec une longue queue jaune.\nLéo va sur la plage avec son grand frère. Le sable vole un peu et les vagues sont grosses. Léo tient la ficelle. Son frère lève le cerf-volant au-dessus de sa tête. « Un, deux, trois… cours ! » Léo court aussi vite qu'il peut. Le dragon monte, monte, puis il tombe dans le sable. Raté !\nLéo ne se fâche pas. Il essaie encore une fois. Cette fois, il tourne le dos au vent. Le vent souffle fort et le cerf-volant monte très haut dans le ciel. Il danse au-dessus des vagues. Sa queue jaune fait des zigzags. Des enfants s'arrêtent pour le regarder. Léo est content.\nMais soudain, le vent tire très fort. Léo serre la ficelle de toutes ses forces. Son frère vient l'aider. À deux, ils tiennent bon ! Le soir, Léo rentre à la maison. Il a les joues rouges et du sable plein les cheveux. Il a hâte de revenir.",
+    questions: [
+      { q: "À quoi ressemble le cerf-volant de Léo ?", choix: ["À un dragon rouge", "À un oiseau bleu", "À un poisson vert"], bonne: 0 },
+      { q: "Que se passe-t-il la première fois ?", choix: ["Le cerf-volant tombe dans le sable", "Le cerf-volant s'envole très loin", "La ficelle casse"], bonne: 0 },
+      { q: "Qui aide Léo quand le vent tire fort ?", choix: ["Son grand frère", "Son papa", "Un enfant de la plage"], bonne: 0 }] },
+  { id: "piscine", niveau: 1, genre: "💬 Dialogue", titre: "À la piscine",
+    texte: "Ce matin, la classe va à la piscine. Dans le vestiaire, Lyes enfile son maillot de bain.\n— J'ai un peu peur de l'eau, dit-il tout bas.\n— Ne t'inquiète pas, répond Lucy. Moi aussi, j'avais peur l'année dernière.\nLe maître nageur siffle. Tous les enfants se mettent en rang au bord du bassin.\n— Aujourd'hui, on va apprendre à faire l'étoile de mer, explique-t-il.\n— C'est quoi, l'étoile de mer ? demande Lyes.\n— Tu t'allonges sur le dos et tu écartes les bras et les jambes. L'eau va te porter.\nLucy essaie la première. Elle flotte comme un bouchon !\n— À toi, Lyes ! crie-t-elle.\nLyes descend l'échelle doucement. L'eau est un peu froide. Il prend une frite en mousse et il s'allonge. Il respire calmement. Petit à petit, il lâche la frite.\n— Regardez, je flotte tout seul ! dit-il.\n— Bravo ! dit le maître nageur.\nÀ la fin de la séance, Lyes n'a plus peur du tout. Dans le car, il dit à Lucy :\n— La semaine prochaine, je veux apprendre à plonger !\nLucy rit. Elle est fière de son copain.",
+    questions: [
+      { q: "Qui a peur de l'eau au début ?", choix: ["Lyes", "Lucy", "Le maître nageur"], bonne: 0 },
+      { q: "Que faut-il faire pour l'étoile de mer ?", choix: ["S'allonger sur le dos et écarter les bras et les jambes", "Plonger au fond de l'eau", "Nager très vite"], bonne: 0 },
+      { q: "Que veut apprendre Lyes la semaine prochaine ?", choix: ["À plonger", "À courir", "À faire du vélo"], bonne: 0 }] },
+  { id: "lune", niveau: 1, genre: "🌙 Documentaire", titre: "La Lune",
+    texte: "La nuit, quand le ciel est clair, on voit souvent la Lune. Elle a l'air de briller comme une lampe. Mais en vérité, la Lune ne fait pas de lumière. Elle est éclairée par le Soleil, comme un ballon sous une lampe de poche.\nLa Lune tourne autour de la Terre. Il lui faut environ un mois pour faire un tour complet. Pendant ce temps, on ne voit pas toujours la même partie éclairée. Parfois, la Lune est toute ronde : c'est la pleine lune. Parfois, elle ressemble à un croissant. Et certains soirs, on ne la voit presque plus !\nSur la Lune, il n'y a pas d'air pour respirer. Il n'y a pas d'eau, pas de plantes et pas d'animaux. Le sol est couvert de poussière grise et de gros trous. On appelle ces trous des cratères.\nIl y a longtemps, des astronautes sont allés sur la Lune en fusée. Ils ont marché sur la poussière. Ils ont laissé des traces de pas. Comme il n'y a pas de vent là-bas, ces traces sont toujours là aujourd'hui !",
+    questions: [
+      { q: "Qui éclaire la Lune ?", choix: ["Le Soleil", "La Terre", "Les étoiles"], bonne: 0 },
+      { q: "Comment appelle-t-on les gros trous sur la Lune ?", choix: ["Des cratères", "Des volcans", "Des grottes"], bonne: 0 },
+      { q: "Pourquoi les traces de pas sont-elles toujours là ?", choix: ["Il n'y a pas de vent", "Il fait trop froid", "Personne ne marche dessus"], bonne: 0 }] },
+  { id: "nuage", niveau: 1, genre: "✨ Conte", titre: "Le petit nuage",
+    texte: "Il était une fois un petit nuage tout blanc. Il s'appelait Floc. Floc était le plus petit nuage du ciel. Les autres nuages étaient grands et gris. Ils faisaient tomber la pluie sur les champs et sur les forêts. Floc, lui, ne savait pas faire pleuvoir. Il était un peu triste.\nUn jour d'été, il fait très chaud. Dans un jardin, une petite fleur jaune baisse la tête. Elle a très soif. Floc la voit et il descend un peu. Il pousse, il pousse de toutes ses forces. Rien ne tombe. Il essaie encore. Ploc ! Une seule goutte tombe sur la fleur. Puis une autre, et encore une autre.\nLa petite fleur relève la tête. « Merci, petit nuage ! » dit-elle. Floc est tout content. Il continue son chemin dans le ciel. Il donne quelques gouttes aux salades, aux tomates et aux arbres du verger. Les oiseaux chantent pour le remercier.\nLe soir, le soleil se couche. Il colore le petit nuage en rose et en orange. Floc n'est plus triste. Il a compris que même un tout petit nuage peut être très utile.",
+    questions: [
+      { q: "Comment s'appelle le petit nuage ?", choix: ["Floc", "Ploc", "Flic"], bonne: 0 },
+      { q: "Pourquoi Floc est-il triste au début ?", choix: ["Il ne sait pas faire pleuvoir", "Il a froid", "Il est tout seul dans le ciel"], bonne: 0 },
+      { q: "Qui Floc aide-t-il en premier ?", choix: ["Une petite fleur jaune", "Un oiseau", "Un arbre du verger"], bonne: 0 }] },
+  { id: "ferme", niveau: 1, genre: "📖 Histoire", titre: "La sortie à la ferme",
+    texte: "Aujourd'hui, la classe de Lucy et Léa visite une ferme. La fermière porte des bottes vertes et un grand chapeau. Elle accueille les enfants avec un grand sourire.\nD'abord, elle montre les vaches. Elles sont noires et blanches. Elles mangent de l'herbe et du foin toute la journée. « Une vache donne beaucoup de lait chaque jour », explique la fermière. Lucy caresse un petit veau. Il lui lèche la main avec sa grande langue. Ça chatouille !\nEnsuite, les enfants vont dans le poulailler. Les poules caquettent très fort. Léa cherche les œufs dans la paille. Elle en trouve trois, encore tout chauds. Elle les pose doucement dans un panier.\nPuis la fermière ouvre la porte de l'enclos des cochons. Ils se roulent dans la boue. « Ils font ça pour se rafraîchir », dit la fermière. Les enfants rient en se bouchant le nez.\nPour finir, tout le monde goûte du fromage fait à la ferme. Lucy adore. Léa préfère le jus de pomme. Dans le car, les deux copines parlent encore des animaux. Elles veulent revenir l'été prochain.",
+    questions: [
+      { q: "Qui caresse le petit veau ?", choix: ["Lucy", "Léa", "La fermière"], bonne: 0 },
+      { q: "Combien d'œufs Léa trouve-t-elle ?", choix: ["Trois", "Deux", "Cinq"], bonne: 0 },
+      { q: "Pourquoi les cochons se roulent-ils dans la boue ?", choix: ["Pour se rafraîchir", "Pour jouer", "Pour se cacher"], bonne: 0 }] },
+  { id: "kimono", niveau: 1, genre: "🥋 Histoire", titre: "Le kimono perdu",
+    texte: "Mercredi, Léo et Lyes ont rendez-vous au club de karaté. Léo arrive en avance. Il ouvre son sac et il pousse un cri. « Oh non ! Mon kimono n'est pas là ! » Il a oublié son kimono à la maison.\nLéo est très embêté. Sans kimono, il ne peut pas monter sur le tatami. Il a envie de pleurer. Lyes arrive à son tour. Il voit tout de suite que son copain a un problème.\n« Qu'est-ce qui se passe ? » demande Lyes. Léo lui explique. Lyes réfléchit un instant. Puis il sourit. « J'ai une idée ! Mon frère a laissé un vieux kimono dans le placard du club. » Les deux garçons vont voir le professeur. Il ouvre le placard et sort un kimono blanc. Il est un peu trop grand. Les manches cachent les mains de Léo !\nLyes l'aide à rouler les manches. Puis il serre bien la ceinture. Léo se regarde dans le miroir et il rit. « Je ressemble à un fantôme ! » Le cours peut commencer. Léo fait tous les exercices avec Lyes. À la fin, il remercie son copain. Le soir, il prépare son sac en avance.",
+    questions: [
+      { q: "Qu'a oublié Léo ?", choix: ["Son kimono", "Sa ceinture", "Ses chaussures"], bonne: 0 },
+      { q: "Où est le vieux kimono ?", choix: ["Dans le placard du club", "Dans le sac de Lyes", "Dans la voiture"], bonne: 0 },
+      { q: "Pourquoi Léo dit-il qu'il ressemble à un fantôme ?", choix: ["Le kimono est trop grand", "Il a peur", "Il est tout blanc de farine"], bonne: 0 }] },
+  // ---------- Nouveaux textes (niveau 2) ----------
+  { id: "potager", niveau: 2, genre: "📖 Histoire", titre: "Le potager de l'école",
+    texte: "Au printemps, la maîtresse annonce une grande nouvelle : la classe va créer un potager dans un coin de la cour. Les élèves sont ravis. Léa et Lyes sont chargés de préparer la terre. Avec de petites pelles et des râteaux, ils enlèvent les cailloux et les mauvaises herbes. C'est un vrai travail de jardinier !\nEnsuite, chaque groupe choisit ce qu'il va planter. Léa veut des radis, parce qu'ils poussent vite. Lyes préfère les tomates, mais il faut acheter de petits plants. La maîtresse explique comment faire : on creuse un sillon, on dépose les graines, puis on les recouvre d'une fine couche de terre. Enfin, on arrose doucement avec l'arrosoir.\nPendant plusieurs semaines, les enfants surveillent leur potager. Chaque matin, un élève vérifie si la terre est assez humide. Un jour, Lyes découvre des limaces sur les feuilles de salade. Il les pose délicatement plus loin, près de la haie.\nAu mois de juin, la récolte est enfin prête. Les radis sont roses et croquants. Les tomates sont encore vertes, mais elles rougiront pendant l'été. Toute la classe déguste les radis avec un peu de beurre. Personne n'a jamais trouvé des radis aussi délicieux !",
+    questions: [
+      { q: "Pourquoi Léa choisit-elle des radis ?", choix: ["Parce qu'ils poussent vite", "Parce qu'ils sont rouges", "Parce que Lyes les aime"], bonne: 0 },
+      { q: "Que trouve Lyes sur les salades ?", choix: ["Des limaces", "Des escargots", "Des coccinelles"], bonne: 0 },
+      { q: "Pourquoi les tomates ne sont-elles pas mangées en juin ?", choix: ["Elles sont encore vertes", "Elles ont été mangées par les oiseaux", "Les enfants ne les aiment pas"], bonne: 0 }] },
+  { id: "dauphins", niveau: 2, genre: "🐬 Documentaire", titre: "Les dauphins",
+    texte: "Le dauphin vit dans la mer, mais ce n'est pas un poisson. C'est un mammifère, comme le chien ou l'être humain. Il respire de l'air grâce à un trou placé sur le dessus de sa tête, qu'on appelle l'évent. Toutes les quelques minutes, il doit remonter à la surface pour prendre une grande inspiration. Même quand il dort, une moitié de son cerveau reste éveillée pour ne pas oublier de respirer !\nLes dauphins vivent en groupes qu'on appelle des bancs. Ils chassent ensemble les poissons et les calmars. Pour se repérer, ils poussent de petits cris et écoutent l'écho qui revient. Ainsi, ils savent où se trouvent leurs proies, même dans l'eau sombre. Chaque dauphin a aussi un sifflement bien à lui, un peu comme un prénom.\nLa femelle met au monde un seul petit à la fois. Le bébé dauphin boit le lait de sa mère pendant plus d'un an. Il nage toujours collé contre elle pour ne pas se perdre.\nLes dauphins sont joueurs et curieux. On les voit souvent sauter hors de l'eau ou suivre les bateaux. Malheureusement, ils sont menacés par la pollution et par les filets de pêche.",
+    questions: [
+      { q: "Par où le dauphin respire-t-il ?", choix: ["Par l'évent, sur sa tête", "Par sa bouche", "Par ses nageoires"], bonne: 0 },
+      { q: "Comment les dauphins se repèrent-ils dans l'eau sombre ?", choix: ["Ils écoutent l'écho de leurs cris", "Ils ont de très bons yeux", "Ils suivent les bateaux"], bonne: 0 },
+      { q: "Que boit le bébé dauphin ?", choix: ["Le lait de sa mère", "De l'eau de mer", "Du jus d'algues"], bonne: 0 }] },
+  { id: "spectacle", niveau: 2, genre: "💬 Dialogue", titre: "Le spectacle de fin d'année",
+    texte: "Dans une semaine, l'école organise son grand spectacle. La classe de Lucy et Léo va jouer une pièce de théâtre sur les animaux de la forêt.\n— Moi, je serai le hibou, annonce Léo. J'ai déjà appris tout mon texte !\n— Et moi, je joue la renarde, dit Lucy. Mais j'ai peur de tout oublier devant les parents.\n— On peut répéter ensemble à la récréation, propose Léo.\nChaque jour, les deux amis s'entraînent dans un coin de la cour. Léo fait semblant d'être assis sur une branche. Lucy marche à pas de loup autour de lui.\n— Bonsoir, monsieur le hibou ! Pourquoi ne dormez-vous pas ?\n— Parce que la nuit, c'est moi qui surveille la forêt, répond Léo d'une voix grave.\nLe soir du spectacle, la salle est pleine. Derrière le rideau, Lucy a les jambes qui tremblent.\n— Respire bien et regarde-moi si tu as un trou, lui chuchote Léo.\nLe rideau s'ouvre. Lucy prend une grande inspiration et dit sa première phrase. Tout se passe à merveille ! À la fin, les spectateurs applaudissent très fort. Les deux copains saluent en se tenant la main.",
+    questions: [
+      { q: "Quel animal joue Léo ?", choix: ["Le hibou", "Le renard", "Le loup"], bonne: 0 },
+      { q: "De quoi Lucy a-t-elle peur ?", choix: ["D'oublier son texte", "Du noir", "Des animaux"], bonne: 0 },
+      { q: "Où les enfants répètent-ils ?", choix: ["Dans la cour, à la récréation", "Chez Lucy", "Dans la forêt"], bonne: 0 }] },
+  { id: "sorciere", niveau: 2, genre: "✨ Conte", titre: "La soupe de la sorcière",
+    texte: "Au fond d'une forêt sombre vivait une vieille sorcière nommée Grimoire. Elle n'était pas méchante, mais elle avait un gros défaut : elle ratait toutes ses potions. Ses potions pour voler faisaient éternuer, et ses potions pour devenir invisible donnaient des boutons verts.\nUn soir d'hiver, Grimoire eut très faim. Elle décida de préparer une soupe magique qui rendrait joyeux tous ceux qui la goûteraient. Elle versa dans son chaudron de l'eau de pluie, trois carottes, une pincée de poudre d'étoile et une plume de corbeau. Elle tourna la soupe en chantant une formule.\nSoudain, le chaudron se mit à trembler. Une grosse bulle rose sortit de la marmite et éclata au plafond. Grimoire goûta la soupe. Elle n'était pas magique du tout. Elle était simplement… délicieuse !\nL'odeur s'échappa par la cheminée et se répandit dans toute la forêt. Le hérisson, la biche, le blaireau et même le vieux loup vinrent frapper à la porte. La sorcière servit un bol à chacun. Ils mangèrent ensemble près du feu en riant et en racontant des histoires.\nCe soir-là, Grimoire comprit que la vraie magie, c'était le partage.",
+    questions: [
+      { q: "Quel est le défaut de Grimoire ?", choix: ["Elle rate toutes ses potions", "Elle est méchante", "Elle a peur du noir"], bonne: 0 },
+      { q: "Comment est la soupe finalement ?", choix: ["Simplement délicieuse", "Magique", "Trop salée"], bonne: 0 },
+      { q: "Qu'a compris la sorcière à la fin ?", choix: ["Que la vraie magie, c'est le partage", "Qu'il faut acheter un nouveau chaudron", "Que les animaux sont dangereux"], bonne: 0 }] },
+  { id: "saisons", niveau: 2, genre: "🌳 Documentaire", titre: "L'arbre et les saisons",
+    texte: "Un arbre comme le chêne ou le cerisier change d'apparence au fil de l'année. Chaque saison, il vit une étape différente.\nAu printemps, les journées deviennent plus longues et plus douces. La sève, un liquide qui nourrit l'arbre, remonte des racines jusqu'aux branches. Les bourgeons gonflent, puis s'ouvrent. De petites feuilles vertes apparaissent, et parfois des fleurs. Les abeilles viennent alors butiner.\nEn été, l'arbre est couvert de feuilles. Grâce à la lumière du soleil, elles fabriquent la nourriture dont l'arbre a besoin pour grandir. Sous son feuillage, il fait bon se reposer à l'ombre. Les fleurs se transforment peu à peu en fruits : cerises, pommes, glands ou noisettes.\nEn automne, les jours raccourcissent et il fait plus frais. Les feuilles deviennent jaunes, orange ou rouges, puis elles tombent. Sur le sol, elles forment un tapis qui protège les petits animaux et enrichit la terre.\nEn hiver, l'arbre semble mort, mais il se repose seulement. Ses branches sont nues, et ses bourgeons, bien fermés, attendent le retour du printemps. Certains arbres, comme le sapin, gardent pourtant leurs aiguilles toute l'année.",
+    questions: [
+      { q: "Que fait la sève au printemps ?", choix: ["Elle remonte des racines jusqu'aux branches", "Elle tombe sur le sol", "Elle gèle"], bonne: 0 },
+      { q: "À quoi servent les feuilles tombées en automne ?", choix: ["À protéger les petits animaux et enrichir la terre", "À nourrir les oiseaux", "À faire pousser des fruits"], bonne: 0 },
+      { q: "Quel arbre garde ses aiguilles en hiver ?", choix: ["Le sapin", "Le chêne", "Le cerisier"], bonne: 0 }] },
+  { id: "panne", niveau: 2, genre: "📖 Histoire", titre: "La panne de courant",
+    texte: "Ce soir-là, un gros orage gronde au-dessus de la ville. Lyes fait ses devoirs à la table de la cuisine pendant que sa mère prépare le dîner. Tout à coup, un éclair illumine le ciel, suivi d'un énorme coup de tonnerre. Et puis plus rien : toutes les lumières s'éteignent !\nLyes sursaute. La maison est plongée dans le noir. Le réfrigérateur s'est arrêté et la télévision du salon est devenue silencieuse. Sa petite sœur se met à pleurer dans sa chambre.\n« Pas de panique, dit Maman. C'est une panne de courant. » Elle cherche une lampe de poche dans le tiroir. Lyes va chercher des bougies dans le placard, en avançant à tâtons. Ils les allument et les posent sur la table, loin des rideaux.\nLa cuisine prend alors un air mystérieux. Les flammes dansent et dessinent des ombres sur les murs. Lyes a une idée : il fait des ombres chinoises avec ses mains. Un lapin, un chien, puis un oiseau qui bat des ailes ! Sa petite sœur arrête de pleurer et éclate de rire.\nUne heure plus tard, la lumière revient. Lyes est presque déçu : cette soirée sans électricité était vraiment amusante.",
+    questions: [
+      { q: "Pourquoi les lumières s'éteignent-elles ?", choix: ["À cause de l'orage", "Parce que Maman les éteint", "Parce que Lyes joue avec"], bonne: 0 },
+      { q: "Où les bougies sont-elles posées ?", choix: ["Sur la table, loin des rideaux", "Près de la fenêtre", "Dans la chambre"], bonne: 0 },
+      { q: "Que fait Lyes pour faire rire sa sœur ?", choix: ["Des ombres chinoises", "Des grimaces", "Une chanson"], bonne: 0 }] },
+  { id: "bibliotheque", niveau: 2, genre: "💬 Dialogue", titre: "À la bibliothèque",
+    texte: "Le mercredi après-midi, Léa et Léo vont à la bibliothèque du quartier. La bibliothécaire, une dame aux lunettes rondes, les salue en chuchotant.\n— Bonjour les enfants. Vous cherchez quelque chose de particulier ?\n— Oui, répond Léa. J'aimerais un livre sur les chevaux, s'il vous plaît.\n— Les documentaires sur les animaux sont au fond, à droite. Ils sont rangés par ordre alphabétique.\nLéa trouve facilement le rayon. Elle hésite entre trois livres, puis choisit celui qui a les plus belles photos. Pendant ce temps, Léo tourne autour des bandes dessinées.\n— Je ne sais pas quoi prendre, soupire-t-il. J'ai déjà tout lu !\n— Tu devrais essayer un roman d'aventure, lui conseille la bibliothécaire. Celui-ci raconte l'histoire d'un garçon qui découvre une carte au trésor.\nLéo lit la première page, puis la deuxième. Il ne peut plus s'arrêter !\n— D'accord, je le prends, dit-il en souriant.\nLes deux amis vont au comptoir avec leur carte. La bibliothécaire scanne les livres et tamponne la date de retour.\n— Vous avez trois semaines pour les lire. Prenez-en bien soin !\nSur le chemin du retour, Léo marche en lisant. Léa doit le tenir par la manche pour qu'il ne tombe pas.",
+    questions: [
+      { q: "Quel livre Léa cherche-t-elle ?", choix: ["Un livre sur les chevaux", "Une bande dessinée", "Un roman d'aventure"], bonne: 0 },
+      { q: "De quoi parle le roman de Léo ?", choix: ["D'un garçon qui découvre une carte au trésor", "De chevaux", "D'un pirate qui perd son bateau"], bonne: 0 },
+      { q: "Combien de temps ont-ils pour lire les livres ?", choix: ["Trois semaines", "Une semaine", "Un mois"], bonne: 0 }] },
+  { id: "fourmis", niveau: 2, genre: "🐜 Documentaire", titre: "Les fourmis",
+    texte: "Les fourmis sont de tout petits insectes, mais elles sont très nombreuses : on en trouve presque partout sur la Terre. Elles vivent en grandes familles dans des nids qu'on appelle des fourmilières. Certaines fourmilières abritent des milliers, voire des millions de fourmis !\nComme chez les abeilles, chaque fourmi a un rôle bien précis. La reine passe sa vie à pondre des œufs. Les ouvrières s'occupent de tout le reste : elles construisent les galeries, nourrissent les larves, nettoient le nid et cherchent de la nourriture. Certaines, plus grosses, sont des soldats qui défendent la fourmilière.\nLes fourmis sont d'une force étonnante. Une fourmi peut porter un objet beaucoup plus lourd qu'elle, comme une miette de pain ou une feuille. Quand elle trouve de la nourriture, elle laisse sur le chemin une odeur que les autres suivent. C'est pour cela qu'on voit souvent des fourmis marcher en file indienne.\nCertaines espèces sont même de vraies fermières : elles élèvent des pucerons pour boire le liquide sucré qu'ils produisent. Les fourmis sont utiles à la nature, car elles nettoient le sol et aèrent la terre.",
+    questions: [
+      { q: "Comment s'appelle le nid des fourmis ?", choix: ["Une fourmilière", "Une ruche", "Un terrier"], bonne: 0 },
+      { q: "Pourquoi les fourmis marchent-elles en file indienne ?", choix: ["Elles suivent une odeur laissée sur le chemin", "Elles ont peur", "Elles jouent"], bonne: 0 },
+      { q: "Que font les soldats ?", choix: ["Ils défendent la fourmilière", "Ils pondent des œufs", "Ils élèvent des pucerons"], bonne: 0 }] },
+  // ---------- Nouveaux textes (niveau 3) ----------
+  { id: "planetes", niveau: 3, genre: "🪐 Documentaire", titre: "Les planètes du système solaire",
+    texte: "Notre planète, la Terre, tourne autour d'une étoile : le Soleil. Elle n'est pas seule à le faire. Avec sept autres planètes, elle forme ce qu'on appelle le système solaire.\nLes quatre planètes les plus proches du Soleil sont petites et rocheuses. Mercure, la première, est brûlante le jour et glaciale la nuit. Vénus est entourée de nuages épais qui retiennent la chaleur : c'est la planète la plus chaude. Vient ensuite la Terre, la seule où l'on a trouvé de l'eau liquide et de la vie. Mars, surnommée la planète rouge, est couverte de poussière couleur rouille ; des robots l'explorent depuis plusieurs années.\nPlus loin se trouvent quatre planètes géantes, composées surtout de gaz. Jupiter est la plus grosse de toutes : plus de mille Terres pourraient tenir à l'intérieur ! Saturne est célèbre pour ses magnifiques anneaux, formés de morceaux de glace et de roche. Uranus et Neptune, très éloignées, sont des mondes bleutés et glacés, balayés par des vents violents.\nPour aller de la Terre jusqu'à Neptune, une sonde spatiale a voyagé pendant douze ans. Cela montre à quel point notre système solaire est immense !",
+    questions: [
+      { q: "Quelle est la planète la plus chaude ?", choix: ["Vénus", "Mercure", "Mars"], bonne: 0 },
+      { q: "De quoi sont faits les anneaux de Saturne ?", choix: ["De morceaux de glace et de roche", "De gaz", "De poussière rouge"], bonne: 0 },
+      { q: "Combien de temps une sonde a-t-elle mis pour aller jusqu'à Neptune ?", choix: ["Douze ans", "Deux ans", "Un mois"], bonne: 0 }] },
+  { id: "cahier", niveau: 3, genre: "🔎 Histoire", titre: "Le mystère du cahier disparu",
+    texte: "Lundi matin, Léo arrive en classe, la mine sombre.\n— Mon cahier de poésie a disparu ! J'avais recopié tous les poèmes de l'année et fait plein de dessins…\nLucy, Léa et Lyes se regardent. Une enquête commence !\n— Où l'as-tu vu pour la dernière fois ? demande Lucy en sortant un carnet, comme une vraie détective.\n— Vendredi, à la bibliothèque de l'école, je crois.\nÀ la récréation, les quatre amis s'y précipitent. Léa inspecte les étagères, Lyes regarde sous les tables. Rien. Soudain, Lucy remarque des traces de feutre vert sur le bord d'un bac de livres à réparer.\n— Léo, tu utilises bien un feutre vert pour tes titres ?\n— Oui ! Mais qu'est-ce que mon cahier ferait là-dedans ?\nLyes plonge la main dans le bac et en ressort un cahier violet, un peu abîmé.\n— Victoire, c'est le mien ! s'exclame Léo.\nLa bibliothécaire, qui passait par là, comprend tout de suite.\n— Je suis désolée, j'ai cru que c'était un livre de la bibliothèque à recoller. Heureusement que vous êtes de si bons enquêteurs !\nLéo serre son cahier contre lui. Pour remercier ses amis, il leur promet d'écrire un poème sur leur incroyable enquête.",
+    questions: [
+      { q: "Qu'est-ce que Léo a perdu ?", choix: ["Son cahier de poésie", "Son feutre vert", "Son livre de bibliothèque"], bonne: 0 },
+      { q: "Quel indice Lucy remarque-t-elle ?", choix: ["Des traces de feutre vert", "Une page déchirée", "Des empreintes de pas"], bonne: 0 },
+      { q: "Pourquoi le cahier était-il dans le bac ?", choix: ["La bibliothécaire croyait que c'était un livre à recoller", "Lyes l'avait caché", "Léo l'avait jeté"], bonne: 0 }] },
+  { id: "dragon", niveau: 3, genre: "✨ Conte", titre: "Le dragon qui avait peur du feu",
+    texte: "Dans un royaume entouré de montagnes vivait un jeune dragon nommé Braisillon. Contrairement à tous ceux de son espèce, il avait une peur terrible du feu. Chaque fois qu'il essayait de cracher une flamme, il fermait les yeux, toussait et ne produisait qu'un petit nuage de fumée grise. Les autres dragons se moquaient de lui sans pitié.\nUn hiver, une tempête de neige s'abattit sur le village voisin. Le froid était si intense que la rivière gela et que les habitants ne pouvaient plus allumer leurs cheminées : tout le bois était trempé. Les enfants grelottaient sous leurs couvertures.\nBraisillon, qui survolait la vallée, entendit leurs pleurs. Il hésita longtemps. Puis il se posa sur la place du village, inspira profondément et souffla, très doucement, au-dessus d'un tas de bûches. Une flamme minuscule apparut, aussi timide que lui. Elle grandit peu à peu, jusqu'à devenir un beau feu crépitant.\nToute la nuit, le dragon alla de maison en maison pour rallumer chaque cheminée. Au matin, les villageois l'acclamèrent. Braisillon comprit alors qu'il n'avait pas besoin d'un feu immense et terrifiant : sa petite flamme douce était exactement ce dont le monde avait besoin.",
+    questions: [
+      { q: "De quoi Braisillon a-t-il peur ?", choix: ["Du feu", "De la neige", "Des autres dragons"], bonne: 0 },
+      { q: "Pourquoi les villageois ne peuvent-ils plus se chauffer ?", choix: ["Tout le bois est trempé", "Les cheminées sont cassées", "Ils n'ont plus d'allumettes"], bonne: 0 },
+      { q: "Que comprend Braisillon à la fin ?", choix: ["Sa petite flamme douce est très utile", "Il doit apprendre à cracher un feu immense", "Il doit quitter le royaume"], bonne: 0 }] },
+  { id: "castors", niveau: 3, genre: "🦫 Documentaire", titre: "Les castors, bâtisseurs de la rivière",
+    texte: "Le castor est le plus grand rongeur d'Europe. Avec son pelage brun et imperméable, ses pattes arrière palmées et sa large queue plate en forme de pagaie, il est parfaitement adapté à la vie aquatique. Il peut rester sous l'eau pendant une quinzaine de minutes, en fermant ses narines et ses oreilles.\nCet animal est surtout célèbre pour ses talents d'architecte. Grâce à ses incisives orange, très dures et qui ne cessent jamais de pousser, il abat des arbres en rongeant leur tronc. Il utilise ensuite les branches, les pierres et la boue pour construire des barrages en travers des cours d'eau. En retenant l'eau, ces barrages créent un étang calme et profond.\nAu milieu de cet étang, la famille de castors bâtit sa hutte. L'entrée se trouve sous l'eau, ce qui protège les petits des prédateurs comme le loup ou le renard. À l'intérieur, une pièce reste au sec, au-dessus du niveau de l'eau.\nLes barrages des castors sont précieux pour la nature : ils créent des zones humides où viennent vivre de nombreux poissons, grenouilles, oiseaux et insectes. Autrefois chassé pour sa fourrure, le castor est aujourd'hui une espèce protégée en France.",
+    questions: [
+      { q: "À quoi ressemble la queue du castor ?", choix: ["À une pagaie plate", "À un pinceau", "À une corde"], bonne: 0 },
+      { q: "Pourquoi l'entrée de la hutte est-elle sous l'eau ?", choix: ["Pour protéger les petits des prédateurs", "Pour garder la hutte au chaud", "Pour attraper des poissons"], bonne: 0 },
+      { q: "Pourquoi les barrages sont-ils utiles à la nature ?", choix: ["Ils créent des zones humides pour beaucoup d'animaux", "Ils empêchent les arbres de pousser", "Ils assèchent la rivière"], bonne: 0 }] },
+  { id: "neige", niveau: 3, genre: "💬 Dialogue", titre: "La classe de neige",
+    texte: "Après six heures de car, la classe arrive enfin au chalet, au cœur des montagnes enneigées. Léa colle son nez contre la vitre.\n— Regarde, Lyes, tout est blanc ! On dirait un paysage de carte postale.\n— J'espère que je ne vais pas passer la semaine à tomber sur les fesses, plaisante Lyes, qui n'a jamais skié.\nLe lendemain matin, un moniteur au visage bronzé distribue les skis, les bâtons et les casques.\n— Pour freiner, vous écartez l'arrière de vos skis en formant une part de pizza, explique-t-il. Pour avancer, vous les remettez parallèles, comme des frites !\nLes premiers essais sont difficiles. Lyes glisse, perd l'équilibre et finit dans la neige poudreuse. Léa éclate de rire, puis tombe à son tour juste à côté de lui.\n— Bon, on est à égalité, constate-t-elle en se relevant.\nJour après jour, ils progressent. Le jeudi, le moniteur les emmène sur une piste verte, longue et sinueuse. Lyes descend prudemment en faisant de grands virages. Arrivé en bas, il lève les bâtons au ciel.\n— Je n'ai pas fait une seule chute !\nLe dernier soir, toute la classe organise une boum au chalet. Dans le car du retour, Léa et Lyes rêvent déjà de revenir l'année prochaine.",
+    questions: [
+      { q: "Qui n'a jamais skié avant ?", choix: ["Lyes", "Léa", "Le moniteur"], bonne: 0 },
+      { q: "Comment met-on les skis pour freiner ?", choix: ["En part de pizza", "En frites", "En croix"], bonne: 0 },
+      { q: "Que se passe-t-il le jeudi ?", choix: ["Lyes descend une piste verte sans tomber", "Léa se casse la jambe", "Il neige trop pour skier"], bonne: 0 }] },
+  { id: "orientation", niveau: 3, genre: "📖 Histoire", titre: "La course d'orientation",
+    texte: "Ce vendredi, la classe participe à une course d'orientation dans le grand parc de la ville. Le principe est simple : chaque équipe reçoit une carte et une boussole, et doit trouver dix balises cachées le plus rapidement possible. Lucy et Léo font équipe ensemble.\n— C'est toi qui tiens la carte, propose Léo. Moi, je m'occupe de la boussole.\nAu coup de sifflet, ils partent en courant. La première balise est facile à trouver, accrochée au tronc d'un grand platane. Ils poinçonnent leur carton et repartent aussitôt. Mais à la quatrième, les choses se compliquent : la carte indique une fontaine, et il y en a deux dans le parc !\n— Réfléchissons, dit Lucy en tournant la carte dans le bon sens. La fontaine est au nord du kiosque à musique.\nLéo vérifie avec la boussole. Ils se dirigent vers la bonne fontaine et découvrent la balise orange, cachée derrière un buisson.\nLa suite du parcours les entraîne à travers un petit bois, le long de l'étang et jusqu'aux jardins fleuris. Essoufflés mais ravis, ils rapportent leur carton complet au professeur. Ils ne sont pas les plus rapides, mais ils n'ont commis aucune erreur. Le professeur les félicite pour leur excellent travail d'équipe.",
+    questions: [
+      { q: "Combien de balises faut-il trouver ?", choix: ["Dix", "Quatre", "Deux"], bonne: 0 },
+      { q: "Quel problème rencontrent-ils à la quatrième balise ?", choix: ["Il y a deux fontaines dans le parc", "La carte est mouillée", "La boussole est cassée"], bonne: 0 },
+      { q: "Pourquoi le professeur les félicite-t-il ?", choix: ["Pour leur excellent travail d'équipe", "Parce qu'ils sont arrivés les premiers", "Parce qu'ils ont trouvé un trésor"], bonne: 0 }] },
+  { id: "baleines", niveau: 3, genre: "🐋 Documentaire", titre: "La baleine bleue",
+    texte: "La baleine bleue est le plus grand animal ayant jamais vécu sur la Terre, plus grand encore que les plus gros dinosaures. Elle peut mesurer trente mètres de long, soit la longueur de trois autobus mis bout à bout, et peser autant que vingt-cinq éléphants. Son cœur, à lui seul, est aussi gros qu'une petite voiture !\nPourtant, ce géant des océans se nourrit d'animaux minuscules : le krill, de petites crevettes qui vivent en bancs immenses. La baleine bleue n'a pas de dents. À la place, sa bouche est garnie de longues lames souples appelées fanons. Elle avale une énorme gorgée d'eau remplie de krill, puis elle referme la bouche et rejette l'eau à travers ses fanons, qui retiennent la nourriture comme une passoire. Elle peut ainsi engloutir plusieurs tonnes de krill par jour.\nComme le dauphin, la baleine est un mammifère : elle respire de l'air par des évents situés sur le dessus de sa tête. Quand elle souffle, un jet de vapeur jaillit à plusieurs mètres de hauteur.\nLes baleines bleues communiquent par des chants très graves qui peuvent porter à des centaines de kilomètres. Longtemps chassées, elles sont aujourd'hui protégées, mais restent rares.",
+    questions: [
+      { q: "Que mange la baleine bleue ?", choix: ["Du krill, de petites crevettes", "Des requins", "Des algues"], bonne: 0 },
+      { q: "À quoi servent les fanons ?", choix: ["À retenir la nourriture comme une passoire", "À mâcher les poissons", "À nager plus vite"], bonne: 0 },
+      { q: "À quelle distance peuvent porter ses chants ?", choix: ["À des centaines de kilomètres", "À quelques mètres", "À un kilomètre seulement"], bonne: 0 }] },
+  { id: "roi", niveau: 3, genre: "✨ Conte", titre: "Le roi qui voulait compter les étoiles",
+    texte: "Il était une fois un roi très savant qui possédait tout ce qu'on peut désirer : des palais, des jardins et des coffres remplis d'or. Mais une seule chose l'empêchait de dormir : il ignorait combien d'étoiles brillaient dans le ciel. Un soir, il convoqua ses conseillers.\n— Celui qui me donnera le nombre exact des étoiles recevra la moitié de mon royaume !\nLe premier conseiller passa trois nuits à compter, mais il s'endormit avant d'avoir terminé. Le deuxième fabriqua une immense lunette et découvrit encore plus d'étoiles qu'avant, ce qui rendit le roi furieux. Le troisième prétendit qu'il y en avait exactement mille, mais personne ne le crut.\nAlors une petite bergère, qui gardait ses moutons au pied du château, demanda à être reçue.\n— Majesté, je connais la réponse.\n— Vraiment ? Combien y en a-t-il ?\n— Il y en a autant que de grains de sable sur les plages et de gouttes d'eau dans la mer. On ne peut pas les compter, mais on peut les admirer.\nLe roi resta longtemps silencieux. Puis il sortit sur son balcon et leva les yeux. Pour la première fois depuis des années, il regarda simplement le ciel, sans chercher à compter. Cette nuit-là, il dormit paisiblement.",
+    questions: [
+      { q: "Pourquoi le roi ne dort-il plus ?", choix: ["Il ne sait pas combien il y a d'étoiles", "Il a perdu son or", "Ses moutons ont disparu"], bonne: 0 },
+      { q: "Que fait le deuxième conseiller ?", choix: ["Il fabrique une immense lunette", "Il s'endort en comptant", "Il dit qu'il y a mille étoiles"], bonne: 0 },
+      { q: "Que conseille la bergère au roi ?", choix: ["D'admirer les étoiles sans les compter", "D'acheter une lunette", "De compter les grains de sable"], bonne: 0 }] }
 ];
 
 
@@ -1631,10 +1814,10 @@ var FLUENCE_TEXTES = [
 //   (un complément qu'on ne peut pas enlever, comme « au karaté » après « va », reste sans crochets).
 var GRAM_PHRASES = [
   "{Le|D petit|A chat|N} dort|V [sur|x le|D canapé|N] .",
-  "{Lucy|NP} met|V son|D kimono|N blanc|A .",
-  "[Le|D mercredi|N] , {Lucy|NP} va|V au|x karaté|N .",
+  "{Lyes|NP} met|V son|D kimono|N blanc|A .",
+  "[Le|D mercredi|N] , {Lucy|NP et|x Léo|NP} vont|V au|x karaté|N .",
   "{Les|D oiseaux|N} chantent|V [dans|x le|D grand|A jardin|N] .",
-  "{Tom|NP} mange|V une|D pomme|N rouge|A .",
+  "{Léa|NP} mange|V une|D pomme|N rouge|A .",
   "{Elle|P} regarde|V les|D étoiles|N [le|D soir|N] .",
   "{Le|D chien|N} court|V [dans|x le|D parc|N] .",
   "[Demain|x] , {nous|P} irons|V à|x la|D plage|N .",
@@ -1642,13 +1825,13 @@ var GRAM_PHRASES = [
   "{Paris|NP} est|V une|D grande|A ville|N .",
   "{Ma|D petite|A sœur|N} dessine|V un|D dragon|N vert|A .",
   "{Tu|P} ranges|V tes|D jouets|N [dans|x ta|D chambre|N] .",
-  "{Hugo|NP} promène|V son|D chien|N [tous|x les|D matins|N] .",
+  "{Lucy|NP} promène|V son|D chien|N [tous|x les|D matins|N] .",
   "[En|x hiver|N] , {les|D ours|N} dorment|V [dans|x leur|D tanière|N] .",
   "{Vous|P} chantez|V une|D jolie|A chanson|N .",
   "{La|D tortue|N} avance|V [lentement|x] .",
   "{Ils|P} visitent|V le|D musée|N [avec|x leur|D classe|N] .",
   "{Une|D abeille|N} butine|V les|D fleurs|N jaunes|A .",
-  "{Inès|NP} adore|V les|D crêpes|N .",
+  "{Lyes|NP} adore|V les|D crêpes|N .",
   "{Je|P} prends|V le|D bus|N [à|x huit|x heures|N] .",
   "{Le|D soleil|N} brille|V [dans|x le|D ciel|N bleu|A] .",
   "{Les|D petits|A lapins|N} mangent|V des|D carottes|N .",
@@ -1662,7 +1845,7 @@ var GRAM_PHRASES = [
   "{On|P} joue|V [dans|x la|D cour|N] [à|x la|D récréation|N] .",
   "{Tu|P} portes|V un|D pull|N chaud|A .",
   "{Le|D vieux|A pirate|N} cache|V un|D trésor|N [sur|x une|D île|N] .",
-  "[Chaque|D samedi|N] , {Léa|NP} fait|V du|D vélo|N .",
+  "[Chaque|D samedi|N] , {Léo|NP} fait|V du|D vélo|N .",
   "{Mon|D cousin|N} lit|V une|D bande|N dessinée|A [dans|x son|D lit|N] .",
   "{Le|D boulanger|N} prépare|V du|D pain|N [très|x tôt|x] .",
   "{Les|D pompiers|N} arrivent|V [rapidement|x] ."
@@ -1681,7 +1864,7 @@ var PAS_GN = ["court très vite", "il mange", "sous la", "a chanté", "et puis",
 
 // Types de phrases (t = déclarative, interrogative, exclamative ou impérative)
 var TYPES_PHRASES = [
-  { p: "Lucy va au karaté le mercredi.", t: "déclarative" }, { p: "Le chat dort sur le lit.", t: "déclarative" },
+  { p: "Lyes va au karaté le mercredi.", t: "déclarative" }, { p: "Le chat dort sur le lit.", t: "déclarative" },
   { p: "Nous mangeons des crêpes ce soir.", t: "déclarative" }, { p: "Il pleut depuis ce matin.", t: "déclarative" },
   { p: "Mon frère a perdu sa dent.", t: "déclarative" }, { p: "Les feuilles tombent en automne.", t: "déclarative" },
   { p: "Le train arrive à huit heures.", t: "déclarative" },
@@ -1707,13 +1890,13 @@ var TYPES_AIDE = {
 
 // Forme affirmative / forme négative : a = affirmative, n = négative, faux = une mauvaise négation
 var NEGATIONS = [
-  { a: "Lucy aime les épinards.", n: "Lucy n'aime pas les épinards.", faux: "Lucy aime pas les épinards." },
-  { a: "Tom mange encore du gâteau.", n: "Tom ne mange plus de gâteau.", faux: "Tom ne plus mange de gâteau." },
+  { a: "Léo aime les épinards.", n: "Léo n'aime pas les épinards.", faux: "Léo aime pas les épinards." },
+  { a: "Lucy mange encore du gâteau.", n: "Lucy ne mange plus de gâteau.", faux: "Lucy ne plus mange de gâteau." },
   { a: "Le chat dort toujours sur mon lit.", n: "Le chat ne dort jamais sur mon lit.", faux: "Le chat dort jamais sur mon lit." },
   { a: "Je regarde la télévision.", n: "Je ne regarde pas la télévision.", faux: "Je regarde ne pas la télévision." },
   { a: "Nous allons à la piscine.", n: "Nous n'allons pas à la piscine.", faux: "Nous allons pas à la piscine." },
   { a: "Il pleut encore.", n: "Il ne pleut plus.", faux: "Il pleut ne plus." },
-  { a: "Hugo range toujours sa chambre.", n: "Hugo ne range jamais sa chambre.", faux: "Hugo ne jamais range sa chambre." },
+  { a: "Lyes range toujours sa chambre.", n: "Lyes ne range jamais sa chambre.", faux: "Lyes ne jamais range sa chambre." },
   { a: "Tu as peur du noir.", n: "Tu n'as pas peur du noir.", faux: "Tu as pas peur du noir." },
   { a: "Les oiseaux chantent.", n: "Les oiseaux ne chantent pas.", faux: "Les oiseaux chantent ne pas." },
   { a: "Mamie habite encore à Lyon.", n: "Mamie n'habite plus à Lyon.", faux: "Mamie habite plus à Lyon." },
@@ -1727,7 +1910,7 @@ var NEGATIONS = [
   { a: "Je mange toujours des bonbons.", n: "Je ne mange jamais de bonbons.", faux: "Je mange jamais de bonbons." },
   { a: "Le chien aboie encore.", n: "Le chien n'aboie plus.", faux: "Le chien aboie plus." },
   { a: "Nous aimons la soupe.", n: "Nous n'aimons pas la soupe.", faux: "Nous aimons pas la soupe." },
-  { a: "Lucy va souvent au cinéma.", n: "Lucy ne va jamais au cinéma.", faux: "Lucy va jamais au cinéma." },
+  { a: "Lucy et Lyes vont souvent au cinéma.", n: "Lucy et Lyes ne vont jamais au cinéma.", faux: "Lucy et Lyes vont jamais au cinéma." },
   { a: "Tu cours vite.", n: "Tu ne cours pas vite.", faux: "Tu cours pas vite." }
 ];
 
@@ -1760,9 +1943,9 @@ var COMPLEMENTS = {
 // Sujets possibles pour chaque personne (0 = je … 5 = ils). f = féminin
 var SUJETS_CONJ = [
   [{ s: "je" }], [{ s: "tu" }],
-  [{ s: "il" }, { s: "elle", f: 1 }, { s: "on" }, { s: "Lucy", f: 1 }, { s: "Mon frère" }],
+  [{ s: "il" }, { s: "elle", f: 1 }, { s: "on" }, { s: "Lucy", f: 1 }, { s: "Léa", f: 1 }, { s: "Léo" }, { s: "Lyes" }],
   [{ s: "nous" }], [{ s: "vous" }],
-  [{ s: "ils" }, { s: "elles", f: 1 }, { s: "Les enfants" }, { s: "Mes cousines", f: 1 }]
+  [{ s: "ils" }, { s: "elles", f: 1 }, { s: "Léo et Lyes" }, { s: "Lucy et Léa", f: 1 }, { s: "Lucy et Léo" }]
 ];
 var MOTS_TEMPS = {
   passe: ["Hier,", "Ce matin,", "La semaine dernière,"], imparfait: ["Autrefois,", "Avant,", "L'an dernier,"],
@@ -1776,10 +1959,10 @@ var GROUPES_VERBES = [
 ];
 // Groupes nominaux et le pronom qui les remplace
 var PRONOMS_GN = [
-  ["Lucy", "elle"], ["Tom", "il"], ["Lucy et Léa", "elles"], ["Tom et Lucy", "ils"], ["Mes parents", "ils"], ["La maîtresse", "elle"],
+  ["Lucy", "elle"], ["Léo", "il"], ["Lucy et Léa", "elles"], ["Lyes et Lucy", "ils"], ["Léa", "elle"], ["Lyes", "il"], ["Léo et Lyes", "ils"], ["Mes parents", "ils"], ["La maîtresse", "elle"],
   ["Le chat", "il"], ["Toi et moi", "nous"], ["Toi et ta sœur", "vous"], ["Les filles", "elles"], ["Mon frère et moi", "nous"],
   ["Les chevaux", "ils"], ["La lune", "elle"], ["Le soleil", "il"], ["Les tortues", "elles"], ["Papa et toi", "vous"],
-  ["Mamie", "elle"], ["Les garçons", "ils"], ["Léa et moi", "nous"], ["Tom et toi", "vous"]
+  ["Mamie", "elle"], ["Les garçons", "ils"], ["Léa et moi", "nous"], ["Lyes et toi", "vous"]
 ];
 
 
@@ -1789,31 +1972,31 @@ var PRONOMS_GN = [
 // Homophones : "_" marque le trou, r = la bonne réponse.
 var HOMOPHONES = {
   "a": [
-    ["Lucy _ un nouveau kimono.", "a"], ["Tom va _ la piscine le samedi.", "à"], ["Le chat _ faim ce matin.", "a"], ["Nous allons _ Paris en train.", "à"],
+    ["Lyes _ un nouveau kimono.", "a"], ["Léo va _ la piscine le samedi.", "à"], ["Le chat _ faim ce matin.", "a"], ["Nous allons _ Paris en train.", "à"],
     ["Mon frère _ perdu sa casquette.", "a"], ["Je joue _ cache-cache avec Léa.", "à"], ["La maîtresse _ une jolie voix.", "a"], ["Il pense _ son anniversaire.", "à"],
-    ["Léa _ mal au ventre.", "a"], ["Hugo arrive _ l'école en vélo.", "à"], ["Papa _ préparé des crêpes.", "a"], ["Elle offre un dessin _ sa mamie.", "à"],
-    ["Le chien _ trouvé un os.", "a"], ["Nous rentrons _ la maison.", "à"], ["Inès _ gagné la course.", "a"], ["J'ai mal _ la tête.", "à"],
+    ["Lucy _ mal au ventre.", "a"], ["Lyes arrive _ l'école en vélo.", "à"], ["Papa _ préparé des crêpes.", "a"], ["Elle offre un dessin _ sa mamie.", "à"],
+    ["Le chien _ trouvé un os.", "a"], ["Nous rentrons _ la maison.", "à"], ["Léa _ gagné la course.", "a"], ["J'ai mal _ la tête.", "à"],
     ["Le bébé _ deux dents.", "a"], ["On mange une tarte _ la fraise.", "à"], ["Lucy _ une ceinture jaune.", "a"], ["Le train part _ huit heures.", "à"],
     ["Mon oncle _ un grand jardin.", "a"], ["Tu écris _ ton ami.", "à"], ["Le lapin _ de longues oreilles.", "a"], ["Nous habitons _ côté de l'école.", "à"]],
   "et": [
-    ["Le ciel _ bleu.", "est"], ["Lucy _ Tom jouent au ballon.", "et"], ["Mon chat _ très gourmand.", "est"], ["J'achète du pain _ des croissants.", "et"],
+    ["Le ciel _ bleu.", "est"], ["Lucy _ Lyes jouent au ballon.", "et"], ["Mon chat _ très gourmand.", "est"], ["J'achète du pain _ des croissants.", "et"],
     ["La soupe _ chaude.", "est"], ["Il fait froid _ il neige.", "et"], ["Léa _ dans sa chambre.", "est"], ["Je mange une pomme _ une banane.", "et"],
     ["Le karaté _ un sport.", "est"], ["Papa _ Maman sont au cinéma.", "et"], ["Cette histoire _ drôle.", "est"], ["Le lion rugit _ s'en va.", "et"],
     ["Mon frère _ malade aujourd'hui.", "est"], ["Elle chante _ elle danse.", "et"], ["La forêt _ calme.", "est"], ["J'ai un crayon rouge _ un crayon vert.", "et"],
-    ["Le gâteau _ délicieux.", "est"], ["Hugo _ Inès vont à l'école.", "et"], ["L'eau _ froide.", "est"], ["Le chien aboie _ court.", "et"],
+    ["Le gâteau _ délicieux.", "est"], ["Léo _ Léa vont à l'école.", "et"], ["L'eau _ froide.", "est"], ["Le chien aboie _ court.", "et"],
     ["Ma maison _ grande.", "est"], ["Il prend son sac _ part.", "et"], ["La lune _ ronde ce soir.", "est"], ["Nous lisons _ nous écrivons.", "et"]],
   "son": [
-    ["Lucy range _ kimono.", "son"], ["Les enfants _ dans la cour.", "sont"], ["Tom cherche _ ballon.", "son"], ["Les fleurs _ jolies.", "sont"],
+    ["Lyes range _ kimono.", "son"], ["Les enfants _ dans la cour.", "sont"], ["Léo cherche _ ballon.", "son"], ["Les fleurs _ jolies.", "sont"],
     ["Le chat lèche _ museau.", "son"], ["Mes cousins _ en vacances.", "sont"], ["Léa mange _ goûter.", "son"], ["Les oiseaux _ sur la branche.", "sont"],
-    ["Hugo prête _ vélo.", "son"], ["Les pommes _ mûres.", "sont"], ["Le chien dort dans _ panier.", "son"], ["Mes parents _ au travail.", "sont"],
-    ["Papa lave _ camion.", "son"], ["Les élèves _ sages.", "sont"], ["Inès promène _ chien.", "son"], ["Les étoiles _ brillantes.", "sont"],
+    ["Lucy prête _ vélo.", "son"], ["Les pommes _ mûres.", "sont"], ["Le chien dort dans _ panier.", "son"], ["Mes parents _ au travail.", "sont"],
+    ["Papa lave _ camion.", "son"], ["Les élèves _ sages.", "sont"], ["Léa promène _ chien.", "son"], ["Les étoiles _ brillantes.", "sont"],
     ["Le roi porte _ manteau rouge.", "son"], ["Ils _ très contents.", "sont"], ["Mamie arrose _ jardin.", "son"], ["Les tigres _ dangereux.", "sont"],
-    ["Tom fait _ lit.", "son"], ["Les gâteaux _ prêts.", "sont"], ["Lucy noue _ ruban.", "son"], ["Mes chaussures _ neuves.", "sont"]],
+    ["Lyes fait _ lit.", "son"], ["Les gâteaux _ prêts.", "sont"], ["Lucy noue _ ruban.", "son"], ["Mes chaussures _ neuves.", "sont"]],
   "on": [
     ["_ va au parc cet après-midi.", "on"], ["Les enfants _ faim.", "ont"], ["Demain, _ ira à la piscine.", "on"], ["Mes amis _ un chien.", "ont"],
     ["_ joue au karaté le mercredi.", "on"], ["Les oiseaux _ construit un nid.", "ont"], ["Quand il pleut, _ reste à la maison.", "on"], ["Les élèves _ fini leur travail.", "ont"],
     ["_ mange des crêpes ce soir.", "on"], ["Mes parents _ une voiture bleue.", "ont"], ["Ce matin, _ a vu un écureuil.", "on"], ["Les chats _ des moustaches.", "ont"],
-    ["_ entend la mer au loin.", "on"], ["Tom et Lucy _ gagné le match.", "ont"], ["À la récré, _ joue à chat.", "on"], ["Les fleurs _ besoin d'eau.", "ont"],
+    ["_ entend la mer au loin.", "on"], ["Léo et Lucy _ gagné le match.", "ont"], ["À la récré, _ joue à chat.", "on"], ["Les fleurs _ besoin d'eau.", "ont"],
     ["_ chante une chanson en classe.", "on"], ["Mes cousines _ un poney.", "ont"], ["Le soir, _ lit une histoire.", "on"], ["Les pompiers _ éteint le feu.", "ont"],
     ["_ part en vacances demain.", "on"], ["Ils _ peur de l'orage.", "ont"], ["Dans la forêt, _ cherche des champignons.", "on"], ["Les lapins _ de grandes oreilles.", "ont"]]
 };
@@ -1852,8 +2035,8 @@ var FEMININS = [
 ];
 // Accord sujet / verbe : sujets (p = personne 0 à 5)
 var SUJETS_ACCORD = [
-  ["Les enfants", 5], ["Lucy", 2], ["Mes cousines", 5], ["Le chien", 2], ["Tom et Hugo", 5], ["Tu", 1], ["Nous", 3], ["Vous", 4],
-  ["La maîtresse", 2], ["Les oiseaux", 5], ["Mon papi", 2], ["Léa et moi", 3], ["Toi et ton frère", 4], ["Les élèves", 5], ["Mon chat", 2]
+  ["Les enfants", 5], ["Lucy", 2], ["Mes cousines", 5], ["Le chien", 2], ["Léo et Lyes", 5], ["Tu", 1], ["Nous", 3], ["Vous", 4],
+  ["La maîtresse", 2], ["Les oiseaux", 5], ["Mon papi", 2], ["Léa et moi", 3], ["Toi et ton frère", 4], ["Les élèves", 5], ["Mon chat", 2], ["Léo", 2], ["Lyes", 2], ["Léa", 2], ["Lucy et Lyes", 5]
 ];
 // Les lettres qui changent le son : m = mot avec "_" à la place des lettres, r = réponse, c = catégorie
 var SONS_LETTRES = [
@@ -1863,7 +2046,7 @@ var SONS_LETTRES = [
   ["_itare", "gu", "g"], ["_êpe", "gu", "g"], ["ba_e", "gu", "g"], ["fati_é", "gu", "g"], ["lan_e", "gu", "g"], ["_irlande", "gu", "g"],
   ["_irafe", "g", "g"], ["_âteau", "g", "g"], ["_orille", "g", "g"], ["ma_ie", "g", "g"], ["_ilet", "g", "g"],
   ["cha_ure", "ss", "s"], ["ta_e", "ss", "s"], ["a_iette", "ss", "s"], ["sauci_e", "ss", "s"], ["poi_on rouge", "ss", "s"], ["cou_in (pour la tête)", "ss", "s"], ["de_ert (au chocolat)", "ss", "s"],
-  ["mai_on", "s", "s"], ["ro_e", "s", "s"], ["bi_ou", "s", "s"], ["va_e", "s", "s"], ["cou_in (Tom, mon cousin)", "s", "s"], ["ca_erole", "s", "s"], ["chemi_e", "s", "s"],
+  ["mai_on", "s", "s"], ["ro_e", "s", "s"], ["bi_ou", "s", "s"], ["va_e", "s", "s"], ["cou_in (Léo, mon cousin)", "s", "s"], ["ca_erole", "s", "s"], ["chemi_e", "s", "s"],
   ["ja_be", "m", "m"], ["ta_bour", "m", "m"], ["po_pier", "m", "m"], ["cha_pion", "m", "m"], ["la_pe", "m", "m"], ["cha_bre", "m", "m"], ["o_bre", "m", "m"], ["ti_bre", "m", "m"], ["e_mener", "m", "m"],
   ["e_fant", "n", "m"], ["ro_de", "n", "m"], ["cha_ter", "n", "m"], ["me_ton", "n", "m"], ["pi_ceau", "n", "m"], ["o_cle", "n", "m"], ["pa_talon", "n", "m"]
 ];
@@ -1876,7 +2059,7 @@ var SONS_REGLE = {
 };
 // Mots invariables du CE2 : m = mot, faux = erreurs fréquentes, p = phrase avec un trou "_"
 var INVARIABLES = [
-  ["toujours", "toujour", "toujoure", "Lucy arrive _ à l'heure au karaté."], ["beaucoup", "beaucou", "bocoup", "J'aime _ les fraises."],
+  ["toujours", "toujour", "toujoure", "Léa arrive _ à l'heure au karaté."], ["beaucoup", "beaucou", "bocoup", "J'aime _ les fraises."],
   ["maintenant", "maintenan", "mintenant", "Range ta chambre _ !"], ["avec", "avek", "avecque", "Je joue _ mon frère."],
   ["aujourd'hui", "aujourdhui", "aujour d'hui", "_, il fait beau."], ["demain", "deumain", "demin", "_, nous irons à la piscine."],
   ["hier", "hiere", "yer", "_, j'ai vu un film."], ["jamais", "jamé", "jammais", "Je ne mange _ de bonbons le matin."],
@@ -1897,14 +2080,14 @@ var INVARIABLES = [
 // é ou er ? : phrase avec le verbe entre { } (sans sa fin), puis la bonne fin "é" ou "er".
 // Astuce : on remplace par « mordre » (→ -er) ou « mordu » (→ -é).
 var E_OU_ER = [
-  ["Il a {ferm} la porte.", "é"], ["J'ai {mang} une pomme.", "é"], ["Lucy a {dessin} un chat.", "é"], ["Nous avons {jou} au ballon.", "é"],
+  ["Il a {ferm} la porte.", "é"], ["J'ai {mang} une pomme.", "é"], ["Léa a {dessin} un chat.", "é"], ["Nous avons {jou} au ballon.", "é"],
   ["Tu as {cass} ton crayon.", "é"], ["Papa a {prépar} le dîner.", "é"], ["Mamie a {lav} la voiture.", "é"], ["Les enfants ont {chant} une chanson.", "é"],
-  ["Vous avez {trouv} un trésor.", "é"], ["Le chat a {attrap} une souris.", "é"], ["Hier, j'ai {regard} un film.", "é"], ["Elle a {ramass} des feuilles.", "é"],
-  ["Tom a {gagn} la course.", "é"], ["On a {dans} toute la soirée.", "é"], ["Le maître a {expliqu} la leçon.", "é"], ["Lucy a {nag} dans la piscine.", "é"],
-  ["Je vais {mang} une pomme.", "er"], ["Il faut {ferm} la porte.", "er"], ["Lucy veut {dessin} un chat.", "er"], ["Nous allons {jou} au ballon.", "er"],
-  ["Tu dois {rang} ta chambre.", "er"], ["Papa va {prépar} le dîner.", "er"], ["Elle aime {chant} sous la douche.", "er"], ["Le chat veut {attrap} une souris.", "er"],
+  ["Vous avez {trouv} un trésor.", "é"], ["Le chat a {attrap} une souris.", "é"], ["Hier, j'ai {regard} un film.", "é"], ["Léa a {ramass} des feuilles.", "é"],
+  ["Léo a {gagn} la course.", "é"], ["On a {dans} toute la soirée.", "é"], ["Le maître a {expliqu} la leçon.", "é"], ["Lyes a {nag} dans la piscine.", "é"],
+  ["Je vais {mang} une pomme.", "er"], ["Il faut {ferm} la porte.", "er"], ["Lyes veut {dessin} un chat.", "er"], ["Nous allons {jou} au ballon.", "er"],
+  ["Tu dois {rang} ta chambre.", "er"], ["Papa va {prépar} le dîner.", "er"], ["Elle aime {chant} sous la douche.", "er"], ["Léa et Lucy veulent {attrap} le ballon.", "er"],
   ["Je peux {port} ce gros sac.", "er"], ["Vous allez {gagn} la course.", "er"], ["Il commence à {neig}.", "er"], ["Range ta chambre avant de {jou}.", "er"],
-  ["On va {regard} un film.", "er"], ["Elle préfère {dans}.", "er"], ["Tom apprend à {nag}.", "er"], ["Lucy a {port} son kimono.", "é"]
+  ["On va {regard} un film.", "er"], ["Elle préfère {dans}.", "er"], ["Léo apprend à {nag}.", "er"], ["Lucy a {port} son kimono.", "é"]
 ];
 
 // =====================================================================
@@ -1957,16 +2140,16 @@ var CONTRAIRES = [
 ];
 // Sens propre / sens figuré : phrase (le mot ou l'expression entre * *), sens, et ce que ça veut dire (pour le figuré)
 var SENS = [
-  ["Le boulanger *coupe* le pain.", "propre"], ["Lucy a *un cœur d'or* : elle aide tout le monde.", "figuré", "elle est très gentille"],
+  ["Le boulanger *coupe* le pain.", "propre"], ["Léo a *un cœur d'or* : il aide tout le monde.", "figuré", "il est très gentil"],
   ["Il *pleut des cordes* ce matin.", "figuré", "il pleut très fort"], ["J'ai *un chat dans la gorge*, je tousse.", "figuré", "j'ai la voix enrouée"],
-  ["*Le chat* dort dans son panier.", "propre"], ["Tom a *la tête dans les nuages* en classe.", "figuré", "il est distrait, il rêve"],
+  ["*Le chat* dort dans son panier.", "propre"], ["Lyes a *la tête dans les nuages* en classe.", "figuré", "il est distrait, il rêve"],
   ["L'avion vole *dans les nuages*.", "propre"], ["Papa a *une faim de loup*.", "figuré", "il a très faim"],
   ["Le *loup* hurle dans la forêt.", "propre"], ["Léa *a la main verte* : ses fleurs poussent bien.", "figuré", "elle sait bien faire pousser les plantes"],
-  ["Lucy lève *la main* pour répondre.", "propre"], ["Hugo *donne sa langue au chat* : il ne trouve pas la réponse.", "figuré", "il abandonne, il ne sait pas"],
+  ["Lucy lève *la main* pour répondre.", "propre"], ["Léo *donne sa langue au chat* : il ne trouve pas la réponse.", "figuré", "il abandonne, il ne sait pas"],
   ["Le chien tire *la langue* quand il a chaud.", "propre"], ["Ce film m'a *glacé le sang*.", "figuré", "il m'a fait très peur"],
   ["Mon jus est trop froid, il est *glacé*.", "propre"], ["Grand-père est *doux comme un agneau*.", "figuré", "il est très gentil et calme"],
-  ["Le bébé *dort comme un loir*.", "figuré", "il dort profondément"], ["Tom *casse* un verre en le faisant tomber.", "propre"],
-  ["Ce bruit me *casse les oreilles* !", "figuré", "il est trop fort"], ["Lucy *marche* jusqu'à l'école.", "propre"],
+  ["Le bébé *dort comme un loir*.", "figuré", "il dort profondément"], ["Léa *casse* un verre en le faisant tomber.", "propre"],
+  ["Ce bruit me *casse les oreilles* !", "figuré", "il est trop fort"], ["Lyes *marche* jusqu'à l'école.", "propre"],
   ["Ma montre ne *marche* plus.", "figuré", "elle ne fonctionne plus"], ["Il fait *un froid de canard*.", "figuré", "il fait très froid"],
   ["Le *canard* nage sur la mare.", "propre"], ["Au karaté, Lucy *garde la tête froide*.", "figuré", "elle reste calme"]
 ];
@@ -1980,15 +2163,15 @@ var COURS = {
     '<div class="frex"><b class="tc">L</b>ucy va au karaté<b class="tr">.</b></div><h2>🗂️ Les 4 types de phrases</h2><ul class="rules">' +
     '<li>📢 <b>Déclarative</b> : elle raconte. <i>Le chat dort<b class="tr">.</b></i></li><li>❓ <b>Interrogative</b> : elle pose une question. <i>Tu viens<b class="tr"> ?</b></i></li>' +
     '<li>😮 <b>Exclamative</b> : elle montre une émotion. <i>Quelle belle journée<b class="tr"> !</b></i></li><li>👉 <b>Impérative</b> : elle donne un ordre. <i>Range ta chambre<b class="tr">.</b></i></li></ul>',
-  "gram.neg": '<h2>🙅 Forme affirmative et forme négative</h2><ul class="rules"><li>La forme <b class="td">affirmative</b> dit « oui » : <i>Lucy aime les épinards.</i></li>' +
+  "gram.neg": '<h2>🙅 Forme affirmative et forme négative</h2><ul class="rules"><li>La forme <b class="td">affirmative</b> dit « oui » : <i>Léo aime les épinards.</i></li>' +
     '<li>La forme <b class="tr">négative</b> dit « non ». On entoure le verbe avec deux petits mots : <b class="tr">ne … pas</b>, <b class="tr">ne … plus</b>, <b class="tr">ne … jamais</b>.</li></ul>' +
-    '<div class="frex">Lucy <b class="tr">n\'</b>aime <b class="tr">pas</b> les épinards.</div><div class="frex">Il <b class="tr">ne</b> pleut <b class="tr">plus</b>.</div>' +
+    '<div class="frex">Léo <b class="tr">n\'</b>aime <b class="tr">pas</b> les épinards.</div><div class="frex">Il <b class="tr">ne</b> pleut <b class="tr">plus</b>.</div>' +
     '<div class="tip">⚠️ N\'oublie pas le « ne » ! Devant une voyelle, il devient « n\' ».</div>',
   "gram.nature": '<h2>🏷️ La nature des mots</h2><ul class="rules"><li>🔵 <b class="tu">Nom commun</b> : une personne, un animal, une chose (chat, école, maman).</li>' +
-    '<li>🟣 <b class="tm">Nom propre</b> : un prénom, une ville… avec une majuscule (Lucy, Paris).</li><li>🟢 <b class="td">Déterminant</b> : le petit mot devant le nom (le, la, un, des, mon…).</li>' +
+    '<li>🟣 <b class="tm">Nom propre</b> : un prénom, une ville… avec une majuscule (Lucy, Léo, Paris).</li><li>🟢 <b class="td">Déterminant</b> : le petit mot devant le nom (le, la, un, des, mon…).</li>' +
     '<li>🌸 <b class="tc">Adjectif</b> : il dit comment est le nom (petit, rouge, jolie).</li><li>🔴 <b class="tr">Verbe</b> : il dit ce qu\'on fait ; il change avec le temps (dort, dormira).</li>' +
     '<li>👤 <b>Pronom personnel</b> : il remplace un nom (je, tu, il, elle, on, nous, vous, ils, elles).</li></ul>' +
-    '<div class="frex"><b class="td">Le</b> <b class="tc">petit</b> <b class="tu">chat</b> de <b class="tm">Lucy</b> <b class="tr">dort</b>.</div>',
+    '<div class="frex"><b class="td">Le</b> <b class="tc">petit</b> <b class="tu">chat</b> de <b class="tm">Léa</b> <b class="tr">dort</b>.</div>',
   "gram.gn": '<h2>🧩 Le groupe nominal</h2><ul class="rules"><li>Le groupe nominal (GN) est un groupe de mots construit autour d\'un <b class="tu">nom</b>.</li>' +
     '<li>Il a toujours un <b class="td">déterminant</b> + un <b class="tu">nom</b>. On peut ajouter un ou des <b class="tc">adjectifs</b>.</li></ul>' +
     '<div class="frex"><b class="td">une</b> <b class="tu">robe</b> → <b class="td">une</b> <b class="tc">jolie</b> <b class="tu">robe</b> <b class="tc">rouge</b></div>' +
@@ -1998,7 +2181,7 @@ var COURS = {
     '<div class="frex"><b class="tu">Le petit chat</b> <b class="tr">dort</b> sur le canapé.</div><div class="tip">Qui est-ce qui dort ? → <b class="tu">le petit chat</b> : c\'est le sujet.</div>',
   "gram.compl": '<h2>🧳 Les compléments</h2><ul class="rules"><li>Certains groupes de mots disent <b>où</b>, <b>quand</b> ou <b>comment</b> : ce sont des <b class="td">compléments</b>.</li>' +
     '<li>On peut souvent les <b>déplacer</b> ou les <b>supprimer</b> : la phrase garde un sens.</li></ul>' +
-    '<div class="frex">Lucy va au karaté <b class="td">le mercredi</b>.</div><div class="frex">→ <b class="td">Le mercredi</b>, Lucy va au karaté. (déplacé)</div><div class="frex">→ Lucy va au karaté. (supprimé)</div>' +
+    '<div class="frex">Lyes va au karaté <b class="td">le mercredi</b>.</div><div class="frex">→ <b class="td">Le mercredi</b>, Lyes va au karaté. (déplacé)</div><div class="frex">→ Lyes va au karaté. (supprimé)</div>' +
     '<div class="tip">⚠️ Le sujet et le verbe, eux, ne peuvent pas être supprimés !</div>',
   "conj.temps": '<h2>⏳ Passé, présent, futur</h2><ul class="rules"><li>⬅️ <b class="tm">Passé</b> : c\'est déjà arrivé. <i>Hier, j\'<b>ai joué</b>.</i></li>' +
     '<li>⏺️ <b class="td">Présent</b> : ça se passe maintenant. <i>Aujourd\'hui, je <b>joue</b>.</i></li><li>➡️ <b class="tu">Futur</b> : ça va arriver. <i>Demain, je <b>jouerai</b>.</i></li></ul>' +
@@ -2008,7 +2191,7 @@ var COURS = {
     '<li>🔵 <b class="tu">2e groupe</b> : les verbes en <b>-ir</b> qui font <b>-issons</b> avec nous (finir → nous finissons).</li>' +
     '<li>🌸 <b class="tc">3e groupe</b> : tous les autres (aller, faire, prendre, venir, voir…).</li></ul><div class="tip">Être et avoir sont à part : ce sont les auxiliaires.</div>',
   "conj.pronoms": '<h2>👥 Les pronoms personnels sujets</h2><ul class="rules"><li><b>je</b> (moi), <b>tu</b> (toi), <b>il / elle / on</b> (une personne)</li><li><b>nous</b> (moi + d\'autres), <b>vous</b> (toi + d\'autres), <b>ils / elles</b> (plusieurs)</li></ul>' +
-    '<div class="frex"><b class="tu">Lucy</b> danse → <b class="tu">Elle</b> danse.</div><div class="frex"><b class="tu">Tom et Lucy</b> jouent → <b class="tu">Ils</b> jouent.</div>' +
+    '<div class="frex"><b class="tu">Lucy</b> danse → <b class="tu">Elle</b> danse.</div><div class="frex"><b class="tu">Léo et Lucy</b> jouent → <b class="tu">Ils</b> jouent.</div>' +
     '<div class="tip">S\'il y a au moins un garçon dans le groupe, on dit « ils ».</div>',
   "conj.present": '<h2>⏺️ Le présent</h2><ul class="rules"><li>Il dit ce qui se passe maintenant.</li><li>Verbes en -er : <b class="tc">-e, -es, -e, -ons, -ez, -ent</b>.</li></ul>',
   "conj.futur": '<h2>➡️ Le futur</h2><ul class="rules"><li>Il dit ce qui va arriver.</li><li>Les terminaisons sont toujours : <b class="tc">-ai, -as, -a, -ons, -ez, -ont</b>.</li><li>Verbes en -er : on garde tout l\'infinitif → je <b>chanter</b>ai.</li></ul>',
@@ -2016,12 +2199,12 @@ var COURS = {
   "conj.passe": '<h2>✅ Le passé composé</h2><ul class="rules"><li>Il dit qu\'une action est finie. Il a <b>deux mots</b> : <b class="tu">avoir</b> ou <b class="tm">être</b> au présent + le <b class="tc">participe passé</b>.</li>' +
     '<li>Verbes en -er : le participe se termine par <b class="tc">-é</b> → j\'<b class="tu">ai</b> <b class="tc">chanté</b>.</li><li>Avec être, on accorde : elle est allé<b class="tc">e</b>, ils sont allé<b class="tc">s</b>.</li></ul>' +
     '<div class="tip">Astuce : -é ou -er ? Remplace par « mordu » : j\'ai mordu → j\'ai chant<b>é</b>.</div>',
-  "orth.a": '<h2>🔤 a ou à ?</h2><ul class="rules"><li><b class="tu">a</b> : c\'est le verbe <b>avoir</b>. On peut dire « <b>avait</b> ». <i>Lucy <b>a</b> (avait) un vélo.</i></li>' +
+  "orth.a": '<h2>🔤 a ou à ?</h2><ul class="rules"><li><b class="tu">a</b> : c\'est le verbe <b>avoir</b>. On peut dire « <b>avait</b> ». <i>Lyes <b>a</b> (avait) un vélo.</i></li>' +
     '<li><b class="tc">à</b> : petit mot invariable. On ne peut pas dire « avait ». <i>Je vais <b>à</b> la piscine.</i></li></ul>',
   "orth.et": '<h2>🔤 et ou est ?</h2><ul class="rules"><li><b class="tu">est</b> : c\'est le verbe <b>être</b>. On peut dire « <b>était</b> ». <i>Le ciel <b>est</b> (était) bleu.</i></li>' +
-    '<li><b class="tc">et</b> : il relie deux mots. On peut dire « <b>et puis</b> ». <i>Lucy <b>et</b> Tom.</i></li></ul>',
+    '<li><b class="tc">et</b> : il relie deux mots. On peut dire « <b>et puis</b> ». <i>Lucy <b>et</b> Léo.</i></li></ul>',
   "orth.son": '<h2>🔤 son ou sont ?</h2><ul class="rules"><li><b class="tu">sont</b> : c\'est le verbe <b>être</b>. On peut dire « <b>étaient</b> ». <i>Les enfants <b>sont</b> (étaient) dehors.</i></li>' +
-    '<li><b class="tc">son</b> : « le sien ». On peut dire « <b>mon</b> ». <i>Lucy range <b>son</b> (mon) kimono.</i></li></ul>',
+    '<li><b class="tc">son</b> : « le sien ». On peut dire « <b>mon</b> ». <i>Léa range <b>son</b> (mon) kimono.</i></li></ul>',
   "orth.on": '<h2>🔤 on ou ont ?</h2><ul class="rules"><li><b class="tu">ont</b> : c\'est le verbe <b>avoir</b>. On peut dire « <b>avaient</b> ». <i>Les enfants <b>ont</b> (avaient) faim.</i></li>' +
     '<li><b class="tc">on</b> : un pronom. On peut dire « <b>il</b> ». <i><b>On</b> (il) va au parc.</i></li></ul>',
   "orth.accgn": '<h2>👫 Les accords dans le groupe nominal</h2><ul class="rules"><li>Dans le GN, le déterminant et l\'adjectif prennent le <b>genre</b> et le <b>nombre</b> du nom.</li>' +
@@ -2068,7 +2251,7 @@ var COURS = {
   var CONFETTI_COLORS = ["#ff4fa3", "#ff9f1c", "#ffd60a", "#22c55e", "#14b8a6", "#3b82f6", "#7c4dff", "#e040fb"];
 
   var BRAVO = [
-    "Bravo Lucy" + NB + "! 🎉", "Super" + NB + "! ⭐", "Génial" + NB + "! 🥳", "Trop forte" + NB + "! 💪",
+    "Bravo" + NB + "! 🎉", "Super" + NB + "! ⭐", "Génial" + NB + "! 🥳", "Trop forte" + NB + "! 💪",
     "Excellent" + NB + "! 🌟", "Parfait" + NB + "! 👏", "Yes" + NB + "! 🦄", "Bien joué" + NB + "! 🎈"
   ];
   var OOPS = ["Oups, presque" + NB + "! 🙂", "Pas tout à fait" + NB + "! 😊", "Presque" + NB + "! 🌈"];
@@ -2080,6 +2263,15 @@ var COURS = {
   // ---------- Petits outils ----------
   function $(sel) { return document.querySelector(sel); }
   function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  // Les prénoms des copains, dans tout le quiz (Lucy et Léa : filles ; Léo et Lyes : garçons)
+  var KIDS = [{ n: "Lucy", f: 1 }, { n: "Léa", f: 1 }, { n: "Léo", f: 0 }, { n: "Lyes", f: 0 }], K = KIDS[0], K2 = KIDS[1];
+  function kid() { return rand(KIDS); }
+  // Qui joue ? (choisi sur l'écran de départ, gardé sur la tablette)
+  var PLAYER = KIDS.filter(function (k) { return k.n === load("joueur", ""); })[0] || null;
+  function pn() { return PLAYER ? PLAYER.n : ""; }
+  function pf(masc, fem) { return PLAYER && !PLAYER.f ? masc : fem; }   // accord selon le joueur (garçon / fille)
+  function kidOther(a) { return rand(KIDS.filter(function (k) { return k !== a; })); }
+  function ilElle(k) { return k.f ? "elle" : "il"; }
   function shuffle(arr) {
     for (var i = arr.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -2387,8 +2579,8 @@ var COURS = {
   function showEnd() {
     var stars, emoji, title, msg;
     if (score === 20) {
-      stars = 5; emoji = "🏆"; title = "Parfait, Lucy" + NB + "!";
-      msg = "20 sur 20, c'est incroyable" + NB + "! Tu es une vraie championne" + NB + "! 🎉";
+      stars = 5; emoji = "🏆"; title = "Parfait, " + pn() + NB + "!";
+      msg = "20 sur 20, c'est incroyable" + NB + "! Tu es " + pf("un vrai champion", "une vraie championne") + NB + "! 🎉";
     } else if (score >= 17) {
       stars = 4; emoji = "🌟"; title = "Super travail" + NB + "!";
       msg = "Presque parfait" + NB + "! Encore un petit effort et c'est 20 sur 20" + NB + "! 💪";
@@ -2397,7 +2589,7 @@ var COURS = {
       msg = "Tu progresses beaucoup. Continue comme ça" + NB + "! 🚀";
     } else if (score >= 8) {
       stars = 2; emoji = "🌈"; title = "Bien joué" + NB + "!";
-      msg = "Chaque essai te rend plus forte. On recommence" + NB + "? 💪";
+      msg = "Chaque essai te rend plus " + pf("fort", "forte") + ". On recommence" + NB + "? 💪";
     } else {
       stars = 1; emoji = "🤗"; title = "Bravo d'avoir essayé" + NB + "!";
       msg = "Les tables, ça s'apprend petit à petit. Tu vas y arriver" + NB + "! ❤️";
@@ -2892,8 +3084,8 @@ var COURS = {
   function sEnd() {
     var stars, emoji, title, msg;
     if (sScore === 20) {
-      stars = 5; emoji = "🏆"; title = "Parfait, Lucy" + NB + "!";
-      msg = "20 sur 20" + NB + "! Tu es une championne des soustractions" + NB + "! 🎉";
+      stars = 5; emoji = "🏆"; title = "Parfait, " + pn() + NB + "!";
+      msg = "20 sur 20" + NB + "! Tu es " + pf("un champion", "une championne") + " des soustractions" + NB + "! 🎉";
     } else if (sScore >= 17) {
       stars = 4; emoji = "🌟"; title = "Super travail" + NB + "!";
       msg = "Presque parfait" + NB + "! Encore un petit effort et c'est 20 sur 20" + NB + "! 💪";
@@ -3335,7 +3527,7 @@ var COURS = {
       if (L === 2) c = 0;
       n = th * 1000 + c * 100 + u;
       return { key: "rec-" + n, type: "fields", fields: [n],
-        prompt: '<div class="gp gstory">🎨 Lucy a <b>' + th + "</b> " + (th > 1 ? "boîtes" : "boîte") + " de 1" + NB + "000 perles" + (c ? ", <b>" + c + "</b> " + (c > 1 ? "boîtes" : "boîte") + " de 100 perles" : "") +
+        prompt: '<div class="gp gstory">🎨 ' + kid().n + ' a <b>' + th + "</b> " + (th > 1 ? "boîtes" : "boîte") + " de 1" + NB + "000 perles" + (c ? ", <b>" + c + "</b> " + (c > 1 ? "boîtes" : "boîte") + " de 100 perles" : "") +
           " et <b>" + u + "</b> " + (u > 1 ? "perles toutes seules" : "perle toute seule") + '. Combien de perles en tout&nbsp;?</div><div class="gq">{0} perles</div>',
         eq: th + " milliers" + (c ? " + " + c + " centaines" : "") + " + " + u + " unités = " + fmt(n),
         explain: '<div class="pose-center">' + placeHTML(n) + '</div><div class="expl">Les boîtes de 1' + NB + "000 donnent les milliers, les boîtes de 100 les centaines." + (c ? "" : " Pas de dizaines ni de centaines&nbsp;: on écrit des 0.") + "</div>" };
@@ -3456,7 +3648,7 @@ var COURS = {
     return addQuestion(p.a, p.b, posed, null);
   }
   var ADD_PB = [
-    function (a, b) { return ["🖼️ Lucy a <b>" + fmt(a) + "</b> images. Sa cousine lui en donne <b>" + fmt(b) + "</b>. Combien d'images a-t-elle maintenant&nbsp;?", "images"]; },
+    function (a, b) { var k = kid(); return ["🖼️ " + k.n + " a <b>" + fmt(a) + "</b> images. Sa cousine lui en donne <b>" + fmt(b) + "</b>. Combien d'images a-t-" + ilElle(k) + " maintenant&nbsp;?", "images"]; },
     function (a, b) { return ["📚 Un livre a <b>" + fmt(a) + "</b> pages, un autre en a <b>" + fmt(b) + "</b>. Combien de pages en tout&nbsp;?", "pages"]; },
     function (a, b) { return ["🚗 Pendant les vacances, papa roule <b>" + fmt(a) + "</b> km, puis encore <b>" + fmt(b) + "</b> km. Combien de kilomètres en tout&nbsp;?", "km"]; },
     function (a, b) { return ["🍎 Le marchand vend <b>" + fmt(a) + "</b> pommes le matin et <b>" + fmt(b) + "</b> l'après-midi. Combien de pommes dans la journée&nbsp;?", "pommes"]; },
@@ -3552,7 +3744,7 @@ var COURS = {
     function (a, b) { return "📦 Une boîte contient <b>" + fmt(a) + "</b> crayons. Combien de crayons y a-t-il dans <b>" + b + "</b> boîtes&nbsp;?"; },
     function (a, b) { return "🚌 Un car transporte <b>" + fmt(a) + "</b> passagers. Combien de passagers dans <b>" + b + "</b> cars&nbsp;?"; },
     function (a, b) { return "🌼 Le jardinier plante <b>" + b + "</b> rangées de <b>" + fmt(a) + "</b> fleurs. Combien de fleurs en tout&nbsp;?"; },
-    function (a, b) { return "📖 Lucy lit <b>" + fmt(a) + "</b> pages par semaine. Combien de pages lit-elle en <b>" + b + "</b> semaines&nbsp;?"; },
+    function (a, b) { var k = kid(); return "📖 " + k.n + " lit <b>" + fmt(a) + "</b> pages par semaine. Combien de pages lit-" + ilElle(k) + " en <b>" + b + "</b> semaines&nbsp;?"; },
     function (a, b) { return "🧁 La boulangère fait <b>" + fmt(a) + "</b> gâteaux par jour. Combien en fait-elle en <b>" + b + "</b> jours&nbsp;?"; }
   ];
   function pbMul(mode, L) {
@@ -3697,7 +3889,7 @@ var COURS = {
     }
     d = L === 0 ? rand([2, 5]) : rnd(2, 9); q = rnd(2, L === 0 ? 5 : 9); N = d * q;
     return { key: "div-" + N + "-" + d, type: "fields", fields: [q],
-      prompt: '<div class="gp gstory">📚 Lucy a <b>' + N + "</b>" + NB + "€. Un livre coûte <b>" + d + "</b>" + NB + '€. Combien de livres peut-elle acheter&nbsp;?</div><div class="gq gsmall">{0} livres</div>',
+      prompt: '<div class="gp gstory">📚 ' + (K = kid()).n + ' a <b>' + N + "</b>" + NB + "€. Un livre coûte <b>" + d + "</b>" + NB + "€. Combien de livres peut-" + ilElle(K) + ' acheter&nbsp;?</div><div class="gq gsmall">{0} livres</div>',
       eq: N + " : " + d + " = " + q,
       explain: tableLineHTML(d, q) + '<div class="expl">' + d + " × " + q + " = " + N + "&nbsp;: elle peut acheter " + q + " livres ✔️</div>" };
   }
@@ -4146,10 +4338,10 @@ var COURS = {
   // ---------- Fin de partie ----------
   function gEnd() {
     var s = G.score, stars, emoji, title, msg;
-    if (s === 20) { stars = 5; emoji = "🏆"; title = "Parfait, Lucy" + NB + "!"; msg = "20 sur 20" + NB + "! Tu es une championne " + G.mod.champ + NB + "! 🎉"; }
+    if (s === 20) { stars = 5; emoji = "🏆"; title = "Parfait, " + pn() + NB + "!"; msg = "20 sur 20" + NB + "! Tu es " + pf("un champion ", "une championne ") + G.mod.champ + NB + "! 🎉"; }
     else if (s >= 17) { stars = 4; emoji = "🌟"; title = "Super travail" + NB + "!"; msg = "Presque parfait" + NB + "! Encore un petit effort et c'est 20 sur 20" + NB + "! 💪"; }
     else if (s >= 13) { stars = 3; emoji = "😃"; title = "Très bien" + NB + "!"; msg = "Tu progresses beaucoup. Continue comme ça" + NB + "! 🚀"; }
-    else if (s >= 8) { stars = 2; emoji = "🌈"; title = "Bien joué" + NB + "!"; msg = "Chaque essai te rend plus forte. On recommence" + NB + "? 💪"; }
+    else if (s >= 8) { stars = 2; emoji = "🌈"; title = "Bien joué" + NB + "!"; msg = "Chaque essai te rend plus " + pf("fort", "forte") + ". On recommence" + NB + "? 💪"; }
     else { stars = 1; emoji = "🤗"; title = "Bravo d'avoir essayé" + NB + "!"; msg = "Relis le petit rappel, et tu vas y arriver" + NB + "! ❤️"; }
     $("#g-end-emoji").textContent = emoji;
     $("#g-end-title").textContent = title;
@@ -4272,19 +4464,19 @@ var COURS = {
   function pbCalc(mode, L) {
     var kind = mode === "melange" ? rand(["dbl", "half", "x10", "compl", "pm"]) : rand(CALC_KINDS[mode]), n, a;
     if (kind === "dbl") { n = L === 0 ? rnd(4, 20) : rnd(21, 50);
-      return { key: "dbl-" + n, type: "fields", fields: [2 * n], prompt: '<div class="gp gstory">🔵 Lucy a <b>' + n + '</b> billes. Sa grande sœur en a le double. Combien de billes a sa sœur&nbsp;?</div><div class="gq gsmall">{0} billes</div>',
+      return { key: "dbl-" + n, type: "fields", fields: [2 * n], prompt: '<div class="gp gstory">🔵 ' + kid().n + ' a <b>' + n + '</b> billes. Sa grande sœur en a le double. Combien de billes a sa sœur&nbsp;?</div><div class="gq gsmall">{0} billes</div>',
         eq: "Le double de " + n + " = " + (2 * n), explain: '<div class="expl">' + dblExplain(n) + "</div>" }; }
     if (kind === "half") { n = L === 0 ? 2 * rnd(3, 10) : 2 * rnd(11, 40);
-      return { key: "half-" + n, type: "fields", fields: [n / 2], prompt: '<div class="gp gstory">🃏 Tom a <b>' + n + '</b> images. Il en donne la moitié à Léa. Combien d\'images donne-t-il&nbsp;?</div><div class="gq gsmall">{0} images</div>',
+      return { key: "half-" + n, type: "fields", fields: [n / 2], prompt: '<div class="gp gstory">🃏 ' + (K = kid()).n + ' a <b>' + n + '</b> images. ' + cap(ilElle(K)) + ' en donne la moitié à ' + kidOther(K).n + '. Combien d\'images donne-t-' + ilElle(K) + '&nbsp;?</div><div class="gq gsmall">{0} images</div>',
         eq: "La moitié de " + n + " = " + (n / 2), explain: '<div class="expl">' + halfExplain(n) + "</div>" }; }
     if (kind === "x10") { n = L === 0 ? rnd(2, 9) : rnd(11, 40);
       return { key: "x10-" + n, type: "fields", fields: [n * 10], prompt: '<div class="gp gstory">✏️ Un paquet contient <b>10</b> crayons. Combien de crayons dans <b>' + n + '</b> paquets&nbsp;?</div><div class="gq gsmall">{0} crayons</div>',
         eq: n + " × 10 = " + (n * 10), explain: '<div class="expl">' + n + " paquets de 10, c'est " + n + " dizaines&nbsp;: " + (n * 10) + ".</div>" }; }
     if (kind === "compl") { a = L === 0 ? rnd(11, 89) : rnd(11, 99);
-      return { key: "c100-" + a, type: "fields", fields: [100 - a], prompt: '<div class="gp gstory">🐷 Lucy a <b>' + a + '</b>' + NB + '€ dans sa tirelire. Combien lui manque-t-il pour avoir 100' + NB + '€&nbsp;?</div><div class="gq gsmall">{0} €</div>',
+      return { key: "c100-" + a, type: "fields", fields: [100 - a], prompt: '<div class="gp gstory">🐷 ' + kid().n + ' a <b>' + a + '</b>' + NB + '€ dans sa tirelire. Combien lui manque-t-il pour avoir 100' + NB + '€&nbsp;?</div><div class="gq gsmall">{0} €</div>',
         eq: a + " + " + (100 - a) + " = 100", explain: complJumps(a, 100) }; }
     n = rnd(20, L === 0 ? 80 : 150);
-    return { key: "pm-" + n + "+9", type: "fields", fields: [n + 9], prompt: '<div class="gp gstory">🏆 Hugo a <b>' + n + '</b> points. Il en gagne encore <b>9</b>. Combien de points a-t-il maintenant&nbsp;?</div><div class="gq gsmall">{0} points</div>',
+    return { key: "pm-" + n + "+9", type: "fields", fields: [n + 9], prompt: '<div class="gp gstory">🏆 ' + (K = kid()).n + ' a <b>' + n + '</b> points. ' + cap(ilElle(K)) + ' en gagne encore <b>9</b>. Combien de points a-t-' + ilElle(K) + ' maintenant&nbsp;?</div><div class="gq gsmall">{0} points</div>',
       eq: n + " + 9 = " + (n + 9), explain: pmExplain(n, 1, 9) };
   }
   function lessonCalc(mode) {
@@ -4585,21 +4777,22 @@ var COURS = {
       var d = L === 0 ? 2 : rand([2, 3, 4]), q = rnd(2, L === 0 ? 8 : 6), N = d * q, e = rand(["🍬", "🍓", "🍪", "🔵"]);
       var nm = { 2: "la moitié", 3: "le tiers", 4: "le quart" }[d];
       return { key: "frn-" + d + "-" + N, type: "fields", fields: [q],
-        prompt: '<div class="gp gstory">' + e + " Lucy a <b>" + N + "</b> bonbons. Elle en donne <b>" + nm + "</b> à son frère. Combien en donne-t-elle&nbsp;?</div>" + itemsHTML(e, N) + '<div class="gq gsmall">{0}</div>',
+        prompt: '<div class="gp gstory">' + e + " " + (K = kid()).n + " a <b>" + N + "</b> bonbons. " + cap(ilElle(K)) + " en donne <b>" + nm + "</b> à son frère. Combien en donne-t-" + ilElle(K) + "&nbsp;?</div>" + itemsHTML(e, N) + '<div class="gq gsmall">{0}</div>',
         eq: cap(nm) + " de " + N + " = " + q + " (" + N + " : " + d + ")", explain: groupHTML(e, q, d, 0) + '<div class="expl">' + cap(nm) + ", c'est une part quand on partage en " + d + "&nbsp;: " + N + " : " + d + " = <b>" + q + "</b>.</div>" };
     }
     if (kind === "pizza") {
       var f = rand(frPool(L)), opts = shuffle([f].concat(frOthers(f, 2)));
       return { key: "frs-" + f, type: "choice", optClass: "fracs",
         options: opts.map(function (x) { return fr(x[0], x[1]); }), answer: opts.indexOf(f),
-        prompt: '<div class="gp gstory">🍕 Papa coupe une pizza en <b>' + f[1] + "</b> parts égales. Lucy en mange <b>" + f[0] + "</b>. Quelle fraction de la pizza a-t-elle mangée&nbsp;?</div>",
+        prompt: '<div class="gp gstory">🍕 Papa coupe une pizza en <b>' + f[1] + "</b> parts égales. " + (K = kid()).n + " en mange <b>" + f[0] + "</b>. Quelle fraction de la pizza a-t-" + ilElle(K) + " mangée&nbsp;?</div>",
         eq: fr(f[0], f[1]) + " (" + frName(f[0], f[1]) + ")", explain: pizzaSVG(f[1], f[0]) + '<div class="expl">' + frExplain(f[0], f[1]) + "</div>" };
     }
     var dens = L === 0 ? [2, 3, 4] : [2, 3, 4, 5, 6, 8], a = rand(dens), b;
     do { b = rand(dens); } while (b === a);
-    return { key: "frt-" + a + "-" + b, type: "choice", optClass: "two", options: ["Tom", "Léa"], answer: a < b ? 0 : 1,
-      prompt: '<div class="gp gstory">🍫 Tom mange ' + fr(1, a) + " d'une tablette de chocolat. Léa mange " + fr(1, b) + " d'une tablette pareille. Qui en mange le plus&nbsp;?</div>",
-      eq: (a < b ? "Tom" : "Léa") + "&nbsp;: " + fr(1, a) + (a < b ? " &gt; " : " &lt; ") + fr(1, b), explain: frCompare([1, a], [1, b]) };
+    K = kid(); K2 = kidOther(K);
+    return { key: "frt-" + a + "-" + b, type: "choice", optClass: "two", options: [K.n, K2.n], answer: a < b ? 0 : 1,
+      prompt: '<div class="gp gstory">🍫 ' + K.n + ' mange ' + fr(1, a) + " d'une tablette de chocolat. " + K2.n + " mange " + fr(1, b) + " d'une tablette pareille. Qui en mange le plus&nbsp;?</div>",
+      eq: (a < b ? K.n : K2.n) + "&nbsp;: " + fr(1, a) + (a < b ? " &gt; " : " &lt; ") + fr(1, b), explain: frCompare([1, a], [1, b]) };
   }
   function lessonFrac(mode) {
     var h = '<div class="panel"><h2>🍕 Une fraction, c\'est quoi&nbsp;?</h2><div class="frlab"><div class="gq frbig">' + fr(3, 8) + '</div><ul class="rules">' +
@@ -4760,7 +4953,7 @@ var COURS = {
   function pbMes(mode, L) {
     var f = mesFam(mode), k = rand({ L: ["taille", "ruban", "etagere"], M: ["sac", "colis"], C: ["bouteille", "verres"] }[f]), a, b;
     if (k === "taille") { a = rnd(10, 45);
-      return { key: "pmt-" + a, type: "fields", fields: [100 + a], prompt: '<div class="gp gstory">📏 Lucy mesure <b>1 m ' + a + ' cm</b>. Combien de centimètres cela fait-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
+      return { key: "pmt-" + a, type: "fields", fields: [100 + a], prompt: '<div class="gp gstory">📏 ' + kid().n + ' mesure <b>1 m ' + a + ' cm</b>. Combien de centimètres cela fait-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
         eq: "1 m " + a + " cm = " + (100 + a) + " cm", explain: '<div class="expl">1 m = 100 cm, et 100 + ' + a + " = <b>" + (100 + a) + " cm</b>.</div>" }; }
     if (k === "etagere") { a = rnd(3, 9);
       return { key: "pme-" + a, type: "fields", fields: [a * 10], prompt: '<div class="gp gstory">📚 Une étagère mesure <b>' + a + ' dm</b>. Combien de centimètres cela fait-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
@@ -4775,7 +4968,7 @@ var COURS = {
       return { key: "pmv-" + a, type: "fields", fields: [10 / a], prompt: '<div class="gp gstory">🥛 Avec <b>1 L</b> de lait, combien de verres de <b>' + a + ' dL</b> peut-on remplir&nbsp;?</div><div class="gq gsmall">{0} verres</div>',
         eq: "1 L = 10 dL, et 10 : " + a + " = " + 10 / a + " verres", explain: '<div class="expl">1 L = 10 dL. ' + a + " dL + " + a + " dL + … = 10 dL, donc <b>" + 10 / a + " verres</b>.</div>" }; }
     if (k === "bouteille") { a = rand([20, 25, 30, 40, 50, 75]);
-      return { key: "pmb-" + a, type: "fields", fields: [100 - a], prompt: '<div class="gp gstory">🧃 Une bouteille contient <b>1 L</b> de jus. Lucy en boit <b>' + a + ' cL</b>. Combien en reste-t-il&nbsp;?</div><div class="gq gsmall">{0} cL</div>',
+      return { key: "pmb-" + a, type: "fields", fields: [100 - a], prompt: '<div class="gp gstory">🧃 Une bouteille contient <b>1 L</b> de jus. ' + kid().n + ' en boit <b>' + a + ' cL</b>. Combien en reste-t-il&nbsp;?</div><div class="gq gsmall">{0} cL</div>',
         eq: "100 cL − " + a + " cL = " + (100 - a) + " cL", explain: '<div class="expl">1 L = 100 cL, et 100 − ' + a + " = <b>" + (100 - a) + " cL</b>.</div>" }; }
     a = rnd(5, 9) * 10; b = rnd(1, Math.floor((a / 10 - 1) / 2)) * 10;   // il reste toujours au moins 10 cm
     return { key: "pmr-" + a + "-" + b, type: "fields", fields: [a - 2 * b], prompt: '<div class="gp gstory">🎀 Le ruban mesure <b>' + a + " cm</b>. On en coupe deux morceaux de <b>" + b + ' cm</b>. Combien en reste-t-il&nbsp;?</div><div class="gq gsmall">{0} cm</div>',
@@ -4914,7 +5107,7 @@ var COURS = {
       return { key: "phg-" + h + "-" + m + "-" + d, type: "fields", fields: [e[0], e[1]], prompt: '<div class="gp gstory">🎂 Le gâteau entre au four à <b>' + tfmt(h, m) + "</b>. Il doit cuire <b>" + d + ' minutes</b>. À quelle heure faut-il le sortir&nbsp;?</div><div class="gq gsmall">{0} h {1}</div>',
         eq: tfmt(h, m) + " + " + d + " min = " + tfmt(e[0], e[1]), explain: timeLine(h, m, d) }; }
     if (k === "ecole") { m = rand([0, 10, 15, 20]); d = rand([10, 15, 20, 25]); e = addMin(8, m, d);
-      return { key: "phe-" + m + "-" + d, type: "fields", fields: [d], prompt: '<div class="gp gstory">🎒 Lucy part de la maison à <b>' + tfmt(8, m) + "</b> et arrive à l'école à <b>" + tfmt(e[0], e[1]) + '</b>. Combien de minutes a duré le trajet&nbsp;?</div><div class="gq gsmall">{0} min</div>',
+      return { key: "phe-" + m + "-" + d, type: "fields", fields: [d], prompt: '<div class="gp gstory">🎒 ' + kid().n + ' part de la maison à <b>' + tfmt(8, m) + "</b> et arrive à l'école à <b>" + tfmt(e[0], e[1]) + '</b>. Combien de minutes a duré le trajet&nbsp;?</div><div class="gq gsmall">{0} min</div>',
         eq: "De " + tfmt(8, m) + " à " + tfmt(e[0], e[1]) + "&nbsp;: " + d + " min", explain: timeLine(8, m, d) }; }
     h = rnd(2, 6); m = rand([0, 30]); d = rand([30, 60, 90]); e = addMin(h, m, d);
     return { key: "phf-" + h + "-" + m + "-" + d, type: "fields", fields: [e[0], e[1]], prompt: '<div class="gp gstory">🎬 Le film commence à <b>' + tfmt(h, m) + "</b> et dure <b>" + durText(d) + '</b>. À quelle heure finit-il&nbsp;?</div><div class="gq gsmall">{0} h {1}</div>',
@@ -5010,7 +5203,7 @@ var COURS = {
       else { p = rnd(1, 9) * 100 + rnd(1, 9) * 10; pay = p < 500 ? 500 : 1000; }
       var back = pay - p, mid = Math.ceil(p / 100) * 100;
       return { key: "mr-" + p + "-" + pay, type: "fields", fields: L === 2 ? [Math.floor(back / 100), back % 100] : [back / 100],
-        prompt: '<div class="gp">' + it.e + " Lucy achète " + it.n + " à <b>" + eur(p) + "</b>. Elle paie avec&nbsp;:</div>" + moneyHTML([pay]) +
+        prompt: '<div class="gp">' + it.e + " " + (K = kid()).n + " achète " + it.n + " à <b>" + eur(p) + "</b>. " + cap(ilElle(K)) + " paie avec&nbsp;:</div>" + moneyHTML([pay]) +
           '<div class="gp">Combien lui rend-on&nbsp;?</div><div class="gq gsmall">' + (L === 2 ? "{0} € {1} c" : "{0} €") + "</div>",
         hint: "Compte de " + eur(p) + " jusqu'à " + eur(pay) + " ✏️",
         eq: eur(pay) + " − " + eur(p) + " = " + eur(back),
@@ -5042,13 +5235,13 @@ var COURS = {
     if (k === "courses") {
       a = L === 0 ? rnd(1, 5) * 100 : rnd(1, 4) * 100 + rand([20, 50, 80]); b = rnd(1, 4) * 100;
       return { key: "pmc-" + a + "-" + b, type: "fields", fields: (a + b) % 100 ? [Math.floor((a + b) / 100), (a + b) % 100] : [(a + b) / 100],
-        prompt: '<div class="gp gstory">🥐 Lucy achète un croissant à <b>' + eur(a) + "</b> et un jus de fruits à <b>" + eur(b) + '</b>. Combien paie-t-elle&nbsp;?</div><div class="gq gsmall">' + ((a + b) % 100 ? "{0} € {1} c" : "{0} €") + "</div>",
+        prompt: '<div class="gp gstory">🥐 ' + (K = kid()).n + ' achète un croissant à <b>' + eur(a) + "</b> et un jus de fruits à <b>" + eur(b) + "</b>. Combien paie-t-" + ilElle(K) + '&nbsp;?</div><div class="gq gsmall">' + ((a + b) % 100 ? "{0} € {1} c" : "{0} €") + "</div>",
         eq: eur(a) + " + " + eur(b) + " = " + eur(a + b), explain: moneyHTML(changeList(a).concat(changeList(b))) + '<div class="expl">' + eur(a) + " + " + eur(b) + " = <b>" + eur(a + b) + "</b>.</div>" };
     }
     if (k === "reste") {
       a = L === 0 ? 1000 : 2000; b = rnd(2, a / 100 - 1) * 100;
       return { key: "pmr-" + a + "-" + b, type: "fields", fields: [(a - b) / 100],
-        prompt: '<div class="gp gstory">🧩 Lucy a <b>' + eur(a) + "</b>. Elle achète un puzzle à <b>" + eur(b) + '</b>. Combien lui reste-t-il&nbsp;?</div><div class="gq gsmall">{0} €</div>',
+        prompt: '<div class="gp gstory">🧩 ' + (K = kid()).n + ' a <b>' + eur(a) + "</b>. " + cap(ilElle(K)) + " achète un puzzle à <b>" + eur(b) + '</b>. Combien lui reste-t-il&nbsp;?</div><div class="gq gsmall">{0} €</div>',
         eq: eur(a) + " − " + eur(b) + " = " + eur(a - b), explain: jumpsHTML(eur(b), [[eur(a), "+" + eur(a - b)]]) + '<div class="expl">Il lui reste <b>' + eur(a - b) + "</b>.</div>" };
     }
     a = rnd(2, 5); b = rnd(2, 6);
@@ -5067,7 +5260,7 @@ var COURS = {
     }
     if (mode === "rendre" || mode === "melange") {
       h += '<div class="panel"><h2>🛍️ Rendre la monnaie</h2><div class="steps">' +
-        stepHTML(1, "Un livre coûte 7 €, Lucy paie avec 10 €", moneyHTML([1000])) +
+        stepHTML(1, "Un livre coûte 7 €, Lyes paie avec 10 €", moneyHTML([1000])) +
         stepHTML(2, "Je compte de 7 € jusqu'à 10 €", jumpsHTML("7 €", [["10 €", "+3 €"]])) +
         stepHTML(3, "On lui rend 3 €", moneyHTML([200, 100])) + '</div><div class="done">✅ 10 € − 7 € = 3 €</div></div>';
     }
@@ -5312,8 +5505,8 @@ var COURS = {
     { key: "pgk-h4", h: 4, t: "🕓 À 4 h, quel angle forment les deux aiguilles de l'horloge&nbsp;?" },
     { key: "pgk-h5", h: 5, t: "🕔 À 5 h, quel angle forment les deux aiguilles de l'horloge&nbsp;?" },
     { key: "pgk-h8", h: 8, t: "🕗 À 8 h, quel angle forment les deux aiguilles de l'horloge&nbsp;?" },
-    { key: "pgk-cis-30", c: 30, t: "✂️ Lucy ouvre un peu ses ciseaux. Quel angle font les deux lames&nbsp;?" },
-    { key: "pgk-cis-120", c: 120, t: "✂️ Lucy ouvre ses ciseaux très grand. Quel angle font les deux lames&nbsp;?" },
+    { key: "pgk-cis-30", c: 30, t: "✂️ Léo ouvre un peu ses ciseaux. Quel angle font les deux lames&nbsp;?" },
+    { key: "pgk-cis-120", c: 120, t: "✂️ Léa ouvre ses ciseaux très grand. Quel angle font les deux lames&nbsp;?" },
     { key: "pgk-livre", b: 1, t: "📖 Quel angle forme le coin d'un livre&nbsp;?" }
   ];
   function pbAngK() {
@@ -5330,16 +5523,16 @@ var COURS = {
   function qGeoMode(mode, L) { return qGeo(mode === "melange" ? rand(["angle", "angles", "figures", "sym", "perim"]) : mode, L); }
   var GEO_PB = {
     angle: [
-      { key: "pga-cahier", a: 4, t: "📒 Lucy vérifie les coins de son cahier avec l'équerre. Combien d'angles droits trouve-t-elle&nbsp;?", x: "Un cahier est un rectangle&nbsp;: 4 angles droits." },
+      { key: "pga-cahier", a: 4, t: "📒 Lyes vérifie les coins de son cahier avec l'équerre. Combien d'angles droits trouve-t-il&nbsp;?", x: "Un cahier est un rectangle&nbsp;: 4 angles droits." },
       { key: "pga-equerre", a: 1, t: "📐 L'équerre de Lucy est un triangle rectangle. Combien a-t-elle d'angles droits&nbsp;?", x: "Un triangle rectangle a 1 angle droit." },
       { key: "pga-porte", a: 4, t: "🚪 La porte de la classe est un rectangle. Combien a-t-elle d'angles droits&nbsp;?", x: "Un rectangle a 4 angles droits." }],
     figures: [
-      { key: "pgf-cadre", c: "carre", t: "🖼️ Le cadre de Lucy a 4 côtés égaux et 4 angles droits. Quelle est sa forme&nbsp;?" },
+      { key: "pgf-cadre", c: "carre", t: "🖼️ Le cadre de Léa a 4 côtés égaux et 4 angles droits. Quelle est sa forme&nbsp;?" },
       { key: "pgf-boite", c: "cercle", t: "🥫 Le dessus d'une boîte de conserve est tout rond. Quelle est sa forme&nbsp;?" },
       { key: "pgf-tablette", c: "rect", t: "📱 La tablette a 4 angles droits, 2 longs côtés et 2 courts. Quelle est sa forme&nbsp;?" }],
     sym: [
-      { key: "pgs-papillon", y: 1, t: "🦋 Lucy plie son dessin de papillon en deux&nbsp;: les deux ailes se superposent exactement. La pliure est-elle un axe de symétrie&nbsp;?" },
-      { key: "pgs-enveloppe", y: 0, t: "✉️ Lucy plie une enveloppe rectangulaire en suivant sa diagonale. Les deux parties se superposent-elles exactement&nbsp;?" },
+      { key: "pgs-papillon", y: 1, t: "🦋 Léo plie son dessin de papillon en deux&nbsp;: les deux ailes se superposent exactement. La pliure est-elle un axe de symétrie&nbsp;?" },
+      { key: "pgs-enveloppe", y: 0, t: "✉️ Lyes plie une enveloppe rectangulaire en suivant sa diagonale. Les deux parties se superposent-elles exactement&nbsp;?" },
       { key: "pgs-carte", y: 1, t: "🃏 Lucy plie une carte carrée au milieu&nbsp;: les deux moitiés se superposent. La pliure est-elle un axe de symétrie&nbsp;?" }]
   };
   function pbGeo(mode, L) {
@@ -5356,7 +5549,7 @@ var COURS = {
         explain: '<div class="expl">Un axe de symétrie partage la figure en deux moitiés qui se superposent exactement quand on plie.</div>' }; }
     var w = rnd(L === 0 ? 5 : 8, L === 0 ? 10 : 25), h = rnd(3, w - 1), unit = rand(["m", "m", "cm"]);
     var txt = unit === "m" ? "🌻 Papa veut mettre une clôture tout autour du jardin rectangulaire de <b>" + w + " m</b> sur <b>" + h + " m</b>. Combien de mètres de clôture faut-il&nbsp;?" :
-      "🖼️ Lucy colle un ruban tout autour d'un cadre rectangulaire de <b>" + w + " cm</b> sur <b>" + h + " cm</b>. Quelle longueur de ruban lui faut-il&nbsp;?";
+      "🖼️ " + kid().n + " colle un ruban tout autour d'un cadre rectangulaire de <b>" + w + " cm</b> sur <b>" + h + " cm</b>. Quelle longueur de ruban lui faut-il&nbsp;?";
     return { key: "pgp-" + w + "-" + h, type: "fields", fields: [2 * (w + h)], prompt: '<div class="gp gstory">' + txt + '</div><div class="gq gsmall">{0} ' + unit + "</div>",
       eq: w + " + " + h + " + " + w + " + " + h + " = " + (2 * (w + h)) + " " + unit,
       explain: perimSVG([[20, 35], [220, 35], [220, 125], [20, 125]], [w + " " + unit, h + " " + unit, w + " " + unit, h + " " + unit]) + '<div class="expl">Tout autour = le périmètre&nbsp;: ' + w + " + " + h + " + " + w + " + " + h + " = <b>" + (2 * (w + h)) + " " + unit + "</b>.</div>" };
@@ -5420,7 +5613,7 @@ var COURS = {
   // Elle choisit d'abord l'opération (+ − × :), puis elle donne le résultat.
   // =========================================================
   var OPS = ["+", "−", "×", ":"];
-  var NAMES = ["Lucy", "Tom", "Léa", "Hugo", "Inès", "Noah", "Jade", "Sami"];
+  var NAMES = ["Lucy", "Léa", "Léo", "Lyes"];
   var PB_T = {
     add: [
       function (A, B) { return ["🧺 Au marché, on vend <b>" + fmt(A) + "</b> pommes le matin et <b>" + fmt(B) + "</b> l'après-midi. Combien de pommes en tout&nbsp;?", "pommes"]; },
@@ -5724,6 +5917,13 @@ var COURS = {
   // =====================================================================
   var PERS = ["je", "tu", "il", "nous", "vous", "ils"];
   var PERS2 = ["je", "tu", "il ou elle", "nous", "vous", "ils ou elles"];
+  function persOf(subj, p) {   // le pronom qui remplace le sujet (prénoms : Lucy et Léa → elle, Léo et Lyes → il)
+    if (/^(Léo|Lyes)$/.test(subj)) return "il";
+    if (/^(Lucy|Léa)$/.test(subj)) return "elle";
+    if (/^(Lucy|Léa) et (Lucy|Léa)$/.test(subj)) return "elles";
+    if (/^(Lucy|Léa|Léo|Lyes) et (Lucy|Léa|Léo|Lyes)$/.test(subj)) return "ils";
+    return PERS2[p];
+  }
   var TEMPS_NOM = { present: "présent", futur: "futur", imparfait: "imparfait", passe: "passé composé" };
   function auTemps(t) { return t === "imparfait" ? "à l'imparfait" : "au " + TEMPS_NOM[t]; }
   var TERM_ER = {
@@ -5745,7 +5945,7 @@ var COURS = {
     return form;
   }
   function withSubj(s, form) { return (/^je$/i.test(s) && /^[aeiouyéèêh]/i.test(form)) ? (s.charAt(0) === "J" ? "J'" : "j'") + form : s + " " + form; }
-  function lowSubj(s) { return /^(Lucy)$/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1); }
+  function lowSubj(s) { return /^(Lucy|Léa|Léo|Lyes)( |$)/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1); }
   function pickSubj(p) { return rand(SUJETS_CONJ[p]); }
   // Tableau de conjugaison (pour le rappel et la correction)
   function conjTable(v, t, hlP) {
@@ -5899,11 +6099,11 @@ var COURS = {
       if (Math.random() < 0.7) {
         var wr = fs.filter(function (x) { return x !== f; });
         return qChoice("sv-" + i + v + t, '<div class="gp">Choisis le verbe qui s\'accorde avec le <b>sujet</b> (' + TEMPS_NOM[t] + ")&nbsp;:</div>" + sent("<b class=\"tu\">" + SA[0] + '</b> <span class="gblank">(' + v + ")</span> " + COMPLEMENTS[v] + "."),
-          opts3(f, shuffle(wr)), f, SA[0] + " " + f + " " + COMPLEMENTS[v] + ".", "« " + SA[0] + " » → on peut dire « <b>" + PERS2[p] + "</b> ». Le verbe s'accorde&nbsp;: <b class=\"tc\">" + SA[0] + " " + f + "</b>.");
+          opts3(f, shuffle(wr)), f, SA[0] + " " + f + " " + COMPLEMENTS[v] + ".", "« " + SA[0] + " » → on peut dire « <b>" + persOf(SA[0], p) + "</b> ». Le verbe s'accorde&nbsp;: <b class=\"tc\">" + SA[0] + " " + f + "</b>.");
       }
       var oth = SUJETS_ACCORD.filter(function (x) { return fs[x[1]] !== f; }).map(function (x) { return x[0]; });
       return qChoice("sw-" + i + v + t, '<div class="gp">Quel <b>sujet</b> va avec ce verbe&nbsp;?</div>' + sent('<span class="gblank">…</span> <b class="tr">' + f + "</b> " + COMPLEMENTS[v] + "."),
-        opts3(SA[0], shuffle(oth)), SA[0], SA[0] + " " + f + " " + COMPLEMENTS[v] + ".", "« " + f + " » va avec « " + PERS2[p] + " » : <b>" + SA[0] + "</b> = " + PERS2[p] + ".");
+        opts3(SA[0], shuffle(oth)), SA[0], SA[0] + " " + f + " " + COMPLEMENTS[v] + ".", "« " + f + " » va avec « " + PERS2[p] + " » : <b>" + SA[0] + "</b> = " + persOf(SA[0], p) + ".");
     }
     if (kind === "sons") {
       i = rnd(0, SONS_LETTRES.length - 1); var SL = SONS_LETTRES[i], ch = SONS_CHOIX[SL[2]], word = SL[0].replace("_", SL[1]);
@@ -5933,7 +6133,7 @@ var COURS = {
   MODULES.orth = {
     id: "orth", fr: true, title: "🔤 L'orthographe", short: "Orthographe", champ: "d'orthographe",
     levels: [
-      { id: "a", label: "a ou à", ex: "Lucy a un vélo / à la piscine", color: "#2f8cff" },
+      { id: "a", label: "a ou à", ex: "Léo a un vélo / à la piscine", color: "#2f8cff" },
       { id: "et", label: "et ou est", ex: "Il est grand et fort", color: "#22b455" },
       { id: "son", label: "son ou sont", ex: "son chat / ils sont", color: "#ff7a1a" },
       { id: "on", label: "on ou ont", ex: "on joue / ils ont", color: "#c23ee0" },
@@ -6042,7 +6242,8 @@ var COURS = {
   // =====================================================================
   var FL_OBJECTIF = 90, FL_DUREE = 60;
   var FL = { niveau: 1, txt: null, phase: "ready", t0: 0, elapsed: 0, timer: null, last: -1, errs: {}, tool: "last", nWords: 0, entry: null, qi: 0, qok: 0, qs: [], wake: null };
-  function flHistory() { var h = load("fluence", []); return Array.isArray(h) ? h : []; }
+  function flKey(base) { return !PLAYER || PLAYER.n === "Lucy" ? base : base + "-" + { "Léa": "lea", "Léo": "leo", "Lyes": "lyes" }[PLAYER.n]; }   // chaque enfant a son historique
+  function flHistory() { var h = load(flKey("fluence"), []); return Array.isArray(h) ? h : []; }
   function flWords(txt) {   // découpe le texte en mots (la ponctuation reste collée au mot ; les tirets seuls ne comptent pas)
     var out = [], n = 0;
     txt.texte.split("\n").forEach(function (par, pi) {
@@ -6055,16 +6256,31 @@ var COURS = {
     FL.nWords = n;
     return out;
   }
+  // Textes déjà lus (gardés sur la tablette) : petite coche sur la carte du texte
+  function flDone() {
+    var d = load(flKey("fluence-lus"), []), out = {};
+    (Array.isArray(d) ? d : []).forEach(function (id) { out[id] = true; });
+    flHistory().forEach(function (e) { out[e.id] = true; });
+    return out;
+  }
+  function flMarkDone(id) { var d = load(flKey("fluence-lus"), []); if (!Array.isArray(d)) d = []; if (d.indexOf(id) < 0) { d.push(id); store(flKey("fluence-lus"), d); } }
   function flMenu() {
     $("#fl-levels").querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", +b.dataset.lv === FL.niveau); });
-    var h = flHistory();
-    $("#fl-list").innerHTML = FLUENCE_TEXTES.filter(function (t) { return t.niveau === FL.niveau; }).map(function (t) {
+    var h = flHistory(), done = flDone(), list = FLUENCE_TEXTES.filter(function (t) { return t.niveau === FL.niveau; }), nd = 0;
+    $("#fl-list").innerHTML = list.map(function (t) {
       var n = flWords(t).filter(function (w) { return w.n >= 0; }).length, best = 0;
       h.forEach(function (e) { if (e.id === t.id && e.score > best) best = e.score; });
-      return '<button class="fl-card" data-id="' + t.id + '"><span class="fl-genre">' + t.genre + '</span><span class="fl-title">' + t.titre + '</span><span class="fl-meta">' + n + " mots" +
+      if (done[t.id]) nd++;
+      return '<button class="fl-card' + (done[t.id] ? " done" : "") + '" data-id="' + t.id + '">' + (done[t.id] ? '<span class="fl-check" aria-label="Déjà lu">✔</span>' : "") +
+        '<span class="fl-genre">' + t.genre + '</span><span class="fl-title">' + t.titre + '</span><span class="fl-meta">' + n + " mots" +
         (best ? " · record&nbsp;: " + best + " mots/min ⭐" : "") + "</span></button>";
     }).join("");
+    $("#fl-count").innerHTML = "✔ " + nd + " / " + list.length + " textes déjà lus";
     showScreen("flmenu");
+  }
+  function flRandom() {   // au hasard parmi les textes pas encore lus du niveau (sinon parmi tous)
+    var done = flDone(), list = FLUENCE_TEXTES.filter(function (t) { return t.niveau === FL.niveau; }), todo = list.filter(function (t) { return !done[t.id]; });
+    flOpen(rand(todo.length ? todo : list).id);
   }
   function flOpen(id) {
     FL.txt = FLUENCE_TEXTES.filter(function (t) { return t.id === id; })[0];
@@ -6072,6 +6288,7 @@ var COURS = {
     FL.phase = "ready"; FL.last = -1; FL.errs = {}; FL.tool = "last"; FL.elapsed = 0;
     clearInterval(FL.timer);
     $("#fl-title").textContent = FL.txt.titre;
+    $("#fl-pret").textContent = pf("Prêt", "Prête");
     $("#fl-time").textContent = "1:00";
     $("#fl-ring").style.setProperty("--p", 1);
     flRenderText();
@@ -6158,9 +6375,9 @@ var COURS = {
     if (FL.last < 0) { var mi = $("#fl-mark-info"); mi.classList.remove("shake"); void mi.offsetWidth; mi.classList.add("shake"); return; }
     var sc = flScore(), ne = Object.keys(FL.errs).length, d = new Date();
     FL.entry = { date: d.toISOString(), id: FL.txt.id, titre: FL.txt.titre, niveau: FL.txt.niveau, score: sc, lus: FL.last + 1, erreurs: ne, temps: Math.round(FL.elapsed), comp: null };
-    var h = flHistory(); h.push(FL.entry); store("fluence", h);
+    var h = flHistory(); h.push(FL.entry); store(flKey("fluence"), h); flMarkDone(FL.txt.id);
     var msg, emoji;
-    if (sc >= FL_OBJECTIF) { emoji = "🏆"; msg = "Objectif de fin de CE2 atteint (" + FL_OBJECTIF + " mots/min)" + NB + "! Tu lis comme une championne" + NB + "! 🎉"; }
+    if (sc >= FL_OBJECTIF) { emoji = "🏆"; msg = "Objectif de fin de CE2 atteint (" + FL_OBJECTIF + " mots/min)" + NB + "! Tu lis comme " + pf("un champion", "une championne") + NB + "! 🎉"; }
     else if (sc >= 70) { emoji = "🌟"; msg = "Très bien" + NB + "! Tu te rapproches des " + FL_OBJECTIF + " mots par minute. Continue" + NB + "! 💪"; }
     else if (sc >= 50) { emoji = "😃"; msg = "Bien" + NB + "! En lisant un peu chaque jour, tu vas aller de plus en plus vite. 🚀"; }
     else { emoji = "🤗"; msg = "Bravo pour ta lecture" + NB + "! Chaque lecture te fait progresser. ❤️"; }
@@ -6188,7 +6405,7 @@ var COURS = {
       FL.entry.comp = FL.qok;
       var h = flHistory();
       h.forEach(function (e) { if (e.date === FL.entry.date) e.comp = FL.qok; });
-      store("fluence", h);
+      store(flKey("fluence"), h);
       box.innerHTML = '<div class="fr-qdone">🧠 Compréhension&nbsp;: <b>' + FL.qok + " / 3</b> " + (FL.qok === 3 ? "— parfait&nbsp;! 🎉" : FL.qok === 2 ? "— très bien&nbsp;! 🌟" : "— relis le texte tranquillement, tu vas trouver&nbsp;! 💪") + "</div>";
       $("#fr-actions").classList.remove("hidden");
       return;
@@ -6241,6 +6458,7 @@ var COURS = {
   $("#fl-list").addEventListener("click", function (e) { var b = e.target.closest(".fl-card"); if (b) flOpen(b.dataset.id); });
   $("#fl-back").addEventListener("click", function () { showScreen("frhome"); });
   $("#fl-histbtn").addEventListener("click", flHist);
+  $("#fl-random").addEventListener("click", flRandom);
   $("#fl-go").addEventListener("click", flGo);
   $("#fl-stop").addEventListener("click", function () { flStop(false); });
   $("#fl-quit").addEventListener("click", function () {
@@ -6271,7 +6489,7 @@ var COURS = {
   $("#fr-hist").addEventListener("click", flHist);
   $("#fh-back").addEventListener("click", flMenu);
   $("#fh-clear").addEventListener("click", function () {
-    if (window.confirm("Effacer tout l'historique de lecture" + NB + "? Cette action est définitive.")) { store("fluence", []); flHist(); }
+    if (window.confirm("Effacer tout l'historique de lecture de " + pn() + NB + "? Cette action est définitive.")) { store(flKey("fluence"), []); flHist(); }
   });
 
   // =====================================================================
@@ -6279,12 +6497,29 @@ var COURS = {
   // =====================================================================
   function updateStartSound() { $("#start-sound").textContent = soundOn ? "🔊" : "🔇"; }
   function goStart() { updateStartSound(); showScreen("start"); }
+  function setPlayer(name) {
+    PLAYER = KIDS.filter(function (k) { return k.n === name; })[0] || null;
+    if (PLAYER) store("joueur", PLAYER.n);
+    document.querySelectorAll("#who .who-btn").forEach(function (b) { b.classList.toggle("on", !!PLAYER && b.dataset.who === PLAYER.n); });
+    document.querySelectorAll(".player-name").forEach(function (e) { e.textContent = pn() || "Lucy"; });
+    BRAVO[0] = (PLAYER ? "Bravo " + PLAYER.n : "Bravo") + NB + "! 🎉";
+    BRAVO[3] = pf("Trop fort", "Trop forte") + NB + "! 💪";
+    $("#start-sub").innerHTML = PLAYER ? "Bonjour " + PLAYER.n + "&nbsp;! Qu'est-ce qu'on révise aujourd'hui&nbsp;?" : "Qui joue&nbsp;? Touche ton prénom&nbsp;!";
+  }
+  setPlayer(pn());
+  $("#who").addEventListener("click", function (e) { var b = e.target.closest(".who-btn"); if (b) { setPlayer(b.dataset.who); soundTap(); } });
+  function needPlayer() {   // on choisit son prénom avant de jouer
+    if (PLAYER) return false;
+    var w = $("#who"); w.classList.remove("shake"); void w.offsetWidth; w.classList.add("shake");
+    $("#start-sub").innerHTML = "👆 Choisis d'abord qui joue&nbsp;!";
+    return true;
+  }
   $("#start-sound").addEventListener("click", function () {
     soundOn = !soundOn; store("sound", soundOn); updateStartSound(); updateHomeSound(); updateSoundBtn(); soundTap();
   });
   updateStartSound();
-  $("#go-maths").addEventListener("click", goHome);
-  $("#go-francais").addEventListener("click", function () { showScreen("frhome"); });
+  $("#go-maths").addEventListener("click", function () { if (!needPlayer()) goHome(); });
+  $("#go-francais").addEventListener("click", function () { if (!needPlayer()) showScreen("frhome"); });
   $("#home-back").addEventListener("click", goStart);
   $("#frhome-back").addEventListener("click", goStart);
   ["gram", "conj", "orth", "voc"].forEach(function (id) { $("#go-" + id).addEventListener("click", function () { gOpen(id); }); });

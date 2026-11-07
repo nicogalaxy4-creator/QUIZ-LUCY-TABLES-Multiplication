@@ -114,6 +114,11 @@
   8. EMC (troisième grand bouton de l'écran de départ) : 4 thèmes + Mélange.
      Fiche de révision (relisible pendant le quiz : « Revoir la fiche »),
      puis 12 questions en QCM. Situations bienveillantes, avec les prénoms.
+  9. ANGLAIS (quatrième grand bouton) : 8 thèmes + Mélange. Fiche avec image,
+     mot anglais et traduction ; toucher un mot = voix anglaise (en-GB).
+     Quiz de 12 questions : écouter, lire, image, mini-dialogues. Si la voix
+     anglaise manque, un message l'explique et les questions « Écoute »
+     sont remplacées par d'autres.
   ==========================================================================
 -->
 <!doctype html>
@@ -875,9 +880,10 @@
   .who-btn.g.on { background: linear-gradient(150deg, #ff6fb5, #ff4f7b); box-shadow: 0 6px 0 #c2185b; }
   .who-btn.b.on { background: linear-gradient(150deg, #3ec7ff, #2f6bff); box-shadow: 0 6px 0 #1d4ed8; }
   @media (max-width: 560px) { .who { grid-template-columns: 1fr 1fr; } }
-  .start-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; margin: 18px 0 24px; }
+  .start-choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin: 14px 0 24px; }
+  @media (min-width: 1000px) { .start-choices { grid-template-columns: repeat(4, 1fr); } .start-choices .sc-title { font-size: 2rem; letter-spacing: 1px; } .start-choices .sc-sub { font-size: 1.1rem; } }
   .start-card {
-    border-radius: 40px; padding: 34px 18px 30px; color: #fff; min-height: clamp(300px, 38vh, 440px);
+    border-radius: 40px; padding: 28px 14px 26px; color: #fff; min-height: clamp(240px, 30vh, 360px);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
     text-shadow: 0 3px 0 rgba(0,0,0,.18); box-shadow: 0 12px 0 rgba(0,0,0,.2); transition: transform .08s;
   }
@@ -1088,6 +1094,33 @@
   .emc-num { font-size: 2.8rem; font-weight: 700; color: #ef4444; line-height: 1; }
   .emc-flag, .emc-svg { width: 72px; height: 48px; }
   .emc-svg { height: 60px; width: 60px; }
+  /* Anglais */
+  .start-card.anglais { background: linear-gradient(150deg, #ff6b6b, #2f6bff); }
+  .ang-help { text-align: center; font-weight: 600; color: var(--ink-soft); }
+  .ang-warn { background: #fff4e3; border: 4px solid #ffd8a3; border-radius: 18px; padding: 10px 14px; margin: 0 0 12px; font-size: 1.15rem; font-weight: 600; }
+  .ang-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 8px 0 12px; }
+  .ang-cards.wide { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .ang-card { position: relative; background: #f6f1ff; border: 4px solid #e1d6ff; border-radius: 20px; padding: 10px 8px; min-height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 5px 0 #d9cbff; }
+  .ang-card:active { transform: translateY(3px); box-shadow: 0 2px 0 #d9cbff; background: #fff3c4; }
+  .ang-en { font-size: clamp(1.4rem, 3.6vw, 1.8rem); color: var(--purple); line-height: 1.15; text-align: center; }
+  .ang-fr { font-size: clamp(1.05rem, 2.6vw, 1.2rem); color: var(--ink-soft); text-align: center; }
+  .ang-ear { position: absolute; top: 6px; right: 8px; font-size: 1rem; opacity: .7; }
+  .ang-emo { font-size: 2.6rem; line-height: 1.1; font-weight: 700; color: var(--ink); }
+  .ang-dot { display: inline-block; width: 46px; height: 46px; border-radius: 50%; border: 3px solid #3b2a5a; vertical-align: middle; }
+  .ang-svg { width: 56px; height: 46px; vertical-align: middle; }
+  .ang-big { text-align: center; margin: 6px 0; }
+  .ang-big .ang-emo { font-size: clamp(4rem, 12vw, 5.5rem); }
+  .ang-big .ang-dot { width: 90px; height: 90px; }
+  .ang-big .ang-svg { width: 110px; height: 90px; }
+  .gopts.angpics .gopt { min-height: 110px; }
+  .gopts.angpics .ang-emo { font-size: 3.2rem; }
+  .gopts.angpics .ang-dot { width: 64px; height: 64px; }
+  .gopts.angpics .ang-svg { width: 80px; height: 64px; }
+  .ang-listen { display: block; margin: 10px auto; background: var(--purple); color: #fff; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; padding: 16px 36px; border-radius: 999px; box-shadow: 0 6px 0 var(--purple-dark); }
+  .ang-listen:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--purple-dark); }
+  .ang-say-mini { background: #fff; border-radius: 50%; width: 44px; height: 44px; font-size: 1.2rem; box-shadow: 0 3px 0 #d9cbff; vertical-align: middle; }
+  .ang-bubble { background: #eaf3ff; border-radius: 20px; padding: 12px 16px; margin: 8px auto; font-size: clamp(1.35rem, 3.6vw, 1.8rem); font-weight: 600; max-width: 600px; }
+  .ang-ex { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
 </style>
 </head>
 <body>
@@ -1127,6 +1160,11 @@
         <span class="sc-emoji">🇫🇷</span>
         <span class="sc-title">EMC</span>
         <span class="sc-sub">Vivre ensemble, sécurité, droits…</span>
+      </button>
+      <button class="start-card anglais" id="go-ang">
+        <span class="sc-emoji">🇬🇧</span>
+        <span class="sc-title">ANGLAIS</span>
+        <span class="sc-sub">Couleurs, animaux, nombres…</span>
       </button>
     </div>
   </div>
@@ -4337,6 +4375,7 @@ var COURS = {
     v.textContent = "Valider ✔";
     v.classList.remove("next");
     gRender();
+    if (q.onShow) q.onShow();   // ex. anglais : la voix dit le mot à écouter
   }
 
   function gFieldBtn(k) {
@@ -7156,6 +7195,164 @@ var COURS = {
     lesson: lessonEmc, question: qEmc, problem: function (mode) { return qEmc(mode); }
   };
   $("#go-emc").addEventListener("click", function () { if (!needPlayer()) gOpen("emc"); });
+
+
+  // =====================================================================
+  // ---------- ANGLAIS — CE2 ----------
+  // Pour chaque thème : une fiche (toucher un mot = la voix anglaise le prononce), puis un quiz de 12 questions.
+  // Pour ajouter un mot : [mot anglais, traduction française, image (emoji, ou "#couleur" pour une pastille de couleur)]
+  // =====================================================================
+  var ANG_DOT = function (c) { return '<span class="ang-dot" style="background:' + c + '"></span>'; };
+  var ANG_RUBBER = '<svg viewBox="0 0 60 40" class="ang-svg" role="img" aria-label="gomme"><rect x="4" y="8" width="52" height="24" rx="6" fill="#ff8fc7" stroke="#3b2a5a" stroke-width="2.5"/><rect x="30" y="8" width="26" height="24" rx="6" fill="#4f8df5" stroke="#3b2a5a" stroke-width="2.5"/></svg>';
+  var ANG_GLUE = '<svg viewBox="0 0 40 60" class="ang-svg" role="img" aria-label="bâton de colle"><rect x="10" y="4" width="20" height="12" rx="4" fill="#ffd60a" stroke="#3b2a5a" stroke-width="2.5"/><rect x="8" y="16" width="24" height="40" rx="5" fill="#7c4dff" stroke="#3b2a5a" stroke-width="2.5"/><text x="20" y="42" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">GLUE</text></svg>';
+  var ANG_THEMES = {
+    hello: { titre: "Se présenter et saluer", e: "👋", color: "#ff4fa3", pics: false, words: [
+      ["Hello!", "Bonjour ! / Salut !", "🙋"], ["Goodbye!", "Au revoir !", "👋"], ["Good morning!", "Bonjour ! (le matin)", "🌅"],
+      ["Please", "S'il te plaît", "🙏"], ["Thank you", "Merci", "💐"], ["Yes", "Oui", "✅"], ["No", "Non", "❌"],
+      ["What's your name?", "Comment t'appelles-tu ?", "❓"], ["My name is Lucy.", "Je m'appelle Lucy.", "📛"],
+      ["How are you?", "Comment vas-tu ?", "🤔"], ["I'm fine.", "Je vais bien.", "😊"], ["How old are you?", "Quel âge as-tu ?", "🎂"], ["I'm 8.", "J'ai 8 ans.", "8️⃣"]] },
+    colours: { titre: "Les couleurs", e: "🎨", color: "#ff7a1a", pics: true, words: [
+      ["red", "rouge", "#ef4444"], ["blue", "bleu", "#2f6bff"], ["green", "vert", "#22b455"], ["yellow", "jaune", "#ffd60a"], ["orange", "orange", "#ff8a1f"],
+      ["pink", "rose", "#ff8fc7"], ["purple", "violet", "#8b3fd9"], ["black", "noir", "#111111"], ["white", "blanc", "#ffffff"], ["brown", "marron", "#8b5a2b"], ["grey", "gris", "#9ca3af"]] },
+    numbers: { titre: "Les nombres de 1 à 20", e: "🔢", color: "#2f8cff", pics: true, words: [
+      ["one", "un", "1"], ["two", "deux", "2"], ["three", "trois", "3"], ["four", "quatre", "4"], ["five", "cinq", "5"], ["six", "six", "6"], ["seven", "sept", "7"],
+      ["eight", "huit", "8"], ["nine", "neuf", "9"], ["ten", "dix", "10"], ["eleven", "onze", "11"], ["twelve", "douze", "12"], ["thirteen", "treize", "13"], ["fourteen", "quatorze", "14"],
+      ["fifteen", "quinze", "15"], ["sixteen", "seize", "16"], ["seventeen", "dix-sept", "17"], ["eighteen", "dix-huit", "18"], ["nineteen", "dix-neuf", "19"], ["twenty", "vingt", "20"]] },
+    animals: { titre: "Les animaux", e: "🐾", color: "#22b455", pics: true, words: [
+      ["cat", "le chat", "🐱"], ["dog", "le chien", "🐶"], ["bird", "l'oiseau", "🐦"], ["fish", "le poisson", "🐟"], ["rabbit", "le lapin", "🐰"], ["horse", "le cheval", "🐴"],
+      ["cow", "la vache", "🐮"], ["pig", "le cochon", "🐷"], ["lion", "le lion", "🦁"], ["elephant", "l'éléphant", "🐘"], ["monkey", "le singe", "🐵"], ["mouse", "la souris", "🐭"]] },
+    family: { titre: "La famille", e: "👨‍👩‍👧", color: "#c23ee0", pics: true, words: [
+      ["mother / mum", "la mère / maman", "👩"], ["father / dad", "le père / papa", "👨"], ["sister", "la sœur", "👧"], ["brother", "le frère", "👦"],
+      ["grandmother", "la grand-mère", "👵"], ["grandfather", "le grand-père", "👴"], ["baby", "le bébé", "👶"]] },
+    days: { titre: "Les jours et les mois", e: "📅", color: "#10b3a3", pics: false, words: [
+      ["Monday", "lundi", "📅"], ["Tuesday", "mardi", "📅"], ["Wednesday", "mercredi", "📅"], ["Thursday", "jeudi", "📅"], ["Friday", "vendredi", "📅"], ["Saturday", "samedi", "📅"], ["Sunday", "dimanche", "📅"],
+      ["January", "janvier", "❄️"], ["February", "février", "❄️"], ["March", "mars", "🌱"], ["April", "avril", "🌷"], ["May", "mai", "🌸"], ["June", "juin", "☀️"],
+      ["July", "juillet", "🏖️"], ["August", "août", "🍦"], ["September", "septembre", "🎒"], ["October", "octobre", "🍂"], ["November", "novembre", "🍁"], ["December", "décembre", "🎄"]] },
+    school: { titre: "L'école", e: "🏫", color: "#f5b400", pics: true, words: [
+      ["pen", "le stylo", "🖊️"], ["pencil", "le crayon", "✏️"], ["book", "le livre", "📕"], ["bag", "le cartable", "🎒"], ["ruler", "la règle", "📏"],
+      ["rubber", "la gomme", ANG_RUBBER], ["scissors", "les ciseaux", "✂️"], ["glue", "la colle", ANG_GLUE], ["teacher", "le maître / la maîtresse", "🧑‍🏫"]] },
+    body: { titre: "Le corps", e: "🧍", color: "#ef4444", pics: true, words: [
+      ["head", "la tête", "🧑"], ["eyes", "les yeux", "👀"], ["ears", "les oreilles", "👂"], ["nose", "le nez", "👃"], ["mouth", "la bouche", "👄"],
+      ["hands", "les mains", "🙌"], ["arms", "les bras", "💪"], ["legs", "les jambes", "🦵"], ["feet", "les pieds", "🦶"]] }
+  };
+  var ANG_ORDER = ["hello", "colours", "numbers", "animals", "family", "days", "school", "body"];
+  var ANG_TOTAL = 12;
+  function angPic(w) { return w[2].charAt(0) === "#" ? ANG_DOT(w[2]) : (w[2].charAt(0) === "<" ? w[2] : '<span class="ang-emo">' + w[2] + "</span>"); }
+  function angSpeakText(en) { return en.replace(" / ", ", ").replace(/Lucy/, "Lucy"); }
+  // ---------- La voix anglaise (synthèse vocale du navigateur, en-GB, voix féminine si possible) ----------
+  var ANG = { voice: null, nVoices: 0, nEn: 0 };
+  function angPickVoice() {
+    if (!dicSupported()) return;
+    var vs = speechSynthesis.getVoices() || [], gb = vs.filter(function (v) { return /^en[-_]GB/i.test(v.lang); }), en = vs.filter(function (v) { return /^en/i.test(v.lang); });
+    var fem = /(female|serena|kate|martha|stephanie|susan|fiona|moira|tessa|karen|samantha|victoria|libby|sonia|hazel|emily|amy|emma|olivia|google uk english female)/i;
+    ANG.voice = gb.filter(function (v) { return fem.test(v.name); })[0] || gb[0] || en.filter(function (v) { return fem.test(v.name); })[0] || en[0] || null;
+    ANG.nVoices = vs.length; ANG.nEn = en.length;
+  }
+  if (dicSupported()) { angPickVoice(); try { speechSynthesis.addEventListener("voiceschanged", angPickVoice); } catch (e) {} }
+  function angCanSpeak() { return dicSupported() && !(ANG.nVoices && !ANG.nEn); }
+  function angSay(text) {
+    if (!dicSupported()) return;
+    try {
+      angPickVoice();
+      speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-GB"; if (ANG.voice) u.voice = ANG.voice; u.rate = 0.8; u.pitch = 1.05;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  function angVoiceProblem() {
+    if (!dicSupported()) return "🔇 La voix anglaise ne marche pas sur cette tablette (ou dans ce navigateur). Les questions « Écoute » sont remplacées par d'autres questions. Essaie avec Chrome.";
+    if (ANG.nVoices && !ANG.nEn) return "🔇 Aucune voix anglaise n'est installée. Un adulte peut en ajouter dans les réglages de la tablette (Paramètres › Synthèse vocale › Langue : anglais). En attendant, il n'y a pas de questions « Écoute ».";
+    return "";
+  }
+  document.addEventListener("click", function (e) {   // tout bouton « data-say » fait parler la voix anglaise
+    var b = e.target.closest && e.target.closest("[data-say]");
+    if (b) { e.preventDefault(); angSay(b.getAttribute("data-say")); }
+  });
+  // ---------- Fiches ----------
+  function angFiche(t) {
+    var T = ANG_THEMES[t], warn = angVoiceProblem();
+    return '<div class="panel"><h2>' + T.e + " " + T.titre + '</h2><p class="ang-help">👆 Touche un mot pour l\'écouter en anglais&nbsp;!</p>' +
+      (warn ? '<div class="ang-warn">' + warn + "</div>" : "") +
+      '<div class="ang-cards' + (t === "hello" ? " wide" : "") + '">' + T.words.map(function (w) {
+        return '<button type="button" class="ang-card" data-say="' + angSpeakText(w[0]).replace(/"/g, "&quot;") + '">' + angPic(w) + '<b class="ang-en">' + w[0] + '</b><span class="ang-fr">' + w[1] + '</span><span class="ang-ear">🔊</span></button>';
+      }).join("") + "</div>" +
+      (t === "hello" ? '<div class="tip">💬 <b>What\'s your name?</b> → <b>My name is Léo.</b> &nbsp;·&nbsp; <b>How are you?</b> → <b>I\'m fine, thank you.</b> &nbsp;·&nbsp; <b>How old are you?</b> → <b>I\'m 8.</b></div>' : "") +
+      (t === "days" ? '<div class="tip">💡 En anglais, les jours et les mois commencent par une <b>majuscule</b>&nbsp;: Monday, January.</div>' : "") +
+      "</div>";
+  }
+  function lessonAng(mode) { return (mode === "melange" ? ANG_ORDER : [mode]).map(angFiche).join(""); }
+  // ---------- Questions ----------
+  function angOthers(T, w, n) {   // mauvaises réponses (jamais deux « Bonjour » ensemble)
+    var bj = function (x) { return /^Bonjour/.test(x[1]); }, out = [], hasBj = bj(w);
+    shuffle(T.words.filter(function (x) { return x !== w; })).forEach(function (x) {
+      if (out.length >= n || (bj(x) && hasBj)) return;
+      if (bj(x)) hasBj = true;
+      out.push(x);
+    });
+    return out;
+  }
+  function angExplain(w) {
+    return '<div class="expl ang-ex">' + angPic(w) + ' <b>' + w[0] + "</b> = " + w[1] + ' <button type="button" class="ang-say-mini" data-say="' + angSpeakText(w[0]).replace(/"/g, "&quot;") + '">🔊</button></div>';
+  }
+  var ANG_DIALOGUES = [
+    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: What's your name?", "My name is " + b.n + ".", ["I'm 8.", "I'm fine.", "Goodbye!"], "« What's your name? » = « Comment t'appelles-tu&nbsp;? ». On répond&nbsp;: <b>My name is " + b.n + ".</b>", "What's your name?"]; },
+    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: How are you?", "I'm fine, thank you.", ["My name is " + b.n + ".", "I'm 8.", "Yellow."], "« How are you? » = « Comment vas-tu&nbsp;? ». On répond&nbsp;: <b>I'm fine, thank you.</b> (Je vais bien, merci.)", "How are you?"]; },
+    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: How old are you?", "I'm 8.", ["I'm fine.", "My name is " + b.n + ".", "Thank you."], "« How old are you? » = « Quel âge as-tu&nbsp;? ». On répond&nbsp;: <b>I'm 8.</b> (J'ai 8 ans.)", "How old are you?"]; },
+    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: Hello, " + b.n + "!", "Hello, " + a.n + "!", ["Goodbye, " + a.n + "!", "I'm 8.", "No."], "On répond à « Hello&nbsp;! » par <b>Hello&nbsp;!</b>", "Hello, " + b.n + "!"]; },
+    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: Here is your pencil.", "Thank you!", ["Hello!", "I'm 8.", "Monday."], "Quand on nous donne quelque chose, on dit <b>Thank you&nbsp;!</b> (Merci&nbsp;!)", "Here is your pencil."]; },
+    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: Goodbye, " + b.n + "!", "Goodbye, " + a.n + "!", ["Good morning!", "I'm fine.", "Yes, please."], "On répond à « Goodbye&nbsp;! » par <b>Goodbye&nbsp;!</b> (Au revoir&nbsp;!)", "Goodbye, " + b.n + "!"]; },
+    function (a, b) { return ['<b>' + a.n + "</b>&nbsp;: Do you want an apple?", "Yes, please!", ["Goodbye!", "My name is " + b.n + ".", "Red."], "Pour accepter poliment, on dit <b>Yes, please&nbsp;!</b> (Oui, s'il te plaît&nbsp;!)", "Do you want an apple?"]; }
+  ];
+  function angDialogue() {
+    var k = rnd(0, ANG_DIALOGUES.length - 1), a = kid(), b = kidOther(a), D = ANG_DIALOGUES[k](a, b), opts = shuffle([D[1]].concat(D[2]));
+    return { key: "ang-dia-" + k + a.n + b.n, type: "choice", options: opts, answer: opts.indexOf(D[1]),
+      prompt: '<div class="gp">💬 Quelle est la bonne réponse de <b>' + b.n + "</b>&nbsp;?</div>" +
+        '<div class="ang-bubble">' + D[0] + ' <button type="button" class="ang-say-mini" data-say="' + D[4].replace(/"/g, "&quot;") + '">🔊</button></div>',
+      eq: "✔️ " + D[1], explain: '<div class="expl">' + D[3] + "</div>" };
+  }
+  function qAng(mode) {
+    var t = mode === "melange" ? rand(ANG_ORDER) : mode, T = ANG_THEMES[t], w = rand(T.words), i = T.words.indexOf(w), kinds = ["read", "reverse"];
+    if (T.pics) kinds.push("image", "image");
+    if (angCanSpeak()) kinds.push("listen", "listen");
+    if (t === "hello") kinds.push("dialog", "dialog", "dialog");
+    var kind = rand(kinds), others = angOthers(T, w, 3), opts, correct, q;
+    if (kind === "dialog") return angDialogue();
+    if (kind === "listen") {
+      var list = shuffle([w].concat(others));
+      opts = list.map(function (x) { return T.pics ? angPic(x) : x[1]; });
+      q = { key: "ang-l-" + t + i, type: "choice", options: opts, answer: list.indexOf(w), optClass: T.pics ? "pics two angpics" : "",
+        prompt: '<div class="gp">🎧 Écoute et touche ' + (T.pics ? "la bonne image" : "la bonne traduction") + '&nbsp;:</div><button type="button" class="ang-listen" data-say="' + angSpeakText(w[0]).replace(/"/g, "&quot;") + '">🔊 Écouter</button>',
+        eq: "Tu as entendu&nbsp;: <b>" + w[0] + "</b>", explain: angExplain(w), hint: "Touche 🔊 pour réécouter 👂",
+        onShow: function () { setTimeout(function () { angSay(angSpeakText(w[0])); }, 350); } };
+      return q;
+    }
+    if (kind === "image") {
+      var l2 = shuffle([w].concat(others));
+      opts = l2.map(function (x) { return x[0]; });
+      return { key: "ang-i-" + t + i, type: "choice", options: opts, answer: l2.indexOf(w), optClass: "two",
+        prompt: '<div class="gp">🖼️ Comment dit-on en anglais&nbsp;?</div><div class="ang-big">' + angPic(w) + "</div>", eq: angPic(w) + " = <b>" + w[0] + "</b>", explain: angExplain(w) };
+    }
+    if (kind === "reverse") {
+      var l3 = shuffle([w].concat(others));
+      opts = l3.map(function (x) { return x[0]; });
+      return { key: "ang-r-" + t + i, type: "choice", options: opts, answer: l3.indexOf(w), optClass: t === "hello" ? "" : "two",
+        prompt: '<div class="gp">🇬🇧 Comment dit-on <b class="tc">« ' + w[1] + ' »</b> en anglais&nbsp;?</div>', eq: w[1] + " = <b>" + w[0] + "</b>", explain: angExplain(w) };
+    }
+    var l4 = shuffle([w].concat(others));
+    opts = l4.map(function (x) { return x[1]; });
+    return { key: "ang-t-" + t + i, type: "choice", options: opts, answer: l4.indexOf(w), optClass: t === "hello" ? "" : "two",
+      prompt: '<div class="gp">🇫🇷 Que veut dire <b class="tu">« ' + w[0] + ' »</b>&nbsp;? <button type="button" class="ang-say-mini" data-say="' + angSpeakText(w[0]).replace(/"/g, "&quot;") + '">🔊</button></div>',
+      eq: "<b>" + w[0] + "</b> = " + w[1], explain: angExplain(w) };
+  }
+  var ANG_LEVELS = ANG_ORDER.map(function (t) { var T = ANG_THEMES[t]; return { id: t, label: T.titre, ex: T.e + " " + T.words.slice(0, 3).map(function (w) { return w[0]; }).join(", ") + "…", color: T.color }; });
+  ANG_LEVELS.push({ id: "melange", label: "Mélange", ex: "🎲 un peu de tout", color: "#7c4dff" });
+  MODULES.ang = {
+    id: "ang", title: "🇬🇧 L'anglais", short: "Anglais", champ: "d'anglais", total: ANG_TOTAL, home: "start",
+    lessonBtn: "📖 Revoir la fiche", lessonWord: "La fiche", ficheTitle: "📋 Fiche de révision",
+    levels: ANG_LEVELS, lesson: lessonAng, question: qAng, problem: function (mode) { return qAng(mode); }
+  };
+  $("#go-ang").addEventListener("click", function () { if (!needPlayer()) { angPickVoice(); gOpen("ang"); } });
 
   // =====================================================================
   // ---------- ÉCRAN DE DÉPART (MATHS / FRANÇAIS) ET BOUTON ACCUEIL ----------
